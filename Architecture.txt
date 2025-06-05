@@ -1,0 +1,80 @@
+C:.
+│   .gitattributes
+│   .gitignore
+│   pom.xml
+│   README.md
+│   Architecture.txt
+│
+├───src
+│   └───main
+│       ├───java
+│       │   │   module-info.java
+│       │   │
+│       │   └───com
+│       │       └───game
+│       │           │   GameApplication.java
+│       │           │
+│       │           ├───controllers
+│       │           │       GameController.java
+│       │           │       MenuController.java
+│       │           │       SettingsController.java
+│       │           │
+│       │           ├───models
+│       │           │   │   GameState.java
+│       │           │   │
+│       │           │   ├───components
+│       │           │   │       CollisionComponent.java
+│       │           │   │       MovementComponent.java
+│       │           │   │       PositionComponent.java
+│       │           │   │       RenderComponent.java
+│       │           │   │
+│       │           │   ├───entities
+│       │           │   │       Bomb.java
+│       │           │   │       Enemy.java
+│       │           │   │       Player.java
+│       │           │   │       PowerUp.java
+│       │           │   │
+│       │           │   └───map
+│       │           │           GameMap.java
+│       │           │           Tile.java
+│       │           │           TileType.java
+│       │           │
+│       │           ├───systems
+│       │           │       CollisionSystem.java
+│       │           │       ExplosionSystem.java
+│       │           │       MovementSystem.java
+│       │           │       RenderSystem.java
+│       │           │
+│       │           ├───utils
+│       │           │       Constants.java
+│       │           │       InputHandler.java
+│       │           │       RessourceLoader.java
+│       │           │
+│       │           └───views
+│       │                   GameView.java
+│       │                   HUDView.java
+│       │                   MenuView.java
+│       │
+│       └───resources
+│           ├───images
+│           ├───maps
+│           └───sounds
+└───target
+    ├───classes
+    │   │   module-info.class
+    │   │
+    │   └───com
+    │       └───game
+    │           │   GameApplication.class
+    │           │
+    │           ├───controllers
+    │           ├───models
+    │           │   ├───components
+    │           │   ├───entities
+    │           │   └───map
+    │           ├───systems
+    │           ├───utils
+    │           └───views
+    ├───generated-sources
+    │   └───annotations
+    └───test-classes
