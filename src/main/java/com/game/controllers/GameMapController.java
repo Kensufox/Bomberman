@@ -21,6 +21,9 @@ public class GameMapController {
     @FXML
     private GridPane mapGrid;
 
+    @FXML
+    private GridPane backgroundGrid;
+
     private InputHandler inputHandler;
 
     private Player player1, player2;
@@ -36,7 +39,7 @@ public class GameMapController {
     public void initialize() {
         this.inputHandler = new InputHandler();
         this.gameMap = new GameMap();
-
+        gameMap.setupBackground(gameMap, backgroundGrid);
         gameMap.setupMap(mapGrid);
 
         //inputHandler.printConfiguration();
@@ -64,7 +67,7 @@ public class GameMapController {
 
     }
 
-    private void checkPowerUpCollision(Player player, StackPane playerCell) {
+    private void checkPowerUpCollision(Player player) {
         if (powerUp == null) return;
 
         if (player.getRow() == powerUp.getRow() && player.getCol() == powerUp.getCol()) {
@@ -112,14 +115,14 @@ public class GameMapController {
             player1.move(dRowJ1, dColJ1);
             GridPane.setRowIndex(player1Cell, player1.getRow());
             GridPane.setColumnIndex(player1Cell, player1.getCol());
-            checkPowerUpCollision(player1, player1Cell);
+            checkPowerUpCollision(player1);
         }
 
         if (isWalkable(newRowJ2, newColJ2)) {
             player2.move(dRowJ2, dColJ2);
             GridPane.setRowIndex(player2Cell, player2.getRow());
             GridPane.setColumnIndex(player2Cell, player2.getCol());
-            checkPowerUpCollision(player2, player2Cell);
+            checkPowerUpCollision(player2);
         }
 
         player1Cell.toFront();
@@ -129,5 +132,4 @@ public class GameMapController {
     private boolean isWalkable(int row, int col) {
         return gameMap.getMapData()[row][col] == '.';
     }
-
 }

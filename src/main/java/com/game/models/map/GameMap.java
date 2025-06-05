@@ -78,6 +78,36 @@ public class GameMap {
         }
     }
 
+    public void setupBackground(GameMap gameMap, GridPane backgroundGrid) {
+        int rows = gameMap.getMapData().length;
+        int cols = gameMap.getMapData()[0].length;
+        int tileSize = gameMap.getTileSize();   
+
+        backgroundGrid.getRowConstraints().clear();
+        backgroundGrid.getColumnConstraints().clear();
+        backgroundGrid.getChildren().clear();   
+
+        for (int i = 0; i < cols; i++) {
+            backgroundGrid.getColumnConstraints().add(new ColumnConstraints(tileSize));
+        }
+        for (int i = 0; i < rows; i++) {
+            backgroundGrid.getRowConstraints().add(new RowConstraints(tileSize));
+        }   
+
+        String color1 = "#33b052"; // vert plus clair
+        String color2 = "#257c3b"; // vert un peu foncé
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                StackPane tile = new StackPane();
+                tile.setPrefSize(tileSize, tileSize);
+                String color = ((row + col) % 2 == 0) ? color1 : color2;
+                tile.setStyle("-fx-background-color: " + color + ";");
+                backgroundGrid.add(tile, col, row);
+            }
+        }
+    }
+
     public char[][] getMapData() {
         return mapData;
     }
