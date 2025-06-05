@@ -1,19 +1,19 @@
 package com.game.controllers;
 
-import java.util.Objects;
-
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.map.GameMap;
 import com.game.utils.InputHandler;
-import com.game.utils.ResourceLoader;
 
+import com.game.utils.ResourceLoader;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+
+import java.util.Objects;
 
 public class GameMapController {
 
@@ -32,13 +32,13 @@ public class GameMapController {
     public void initialize() {
         this.inputHandler = new InputHandler();
         this.gameMap = new GameMap();
-            
+
         gameMap.setupMap(mapGrid);
 
         inputHandler.printConfiguration();
-            
+
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg());
-            
+
         Image playerImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player.png")));
         player1Cell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
         player2Cell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
