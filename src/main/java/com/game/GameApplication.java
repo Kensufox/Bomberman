@@ -1,4 +1,4 @@
-package com.game.bomberman;
+package com.game;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class App extends Application {
+public class GameApplication extends Application {
     @Override
     public void start(Stage stage) {
         Label label = new Label("Bonjour JavaFX !");
