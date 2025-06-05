@@ -52,7 +52,7 @@ public class GameMapController {
         KeyCode keyPressed = event.getCode();
         int dRow = 0, dCol = 0;
 
-        // Touches personnalisées (Joueur 1)
+        // Custom keys (Player 1)
         if (keyPressed == inputHandler.getJ1Up()) {
             dRow = -1;
         } else if (keyPressed == inputHandler.getJ1Down()) {
@@ -66,7 +66,7 @@ public class GameMapController {
             return;
         }
 
-        // Aucun mouvement reconnu
+        // No recognized movement
         else {
             return;
         }
