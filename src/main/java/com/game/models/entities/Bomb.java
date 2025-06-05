@@ -29,18 +29,20 @@ public class Bomb {
 
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
-
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE);
 
+        mapData[row][col] = 'X';  // Block the tile while bomb is active
         mapGrid.add(bombCell, col, row);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
         delay.setOnFinished(e -> {
             mapGrid.getChildren().remove(bombCell);
+            mapData[row][col] = '.'; // Make walkable again before explosion logic
             explode(row, col);
         });
         delay.play();
     }
+
 
     private void explode(int row, int col) {
         int[][] directions = {
