@@ -10,7 +10,7 @@ public class GameApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/game/views/game_map.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_menu.fxml"));
         Parent root = loader.load();
 
         primaryStage.setTitle("Bomberman | v0.0.1");
