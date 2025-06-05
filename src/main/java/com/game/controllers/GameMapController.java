@@ -3,9 +3,9 @@ package com.game.controllers;
 import java.util.Objects;
 import java.util.Random;
 
+import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 
-import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,7 +15,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
 
 public class GameMapController {
 
@@ -32,6 +31,8 @@ public class GameMapController {
     private Player player;
     private StackPane playerCell;
 
+    private Bomb bomb;
+
     private Image wallImg;
     private Image breakableImg;
     private Image emptyImg;
@@ -44,6 +45,8 @@ public class GameMapController {
 
         setupGrid();
         generateMap();
+
+        bomb = new Bomb(mapGrid, mapData, tiles, emptyImg);
 
         // Load player image and create pixelated canvas icon
         Image playerImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player.png")));
@@ -134,7 +137,7 @@ public class GameMapController {
             case A, LEFT -> dCol = -1;
             case D, RIGHT -> dCol = 1;
             case SPACE -> {
-                placeBomb(player.getRow(), player.getCol());
+                bomb.place(player.getRow(), player.getCol());
                 return;
             }
             default -> {
@@ -155,58 +158,5 @@ public class GameMapController {
 
     private boolean isWalkable(int row, int col) {
         return mapData[row][col] == '.';
-    }
-
-    private void placeBomb(int row, int col) {
-        Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
-
-        StackPane bombCell = createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE);
-        mapGrid.add(bombCell, col, row);
-
-        PauseTransition delay = new PauseTransition(Duration.seconds(2));
-        delay.setOnFinished(e -> {
-            mapGrid.getChildren().remove(bombCell);
-            explode(row, col);
-        });
-        delay.play();
-    }
-
-    private void explode(int row, int col) {
-        int[][] directions = {
-                {0, 0},  // center
-                {-1, 0}, {1, 0}, {0, -1}, {0, 1}  // up, down, left, right
-        };
-
-        for (int[] dir : directions) {
-            int r = row + dir[0];
-            int c = col + dir[1];
-
-            if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
-                if (mapData[r][c] == 'B') {
-                    mapData[r][c] = '.';
-                    // Update tile texture to empty
-                    StackPane oldTile = tiles[r][c];
-                    mapGrid.getChildren().remove(oldTile);
-
-                    StackPane newTile = createTexturedTile(emptyImg);
-                    tiles[r][c] = newTile;
-                    mapGrid.add(newTile, c, r);
-                }
-
-                StackPane explosionPane = new StackPane();
-                Canvas explosionCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
-                explosionCanvas.setOpacity(0.5);
-                explosionCanvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.YELLOW);
-                explosionCanvas.getGraphicsContext2D().fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-                explosionPane.getChildren().add(explosionCanvas);
-                explosionPane.setPrefSize(TILE_SIZE, TILE_SIZE);
-
-                mapGrid.add(explosionPane, c, r);
-
-                PauseTransition clear = new PauseTransition(Duration.seconds(0.4));
-                clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
-                clear.play();
-            }
-        }
     }
 }
