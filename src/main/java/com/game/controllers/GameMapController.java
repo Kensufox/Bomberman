@@ -22,8 +22,8 @@ public class GameMapController {
 
     private InputHandler inputHandler;
 
-    private Player player;
-    private StackPane playerCell;
+    private Player player1, player2;
+    private StackPane player1Cell, player2Cell;
 
     private Bomb bomb;
 
@@ -38,11 +38,14 @@ public class GameMapController {
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg());
             
         Image playerImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player.png")));
-        playerCell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
-            
-        player = new Player(1, 1);
-        mapGrid.add(playerCell, player.getCol(), player.getRow());
-            
+        player1Cell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
+        player2Cell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
+
+        player1 = new Player(1, 1);
+        player2 = new Player(11, 13);
+        mapGrid.add(player1Cell, player1.getCol(), player1.getRow());
+        mapGrid.add(player2Cell, player2.getCol(), player2.getRow());
+
         mapGrid.setFocusTraversable(true);
         mapGrid.setOnKeyPressed(this::handleKeyPress);
 
@@ -52,7 +55,7 @@ public class GameMapController {
         KeyCode keyPressed = event.getCode();
         int dRow = 0, dCol = 0;
 
-        // Custom keys (Player 1)
+        // Custom keys (Player 1 & Player 2)
         if (keyPressed == inputHandler.getJ1Up()) {
             dRow = -1;
         } else if (keyPressed == inputHandler.getJ1Down()) {
@@ -62,8 +65,18 @@ public class GameMapController {
         } else if (keyPressed == inputHandler.getJ1Right()) {
             dCol = 1;
         } else if (keyPressed == inputHandler.getJ1Bomb()) {
-            bomb.place(player.getRow(), player.getCol());
+            bomb.place(player1.getRow(), player1.getCol());
             return;
+        } else if (keyPressed == inputHandler.getJ2Up()) {
+            dRow = -1;
+        } else if (keyPressed == inputHandler.getJ2Down()) {
+            dRow = 1;
+        } else if (keyPressed == inputHandler.getJ2Left()) {
+            dCol = -1;
+        } else if (keyPressed == inputHandler.getJ2Right()) {
+            dCol = 1;
+        } else if (keyPressed == inputHandler.getJ2Bomb()) {
+            bomb.place(player2.getRow(), player2.getCol());
         }
 
         // No recognized movement
@@ -71,14 +84,14 @@ public class GameMapController {
             return;
         }
 
-        int newRow = player.getRow() + dRow;
-        int newCol = player.getCol() + dCol;
+        int newRow = player1.getRow() + dRow;
+        int newCol = player1.getCol() + dCol;
 
         if (isWalkable(newRow, newCol)) {
-            player.move(dRow, dCol);
+            player1.move(dRow, dCol);
             // Move playerCell in the grid
-            GridPane.setRowIndex(playerCell, player.getRow());
-            GridPane.setColumnIndex(playerCell, player.getCol());
+            GridPane.setRowIndex(player1Cell, player1.getRow());
+            GridPane.setColumnIndex(player1Cell, player1.getCol());
         }
     }
 
