@@ -18,14 +18,26 @@ public class ResourceLoader {
         return pane;
     }
 
-    public static StackPane createPixelatedImageNode(Image img, double width, double height) {
-        Canvas canvas = new Canvas(width, height);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setImageSmoothing(false);
-        gc.drawImage(img, 0, 0, img.getWidth(), img.getHeight(),
-                     0, 0, width, height);
-        StackPane pane = new StackPane(canvas);
-        pane.setPrefSize(width, height);
-        return pane;
-    }
+public static StackPane createPixelatedImageNode(Image img, double width, double height, int xOffset, int yOffset) {
+    double canvasWidth = width + Math.abs(xOffset);
+    double canvasHeight = height + Math.abs(yOffset);
+
+    Canvas canvas = new Canvas(canvasWidth, canvasHeight);
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    gc.setImageSmoothing(false);
+
+    // Compute where to draw the image on the canvas
+    double drawX = xOffset >= 0 ? xOffset : 0;
+    double drawY = yOffset >= 0 ? yOffset : 0;
+
+    gc.drawImage(
+        img,
+        0, 0, img.getWidth(), img.getHeight(),  // source image
+        drawX - xOffset, drawY - yOffset, width, height  // destination
+    );
+
+    StackPane pane = new StackPane(canvas);
+    pane.setPrefSize(canvasWidth, canvasHeight);
+    return pane;
+}
 }

@@ -48,8 +48,8 @@ public class GameMapController {
 
         Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player1.png")));
         Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player2.png")));
-        player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), gameMap.getTileSize()*1.75);
-        player2Cell = ResourceLoader.createPixelatedImageNode(player2Img, gameMap.getTileSize(), gameMap.getTileSize()*1.75);
+        player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), (gameMap.getTileSize()*1.75), 0, 15);
+        player2Cell = ResourceLoader.createPixelatedImageNode(player2Img, gameMap.getTileSize(), (gameMap.getTileSize()*1.75), 0, 15);
         player1Cell.toFront();
         player2Cell.toFront();
 
@@ -59,7 +59,7 @@ public class GameMapController {
         mapGrid.add(player2Cell, player2.getCol(), player2.getRow());
 
         Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/power-up.png"))); 
-        powerUpCell = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize());
+        powerUpCell = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
         powerUp = new PowerUp(2, 1);
         mapGrid.add(powerUpCell, powerUp.getCol(), powerUp.getRow());
 
