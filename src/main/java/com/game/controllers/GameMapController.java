@@ -1,20 +1,20 @@
 package com.game.controllers;
 
+import java.util.Objects;
+
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.map.GameMap;
 import com.game.utils.InputHandler;
-
 import com.game.utils.ResourceLoader;
+
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-
-import java.util.Objects;
 
 public class GameMapController {
 
@@ -114,7 +114,7 @@ public class GameMapController {
             GridPane.setColumnIndex(player1Cell, player1.getCol());
             checkPowerUpCollision(player1, player1Cell);
         }
-        
+
         if (isWalkable(newRowJ2, newColJ2)) {
             player2.move(dRowJ2, dColJ2);
             GridPane.setRowIndex(player2Cell, player2.getRow());
