@@ -5,10 +5,12 @@ import java.util.Random;
 
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
+import com.game.utils.InputHandler;
 import com.game.utils.ResourceLoader;
 
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -19,6 +21,8 @@ public class GameMapController {
 
     @FXML
     private GridPane mapGrid;
+
+    private InputHandler inputHandler;
 
     private final int TILE_SIZE = 40;
     private final int ROWS = 13;
@@ -41,6 +45,8 @@ public class GameMapController {
         wallImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/inf_wall.png")));
         breakableImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/weak_wall.png")));
         emptyImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/empty.png")));
+
+        this.inputHandler = new InputHandler();
 
         setupGrid();
         generateMap();
@@ -105,20 +111,26 @@ public class GameMapController {
     }
 
     private void handleKeyPress(KeyEvent event) {
+        KeyCode keyPressed = event.getCode();
         int dRow = 0, dCol = 0;
 
-        switch (event.getCode()) {
-            case W, UP -> dRow = -1;
-            case S, DOWN -> dRow = 1;
-            case A, LEFT -> dCol = -1;
-            case D, RIGHT -> dCol = 1;
-            case SPACE -> {
-                bomb.place(player.getRow(), player.getCol());
-                return;
-            }
-            default -> {
-                return;
-            }
+        // Touches personnalisées (Joueur 1)
+        if (keyPressed == inputHandler.getJ1Up()) {
+            dRow = -1;
+        } else if (keyPressed == inputHandler.getJ1Down()) {
+            dRow = 1;
+        } else if (keyPressed == inputHandler.getJ1Left()) {
+            dCol = -1;
+        } else if (keyPressed == inputHandler.getJ1Right()) {
+            dCol = 1;
+        } else if (keyPressed == inputHandler.getJ1Bomb()) {
+            bomb.place(player.getRow(), player.getCol());
+            return;
+        }
+
+        // Aucun mouvement reconnu
+        else {
+            return;
         }
 
         int newRow = player.getRow() + dRow;
