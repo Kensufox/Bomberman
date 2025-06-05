@@ -122,4 +122,20 @@ public class InputHandler {
     public KeyCode getJ1Up() {
         return j1Up;
     }
+
+    public void printConfiguration() {
+        System.out.println("=== Configuration des contrôles ===");
+        System.out.println("Joueur 1:");
+        System.out.println("  Haut: " + getJ1Up());
+        System.out.println("  Bas: " + getJ1Down());
+        System.out.println("  Gauche: " + getJ1Left());
+        System.out.println("  Droite: " + getJ1Right());
+        System.out.println("  Bombe: " + getJ1Bomb());
+        System.out.println("Joueur 2:");
+        System.out.println("  Haut: " + getJ2Up());
+        System.out.println("  Bas: " + getJ2Down());
+        System.out.println("  Gauche: " + getJ2Left());
+        System.out.println("  Droite: " + getJ2Right());
+        System.out.println("  Bombe: " + getJ2Bomb());
+    }
 }

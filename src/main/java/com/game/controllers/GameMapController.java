@@ -34,6 +34,8 @@ public class GameMapController {
         this.gameMap = new GameMap();
             
         gameMap.setupMap(mapGrid);
+
+        inputHandler.printConfiguration();
             
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg());
             
@@ -53,28 +55,29 @@ public class GameMapController {
 
     private void handleKeyPress(KeyEvent event) {
         KeyCode keyPressed = event.getCode();
-        int dRow = 0, dCol = 0;
+        int dRowJ1 = 0, dColJ1 = 0;
+        int dRowJ2 = 0, dColJ2 = 0;
 
         // Custom keys (Player 1 & Player 2)
         if (keyPressed == inputHandler.getJ1Up()) {
-            dRow = -1;
+            dRowJ1 = -1;
         } else if (keyPressed == inputHandler.getJ1Down()) {
-            dRow = 1;
+            dRowJ1 = 1;
         } else if (keyPressed == inputHandler.getJ1Left()) {
-            dCol = -1;
+            dColJ1 = -1;
         } else if (keyPressed == inputHandler.getJ1Right()) {
-            dCol = 1;
+            dColJ1 = 1;
         } else if (keyPressed == inputHandler.getJ1Bomb()) {
             bomb.place(player1.getRow(), player1.getCol());
             return;
         } else if (keyPressed == inputHandler.getJ2Up()) {
-            dRow = -1;
+            dRowJ2 = -1;
         } else if (keyPressed == inputHandler.getJ2Down()) {
-            dRow = 1;
+            dRowJ2 = 1;
         } else if (keyPressed == inputHandler.getJ2Left()) {
-            dCol = -1;
+            dColJ2 = -1;
         } else if (keyPressed == inputHandler.getJ2Right()) {
-            dCol = 1;
+            dColJ2 = 1;
         } else if (keyPressed == inputHandler.getJ2Bomb()) {
             bomb.place(player2.getRow(), player2.getCol());
         }
@@ -84,14 +87,22 @@ public class GameMapController {
             return;
         }
 
-        int newRow = player1.getRow() + dRow;
-        int newCol = player1.getCol() + dCol;
+        int newRowJ1 = player1.getRow() + dRowJ1;
+        int newColJ1 = player1.getCol() + dColJ1;
+        int newRowJ2 = player2.getRow() + dRowJ2;
+        int newColJ2 = player2.getCol() + dColJ2;
 
-        if (isWalkable(newRow, newCol)) {
-            player1.move(dRow, dCol);
+        if (isWalkable(newRowJ1, newColJ1)) {
+            player1.move(dRowJ1, dColJ1);
             // Move playerCell in the grid
             GridPane.setRowIndex(player1Cell, player1.getRow());
             GridPane.setColumnIndex(player1Cell, player1.getCol());
+
+        }
+        if (isWalkable(newRowJ2, newColJ2)) {
+            player2.move(dRowJ2, dColJ2);
+            GridPane.setRowIndex(player2Cell, player2.getRow());
+            GridPane.setColumnIndex(player2Cell, player2.getCol());
         }
     }
 
