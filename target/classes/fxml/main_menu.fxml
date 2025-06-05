@@ -3,13 +3,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.game.controllers.MenuController">
+    <ImageView fitWidth="600">
+        <image>
+            <Image url="/images/BombermanMenu.jpg" />
+        </image>
+    </ImageView>
     <GridPane fx:id="menuGrid"
               AnchorPane.topAnchor="0"
               AnchorPane.leftAnchor="0"
               hgap="0" vgap="0">
-        <Label text="Bomberman" GridPane.rowIndex="0" />
         <Button fx:id="jouer" onAction="#jouer" text="Jouer" GridPane.rowIndex="1" />
         <Button fx:id="options" onAction="#optionsMenu" text="Options" GridPane.rowIndex="2" />
         <Button fx:id="quitter" onAction="#exit" text="Quitter" GridPane.rowIndex="3" />
