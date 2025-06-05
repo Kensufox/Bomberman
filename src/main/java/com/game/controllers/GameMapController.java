@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
+import com.game.models.entities.PowerUp;
 import com.game.models.map.GameMap;
 import com.game.utils.InputHandler;
 import com.game.utils.ResourceLoader;
@@ -25,6 +26,9 @@ public class GameMapController {
     private Player player1, player2;
     private StackPane player1Cell, player2Cell;
 
+    private PowerUp powerUp;
+    private StackPane powerUpCell;
+
     private Bomb bomb;
 
     private GameMap gameMap;
@@ -42,11 +46,18 @@ public class GameMapController {
         Image playerImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player.png")));
         player1Cell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
         player2Cell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
+        player1Cell.toFront();
+        player2Cell.toFront();
 
         player1 = new Player(1, 1);
         player2 = new Player(11, 13);
         mapGrid.add(player1Cell, player1.getCol(), player1.getRow());
         mapGrid.add(player2Cell, player2.getCol(), player2.getRow());
+
+        Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/power-up.png"))); 
+        powerUpCell = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize());
+        powerUp = new PowerUp(2, 1);
+        mapGrid.add(powerUpCell, powerUp.getCol(), powerUp.getRow());
 
         mapGrid.setFocusTraversable(true);
         mapGrid.setOnKeyPressed(this::handleKeyPress);
@@ -61,30 +72,36 @@ public class GameMapController {
         // Custom keys (Player 1 & Player 2)
         if (keyPressed == inputHandler.getJ1Up()) {
             dRowJ1 = -1;
+            player1Cell.toFront();
         } else if (keyPressed == inputHandler.getJ1Down()) {
             dRowJ1 = 1;
+            player1Cell.toFront();
         } else if (keyPressed == inputHandler.getJ1Left()) {
             dColJ1 = -1;
+            player1Cell.toFront();
         } else if (keyPressed == inputHandler.getJ1Right()) {
             dColJ1 = 1;
+            player1Cell.toFront();
         } else if (keyPressed == inputHandler.getJ1Bomb()) {
             bomb.place(player1.getRow(), player1.getCol());
-            return;
-        } else if (keyPressed == inputHandler.getJ2Up()) {
+            player1Cell.toFront();
+        }
+        
+        if (keyPressed == inputHandler.getJ2Up()) {
             dRowJ2 = -1;
+            player2Cell.toFront();
         } else if (keyPressed == inputHandler.getJ2Down()) {
             dRowJ2 = 1;
+            player2Cell.toFront();
         } else if (keyPressed == inputHandler.getJ2Left()) {
             dColJ2 = -1;
+            player2Cell.toFront();
         } else if (keyPressed == inputHandler.getJ2Right()) {
             dColJ2 = 1;
+            player2Cell.toFront();
         } else if (keyPressed == inputHandler.getJ2Bomb()) {
             bomb.place(player2.getRow(), player2.getCol());
-        }
-
-        // No recognized movement
-        else {
-            return;
+            player2Cell.toFront();
         }
 
         int newRowJ1 = player1.getRow() + dRowJ1;
@@ -104,6 +121,9 @@ public class GameMapController {
             GridPane.setRowIndex(player2Cell, player2.getRow());
             GridPane.setColumnIndex(player2Cell, player2.getCol());
         }
+
+        player1Cell.toFront();
+        player2Cell.toFront();
     }
 
     private boolean isWalkable(int row, int col) {
