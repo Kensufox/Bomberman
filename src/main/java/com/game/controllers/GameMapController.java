@@ -15,8 +15,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class GameMapController {
@@ -29,36 +27,34 @@ public class GameMapController {
     private final int COLS = 15;
 
     private final char[][] mapData = new char[ROWS][COLS]; // W = wall, B = breakable, . = empty
-    private final Rectangle[][] tiles = new Rectangle[ROWS][COLS];
+    private final StackPane[][] tiles = new StackPane[ROWS][COLS];
 
     private Player player;
     private StackPane playerCell;
 
+    private Image wallImg;
+    private Image breakableImg;
+    private Image emptyImg;
+
     public void initialize() {
+        // Load tile textures
+        wallImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/inf_wall.png")));
+        breakableImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/weak_wall.png")));
+        emptyImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/empty.png")));
+
         setupGrid();
         generateMap();
 
-        // Load player image
+        // Load player image and create pixelated canvas icon
         Image playerImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player.png")));
-
-        // Create a canvas for the player icon sized to TILE_SIZE x TILE_SIZE
-        Canvas playerCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
-        GraphicsContext gc = playerCanvas.getGraphicsContext2D();
-        gc.setImageSmoothing(false); // nearest neighbor scaling
-        gc.drawImage(playerImg, 0, 0, playerImg.getWidth(), playerImg.getHeight(),
-                     0, 0, TILE_SIZE, TILE_SIZE);
+        playerCell = createPixelatedImageNode(playerImg, TILE_SIZE, TILE_SIZE);
 
         player = new Player(1, 1);
-
-        // Use a StackPane to hold the canvas and place in the grid
-        playerCell = new StackPane(playerCanvas);
-        playerCell.setPrefSize(TILE_SIZE, TILE_SIZE);
         mapGrid.add(playerCell, player.getCol(), player.getRow());
 
         mapGrid.setFocusTraversable(true);
         mapGrid.setOnKeyPressed(this::handleKeyPress);
     }
-
 
     private void setupGrid() {
         mapGrid.setHgap(0);
@@ -79,31 +75,52 @@ public class GameMapController {
         }
     }
 
+    private StackPane createTexturedTile(Image texture) {
+        Canvas canvas = new Canvas(TILE_SIZE, TILE_SIZE);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setImageSmoothing(false);
+        gc.drawImage(texture, 0, 0, texture.getWidth(), texture.getHeight(),
+                     0, 0, TILE_SIZE, TILE_SIZE);
+
+        StackPane pane = new StackPane(canvas);
+        pane.setPrefSize(TILE_SIZE, TILE_SIZE);
+        return pane;
+    }
+
+    private StackPane createPixelatedImageNode(Image img, double width, double height) {
+        Canvas canvas = new Canvas(width, height);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setImageSmoothing(false);
+        gc.drawImage(img, 0, 0, img.getWidth(), img.getHeight(),
+                     0, 0, width, height);
+        StackPane pane = new StackPane(canvas);
+        pane.setPrefSize(width, height);
+        return pane;
+    }
+
     private void generateMap() {
         Random random = new Random();
 
+        mapGrid.getChildren().clear();  // Clear all children before adding tiles
+
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                Rectangle tile = new Rectangle(TILE_SIZE, TILE_SIZE);
-                tile.setStrokeWidth(0); // No border
-                tile.setStroke(null);
-
+                StackPane tilePane;
                 if (row == 0 || row == ROWS - 1 || col == 0 || col == COLS - 1 || (row % 2 == 0 && col % 2 == 0)) {
-                    tile.setFill(Color.DARKGRAY); // Solid wall
                     mapData[row][col] = 'W';
+                    tilePane = createTexturedTile(wallImg);
                 } else if ((row <= 2 && col <= 2)) {
-                    tile.setFill(Color.BEIGE); // Spawn area
                     mapData[row][col] = '.';
+                    tilePane = createTexturedTile(emptyImg);
                 } else if (random.nextDouble() < 0.4) {
-                    tile.setFill(Color.ORANGE); // Breakable wall
                     mapData[row][col] = 'B';
+                    tilePane = createTexturedTile(breakableImg);
                 } else {
-                    tile.setFill(Color.BEIGE); // Empty
                     mapData[row][col] = '.';
+                    tilePane = createTexturedTile(emptyImg);
                 }
-
-                tiles[row][col] = tile;
-                mapGrid.add(tile, col, row);
+                tiles[row][col] = tilePane;
+                mapGrid.add(tilePane, col, row);
             }
         }
     }
@@ -130,6 +147,7 @@ public class GameMapController {
 
         if (isWalkable(newRow, newCol)) {
             player.move(dRow, dCol);
+            // Move playerCell in the grid
             GridPane.setRowIndex(playerCell, player.getRow());
             GridPane.setColumnIndex(playerCell, player.getCol());
         }
@@ -142,19 +160,7 @@ public class GameMapController {
     private void placeBomb(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
 
-        // Create canvas with tile size
-        Canvas canvas = new Canvas(TILE_SIZE, TILE_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        // Disable smoothing for nearest neighbor effect
-        gc.setImageSmoothing(false);
-
-        // Draw bomb image scaled to TILE_SIZE x TILE_SIZE
-        gc.drawImage(bombImg, 0, 0, bombImg.getWidth(), bombImg.getHeight(), 
-                     0, 0, TILE_SIZE, TILE_SIZE);
-
-        StackPane bombCell = new StackPane(canvas);
-        bombCell.setPrefSize(TILE_SIZE, TILE_SIZE);
+        StackPane bombCell = createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE);
         mapGrid.add(bombCell, col, row);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
@@ -178,13 +184,23 @@ public class GameMapController {
             if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
                 if (mapData[r][c] == 'B') {
                     mapData[r][c] = '.';
-                    tiles[r][c].setFill(Color.BEIGE);
+                    // Update tile texture to empty
+                    StackPane oldTile = tiles[r][c];
+                    mapGrid.getChildren().remove(oldTile);
+
+                    StackPane newTile = createTexturedTile(emptyImg);
+                    tiles[r][c] = newTile;
+                    mapGrid.add(newTile, c, r);
                 }
 
-                Rectangle explosion = new Rectangle(TILE_SIZE, TILE_SIZE, Color.YELLOW);
-                explosion.setOpacity(0.5);
-                StackPane explosionPane = new StackPane(explosion);
+                StackPane explosionPane = new StackPane();
+                Canvas explosionCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
+                explosionCanvas.setOpacity(0.5);
+                explosionCanvas.getGraphicsContext2D().setFill(javafx.scene.paint.Color.YELLOW);
+                explosionCanvas.getGraphicsContext2D().fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+                explosionPane.getChildren().add(explosionCanvas);
                 explosionPane.setPrefSize(TILE_SIZE, TILE_SIZE);
+
                 mapGrid.add(explosionPane, c, r);
 
                 PauseTransition clear = new PauseTransition(Duration.seconds(0.4));
