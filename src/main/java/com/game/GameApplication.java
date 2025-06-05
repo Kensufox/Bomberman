@@ -1,24 +1,24 @@
 package com.game;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class GameApplication extends Application {
 
     @Override
-    public void start(Stage stage) {
-        Label label = new Label("Hello JavaFX!");
-        StackPane root = new StackPane(label);
-        Scene scene = new Scene(root, 960, 720);
-        stage.setScene(scene);
-        stage.setTitle("Bomberman");
-        stage.show();
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/game/views/game_map.fxml"));
+        Parent root = loader.load();
+
+        primaryStage.setTitle("Bomberman");
+        primaryStage.setScene(new Scene(root, 600, 520));
+        primaryStage.show();
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }
