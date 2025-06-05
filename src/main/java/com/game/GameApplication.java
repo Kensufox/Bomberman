@@ -7,13 +7,14 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class GameApplication extends Application {
+
     @Override
     public void start(Stage stage) {
-        Label label = new Label("Bonjour JavaFX !");
+        Label label = new Label("Hello JavaFX!");
         StackPane root = new StackPane(label);
-        Scene scene = new Scene(root, 400, 300);
+        Scene scene = new Scene(root, 960, 720);
         stage.setScene(scene);
-        stage.setTitle("Hello JavaFX");
+        stage.setTitle("Bomberman");
         stage.show();
     }
 
