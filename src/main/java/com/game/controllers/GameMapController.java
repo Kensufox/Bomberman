@@ -5,10 +5,9 @@ import java.util.Random;
 
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
+import com.game.utils.ResourceLoader;
 
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -50,7 +49,7 @@ public class GameMapController {
 
         // Load player image and create pixelated canvas icon
         Image playerImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player.png")));
-        playerCell = createPixelatedImageNode(playerImg, TILE_SIZE, TILE_SIZE);
+        playerCell = ResourceLoader.createPixelatedImageNode(playerImg, TILE_SIZE, TILE_SIZE);
 
         player = new Player(1, 1);
         mapGrid.add(playerCell, player.getCol(), player.getRow());
@@ -78,29 +77,6 @@ public class GameMapController {
         }
     }
 
-    private StackPane createTexturedTile(Image texture) {
-        Canvas canvas = new Canvas(TILE_SIZE, TILE_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setImageSmoothing(false);
-        gc.drawImage(texture, 0, 0, texture.getWidth(), texture.getHeight(),
-                     0, 0, TILE_SIZE, TILE_SIZE);
-
-        StackPane pane = new StackPane(canvas);
-        pane.setPrefSize(TILE_SIZE, TILE_SIZE);
-        return pane;
-    }
-
-    private StackPane createPixelatedImageNode(Image img, double width, double height) {
-        Canvas canvas = new Canvas(width, height);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setImageSmoothing(false);
-        gc.drawImage(img, 0, 0, img.getWidth(), img.getHeight(),
-                     0, 0, width, height);
-        StackPane pane = new StackPane(canvas);
-        pane.setPrefSize(width, height);
-        return pane;
-    }
-
     private void generateMap() {
         Random random = new Random();
 
@@ -111,16 +87,16 @@ public class GameMapController {
                 StackPane tilePane;
                 if (row == 0 || row == ROWS - 1 || col == 0 || col == COLS - 1 || (row % 2 == 0 && col % 2 == 0)) {
                     mapData[row][col] = 'W';
-                    tilePane = createTexturedTile(wallImg);
+                    tilePane = ResourceLoader.createTexturedTile(wallImg, TILE_SIZE);
                 } else if ((row <= 2 && col <= 2)) {
                     mapData[row][col] = '.';
-                    tilePane = createTexturedTile(emptyImg);
+                    tilePane = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
                 } else if (random.nextDouble() < 0.4) {
                     mapData[row][col] = 'B';
-                    tilePane = createTexturedTile(breakableImg);
+                    tilePane = ResourceLoader.createTexturedTile(breakableImg, TILE_SIZE);
                 } else {
                     mapData[row][col] = '.';
-                    tilePane = createTexturedTile(emptyImg);
+                    tilePane = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
                 }
                 tiles[row][col] = tilePane;
                 mapGrid.add(tilePane, col, row);

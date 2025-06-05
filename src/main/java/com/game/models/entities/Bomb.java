@@ -2,6 +2,8 @@ package com.game.models.entities;
 
 import java.util.Objects;
 
+import com.game.utils.ResourceLoader;
+
 import javafx.animation.PauseTransition;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,7 +29,8 @@ public class Bomb {
 
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
-        StackPane bombCell = createPixelatedImageNode(bombImg);
+
+        StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE);
 
         mapGrid.add(bombCell, col, row);
 
@@ -54,7 +57,8 @@ public class Bomb {
                     StackPane oldTile = tiles[r][c];
                     mapGrid.getChildren().remove(oldTile);
 
-                    StackPane newTile = createTexturedTile(emptyImg);
+                    
+                    StackPane newTile = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
                     tiles[r][c] = newTile;
                     mapGrid.add(newTile, c, r);
                 }
@@ -75,21 +79,5 @@ public class Bomb {
                 clear.play();
             }
         }
-    }
-
-    private StackPane createTexturedTile(Image texture) {
-        Canvas canvas = new Canvas(TILE_SIZE, TILE_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setImageSmoothing(false);
-        gc.drawImage(texture, 0, 0, texture.getWidth(), texture.getHeight(), 0, 0, TILE_SIZE, TILE_SIZE);
-        return new StackPane(canvas);
-    }
-
-    private StackPane createPixelatedImageNode(Image img) {
-        Canvas canvas = new Canvas(TILE_SIZE, TILE_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setImageSmoothing(false);
-        gc.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), 0, 0, TILE_SIZE, TILE_SIZE);
-        return new StackPane(canvas);
     }
 }
