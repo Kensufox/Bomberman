@@ -39,7 +39,7 @@ public class GameMapController {
 
         gameMap.setupMap(mapGrid);
 
-        inputHandler.printConfiguration();
+        //inputHandler.printConfiguration();
 
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg());
 
