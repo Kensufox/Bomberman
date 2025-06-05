@@ -62,7 +62,7 @@ public class GameMap {
                 if (row == 0 || row == ROWS - 1 || col == 0 || col == COLS - 1 || (row % 2 == 0 && col % 2 == 0)) {
                     mapData[row][col] = 'W';
                     tilePane = ResourceLoader.createTexturedTile(wallImg, TILE_SIZE);
-                } else if ((row <= 2 && col <= 2) || row >= 12 && col >= 12) {
+                } else if ((row <= 2 && col <= 2) || row >= ROWS-3 && col >= COLS-3) {
                     mapData[row][col] = '.';
                     tilePane = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
                 } else if (random.nextDouble() < 0.4) {
