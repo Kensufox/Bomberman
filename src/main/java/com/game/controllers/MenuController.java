@@ -1,12 +1,10 @@
 package com.game.controllers;
 
-import com.game.GameApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
 public class MenuController {
 
@@ -18,7 +16,7 @@ public class MenuController {
     public void jouer(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_map.fxml"));
-            AnchorPane root = loader.load();
+            StackPane root = loader.load();
 
             // Retrieves the current scene from one of the buttons
             Button sourceButton = (Button) event.getSource();
