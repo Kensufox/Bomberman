@@ -13,7 +13,7 @@ public class GameApplication extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/game/views/game_map.fxml"));
         Parent root = loader.load();
 
-        primaryStage.setTitle("Bomberman");
+        primaryStage.setTitle("Bomberman | v0.0.1");
         primaryStage.setScene(new Scene(root, 600, 520));
         primaryStage.show();
     }
