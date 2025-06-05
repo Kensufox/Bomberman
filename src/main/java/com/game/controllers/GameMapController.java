@@ -46,9 +46,10 @@ public class GameMapController {
 
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg());
 
-        Image playerImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player.png")));
-        player1Cell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
-        player2Cell = ResourceLoader.createPixelatedImageNode(playerImg, gameMap.getTileSize(), gameMap.getTileSize());
+        Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player1.png")));
+        Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player2.png")));
+        player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), gameMap.getTileSize()*1.75);
+        player2Cell = ResourceLoader.createPixelatedImageNode(player2Img, gameMap.getTileSize(), gameMap.getTileSize()*1.75);
         player1Cell.toFront();
         player2Cell.toFront();
 
