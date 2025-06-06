@@ -29,7 +29,7 @@ public class Bomb {
 
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
-        StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE);
+        StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
         mapData[row][col] = 'X';  // Block the tile while bomb is active
         mapGrid.add(bombCell, col, row);
