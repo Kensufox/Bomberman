@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.game.controllers.MenuController"
+            stylesheets="/style.css" styleClass="choose-game-pane">
+
+    <VBox spacing="20" alignment="CENTER">
+
+        <!-- Buttons Grid -->
+        <Button fx:id="btnClassic" text="Classic"  onAction="#classicGame" styleClass="choose-game-button"/>
+        <Button fx:id="btnCaptureTheFlag" text="Capture the Flag" styleClass="choose-game-button"/>
+        <Button fx:id="btnContreLOrdi" text="Contre l'ordinateur" styleClass="choose-game-button"/>
+        <Button fx:id="btnRetourMenu" text="Retour" onAction="#retourMenu" styleClass="choose-game-button"/>
+
+    </VBox>
+</StackPane >

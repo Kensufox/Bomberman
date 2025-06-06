@@ -1,0 +1,248 @@
+    /* MAIN MENU */
+
+/* Style pour le conteneur VBox */
+VBox {
+    -fx-spacing: 25px;
+    -fx-alignment: center;
+}
+
+/* Style pour la grille de menu */
+#menuGrid {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-background-radius: 20px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 15, 0.6, 3, 3);
+}
+
+/* Style des boutons du menu principal */
+.menu-button {
+    /* Taille et espacement */
+    -fx-min-width: 300px;
+    -fx-min-height: 60px;
+    -fx-max-width: 300px;
+    -fx-pref-height: 60px;
+
+    /* Police rétro avec icônes */
+    -fx-font-family: "Courier New", "Consolas", "Monaco", monospace;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-alignment: center-left;
+    -fx-content-display: left;
+    -fx-graphic-text-gap: 15px;
+
+    /* Couleur de base - bleu électrique rétro */
+    -fx-background-color:
+            linear-gradient(to bottom, #0066ff 0%, #0044cc 50%, #002299 100%),
+            linear-gradient(to right, #3388ff, #0066ff);
+
+    /* Bordures pixelisées avec effet néon */
+    -fx-border-color: #66aaff, #001166, #001166, #66aaff;
+    -fx-border-width: 4px, 2px, 4px, 2px;
+    -fx-border-style: solid;
+    -fx-border-insets: 0, 4, 4, 4;
+
+    /* Coins légèrement arrondis */
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+
+    /* Effet néon subtil */
+    -fx-effect: dropshadow(gaussian, rgba(102,170,255,0.4), 8, 0.5, 0, 0),
+    dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.4, 3, 3);
+
+    /* Curseur */
+    -fx-cursor: hand;
+
+    /* Padding interne pour les icônes */
+    -fx-padding: 0 20px 0 25px;
+}
+
+/* Effet de survol pour les boutons du menu */
+.menu-button:hover {
+    -fx-background-color:
+            linear-gradient(to bottom, #3388ff 0%, #0066ff 50%, #0044cc 100%),
+            linear-gradient(to right, #66aaff, #3388ff);
+
+    -fx-border-color: #99ccff, #0044cc, #0044cc, #99ccff;
+    -fx-text-fill: #ccddff;
+
+    /* Effet néon renforcé */
+    -fx-effect: dropshadow(gaussian, rgba(102,170,255,0.8), 12, 0.7, 0, 0),
+    dropshadow(gaussian, rgba(255,255,255,0.3), 6, 0.4, 0, 0),
+    dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.4, 3, 3);
+
+    /* Animation de pulsation */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Effet de clic pour les boutons du menu */
+.menu-button:pressed {
+    -fx-background-color:
+            linear-gradient(to bottom, #002299 0%, #001166 50%, #000044 100%);
+
+    -fx-border-color: #4488cc, #000033, #000033, #4488cc;
+    -fx-text-fill: #aaccff;
+
+    /* Effet enfoncé */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.6), 6, 0.4, 2, 2);
+    -fx-translate-y: 2px;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Style spécifique pour le bouton Jouer (vert) */
+.menu-button#jouer {
+    -fx-background-color:
+            linear-gradient(to bottom, #00cc44 0%, #009933 50%, #006622 100%),
+            linear-gradient(to right, #44dd77, #00cc44);
+
+    -fx-border-color: #77ee99, #003311, #003311, #77ee99;
+
+    -fx-effect: dropshadow(gaussian, rgba(68,221,119,0.4), 8, 0.5, 0, 0),
+    dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.4, 3, 3);
+}
+
+.menu-button#jouer:hover {
+    -fx-background-color:
+            linear-gradient(to bottom, #44dd77 0%, #00cc44 50%, #009933 100%);
+
+    -fx-border-color: #aaffbb, #006622, #006622, #aaffbb;
+
+    -fx-effect: dropshadow(gaussian, rgba(68,221,119,0.8), 12, 0.7, 0, 0),
+    dropshadow(gaussian, rgba(255,255,255,0.3), 6, 0.4, 0, 0),
+    dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.4, 3, 3);
+}
+
+/* Style spécifique pour le bouton Quitter (rouge) */
+.menu-button#quitter {
+    -fx-background-color:
+            linear-gradient(to bottom, #cc3300 0%, #aa2200 50%, #881100 100%),
+            linear-gradient(to right, #ee5544, #cc3300);
+
+    -fx-border-color: #ff7766, #440000, #440000, #ff7766;
+
+    -fx-effect: dropshadow(gaussian, rgba(238,85,68,0.4), 8, 0.5, 0, 0),
+    dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.4, 3, 3);
+}
+
+.menu-button#quitter:hover {
+    -fx-background-color:
+            linear-gradient(to bottom, #ee5544 0%, #cc3300 50%, #aa2200 100%);
+
+    -fx-border-color: #ffaa99, #881100, #881100, #ffaa99;
+
+    -fx-effect: dropshadow(gaussian, rgba(238,85,68,0.8), 12, 0.7, 0, 0),
+    dropshadow(gaussian, rgba(255,255,255,0.3), 6, 0.4, 0, 0),
+    dropshadow(gaussian, rgba(0,0,0,0.6), 8, 0.4, 3, 3);
+}
+
+/* Animation douce pour les transitions du menu */
+.menu-button {
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+        /* CHOOSE GAME MENU */
+
+/* Fond principal avec dégradé rétro */
+.choose-game-pane {
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e, #0f3460);
+    -fx-padding: 40px;
+}
+
+/* Style des boutons avec effet pixelisé */
+.choose-game-button {
+    /* Taille et espacement */
+    -fx-min-width: 280px;
+    -fx-min-height: 50px;
+    -fx-max-width: 280px;
+    -fx-pref-height: 50px;
+
+    /* Police rétro */
+    -fx-font-family: "Courier New", "Consolas", "Monaco", monospace;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+
+    /* Couleur de base - orange/rouge Bomberman */
+    -fx-background-color:
+            linear-gradient(to bottom, #ff6b35 0%, #ff4500 50%, #cc3300 100%),
+            linear-gradient(to right, #ff8c42, #ff6b35);
+
+    /* Bordures pixelisées */
+    -fx-border-color: #ffaa77, #cc2200, #cc2200, #ffaa77;
+    -fx-border-width: 3px, 2px, 3px, 2px;
+    -fx-border-style: solid;
+    -fx-border-insets: 0, 3, 3, 3;
+
+    /* Coins arrondis légers pour un effet rétro */
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+
+    /* Ombre portée */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0.3, 2, 2);
+
+    /* Curseur */
+    -fx-cursor: hand;
+}
+
+/* Effet de survol */
+.choose-game-button:hover {
+    -fx-background-color:
+            linear-gradient(to bottom, #ff8c42 0%, #ff6b35 50%, #e63900 100%),
+            linear-gradient(to right, #ffaa77, #ff8c42);
+
+    -fx-border-color: #ffcc99, #e63900, #e63900, #ffcc99;
+    -fx-text-fill: #ffff99;
+
+    /* Effet de brillance */
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.3), 4, 0.5, 0, 0),
+    dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0.3, 2, 2);
+
+    /* Animation de pulsation */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Effet de clic */
+.choose-game-button:pressed {
+    -fx-background-color:
+            linear-gradient(to bottom, #cc3300 0%, #aa2200 50%, #881100 100%);
+
+    -fx-border-color: #aa5555, #660000, #660000, #aa5555;
+    -fx-text-fill: #ffccaa;
+
+    /* Effet enfoncé */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 4, 0.3, 1, 1);
+    -fx-translate-y: 1px;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Animation douce pour les transitions */
+.choose-game-button {
+    -fx-transition: all 0.15s ease-in-out;
+}
+
+/* Style spécial pour le bouton Retour */
+.choose-game-button#btnRetourMenu {
+    -fx-background-color:
+            linear-gradient(to bottom, #666666 0%, #444444 50%, #222222 100%);
+
+    -fx-border-color: #999999, #111111, #111111, #999999;
+    -fx-text-fill: #cccccc;
+}
+
+.choose-game-button#btnRetourMenu:hover {
+    -fx-background-color:
+            linear-gradient(to bottom, #777777 0%, #555555 50%, #333333 100%);
+
+    -fx-border-color: #aaaaaa, #222222, #222222, #aaaaaa;
+    -fx-text-fill: #ffffff;
+}
+
+/* Style pour le conteneur VBox */
+VBox {
+    -fx-spacing: 25px;
+    -fx-alignment: center;
+}

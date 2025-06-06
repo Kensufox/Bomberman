@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.game.controllers.MenuController">
-    <ImageView fitWidth="600">
+            fx:controller="com.game.controllers.MenuController"
+            prefWidth="600" prefHeight="520"
+            stylesheets="/style.css">
+
+    <!-- Background image -->
+    <ImageView fitWidth="600" fitHeight="520" preserveRatio="false">
         <image>
             <Image url="/images/BombermanMenu.jpg" />
         </image>
     </ImageView>
+
+    <!-- Buttons Grid -->
     <GridPane fx:id="menuGrid"
-              AnchorPane.topAnchor="0"
-              AnchorPane.leftAnchor="0"
-              hgap="0" vgap="0">
-        <Button fx:id="jouer" onAction="#jouer" text="Jouer" GridPane.rowIndex="1" />
-        <Button fx:id="options" onAction="#optionsMenu" text="Options" GridPane.rowIndex="2" />
-        <Button fx:id="quitter" onAction="#exit" text="Quitter" GridPane.rowIndex="3" />
+              layoutX="235"
+              layoutY="240"
+              hgap="10" vgap="20"
+              alignment="CENTER">
+
+        <Button fx:id="jouer" onAction="#jouer" text="▶ Jouer" styleClass="menu-button" GridPane.rowIndex="0"/>
+        <Button fx:id="options" onAction="#optionsMenu" text="⚙ Options" styleClass="menu-button" GridPane.rowIndex="1"/>
+        <Button fx:id="quitter" onAction="#exit" text="✖ Quitter" styleClass="menu-button" GridPane.rowIndex="2"/>
+
     </GridPane>
 </AnchorPane>
