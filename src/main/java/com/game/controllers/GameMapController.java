@@ -57,9 +57,7 @@ public class GameMapController {
         player1 = new Player(1, 1, Player.State.ALIVE);
         player2 = new Player(11, 13, Player.State.ALIVE);
         mapGrid.add(player1Cell, player1.getCol(), player1.getRow());
-        gameMap.getMapData()[player1.getRow()][player1.getCol()] = '1';
         mapGrid.add(player2Cell, player2.getCol(), player2.getRow());
-        gameMap.getMapData()[player2.getRow()][player2.getCol()] = '2';
 
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg(), player1, player2, this);
 
@@ -110,6 +108,9 @@ public class GameMapController {
                 else if (pressedKeys.contains(inputHandler.getJ2Left())) dColJ2 = -1;
                 else if (pressedKeys.contains(inputHandler.getJ2Right())) dColJ2 = 1;
 
+                player1Cell.toFront();
+                player2Cell.toFront();
+
                 if (pressedKeys.contains(inputHandler.getJ1Bomb()))
                     bomb.place(player1.getRow(), player1.getCol());
                 if (pressedKeys.contains(inputHandler.getJ2Bomb()))
@@ -132,20 +133,13 @@ public class GameMapController {
 
     private void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
 
-        if (dRow == 0 && dCol == 0) return;
-
         int oldRow = player.getRow();
         int oldCol = player.getCol();
         int newRow = oldRow + dRow;
         int newCol = oldCol + dCol;
 
-        if (gameMap.getMapData()[newRow][newCol] == 'X') return;
-
         if (isWalkable(newRow, newCol)) {
-            // Clear previous player position in mapData
-            gameMap.getMapData()[oldRow][oldCol] = '.';
             player.move(dRow, dCol);
-            gameMap.getMapData()[player.getRow()][player.getCol()] = player == player1 ? '1' : '2';
 
             // Visually move the player
             GridPane.setRowIndex(cell, player.getRow());
@@ -157,6 +151,7 @@ public class GameMapController {
 
     private boolean isWalkable(int row, int col) {
         char cell = gameMap.getMapData()[row][col];
+        System.out.println(cell);
         return cell == '.' || cell == 'P';
     }
 
