@@ -3,4 +3,5 @@
 .DS_Store
 /target/
 *.class
+target/
 *.class
