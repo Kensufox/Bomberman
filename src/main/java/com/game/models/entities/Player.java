@@ -1,19 +1,24 @@
 package com.game.models.entities;
 
 public class Player {
+    public enum State {
+        ALIVE, DEAD, GHOST
+    }
 
     private int row;
     private int col;
     private PowerUp.Power power;
+    private State state;
     private long powerEndTime = 0;
 
 
     private long lastMoveTime = 0;
     private long moveDelay = 150_000_000; // 150ms
 
-    public Player(int startRow, int startCol) {
+    public Player(int startRow, int startCol, State state) {
         this.row = startRow;
         this.col = startCol;
+        this.state = state;
     }
 
     public int getRow() {
@@ -63,6 +68,14 @@ public class Player {
 
     public long getMoveDelay() {
         return moveDelay;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public void appliPower() {

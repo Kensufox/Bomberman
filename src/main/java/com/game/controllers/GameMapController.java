@@ -26,17 +26,13 @@ public class GameMapController {
 
     @FXML
     private GridPane backgroundGrid;
-
+    
     private InputHandler inputHandler;
-
     private Player player1, player2;
     private StackPane player1Cell, player2Cell;
-
     private PowerUp powerUp;
     private StackPane powerUpCell;
-
     private Bomb bomb;
-
     private GameMap gameMap;
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
@@ -47,8 +43,6 @@ public class GameMapController {
         gameMap.setupBackground(gameMap, backgroundGrid);
         gameMap.setupMap(mapGrid);
 
-        this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg());
-
         Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player1.png")));
         Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player2.png")));
         player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), (gameMap.getTileSize() * 1.75), 0, 15);
@@ -56,10 +50,14 @@ public class GameMapController {
         player1Cell.toFront();
         player2Cell.toFront();
 
-        player1 = new Player(1, 1);
-        player2 = new Player(11, 13);
+        player1 = new Player(1, 1, Player.State.ALIVE);
+        player2 = new Player(11, 13, Player.State.ALIVE);
         mapGrid.add(player1Cell, player1.getCol(), player1.getRow());
+        gameMap.getMapData()[player1.getRow()][player1.getCol()] = '1';
         mapGrid.add(player2Cell, player2.getCol(), player2.getRow());
+        gameMap.getMapData()[player2.getRow()][player2.getCol()] = '2';
+
+        this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg(), player1, player2, this);
 
         Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/power-up.png")));
         powerUpCell = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
@@ -126,25 +124,31 @@ public class GameMapController {
         movementLoop.start();
     }
 
-
     private void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
         if (dRow == 0 && dCol == 0) return;
 
-        int newRow = player.getRow() + dRow;
-        int newCol = player.getCol() + dCol;
+        int oldRow = player.getRow();
+        int oldCol = player.getCol();
+        int newRow = oldRow + dRow;
+        int newCol = oldCol + dCol;
 
         if (isWalkable(newRow, newCol)) {
+            // Clear previous player position in mapData
+            gameMap.getMapData()[oldRow][oldCol] = '.';
             player.move(dRow, dCol);
+            gameMap.getMapData()[player.getRow()][player.getCol()] = player == player1 ? '1' : '2';
+
+            // Visually move the player
             GridPane.setRowIndex(cell, player.getRow());
             GridPane.setColumnIndex(cell, player.getCol());
             checkPowerUpCollision(player);
         }
-
         cell.toFront();
     }
 
     private boolean isWalkable(int row, int col) {
-        return gameMap.getMapData()[row][col] == '.';
+        char cell = gameMap.getMapData()[row][col];
+        return cell == '.' || cell == 'P';
     }
 
     private void checkPowerUpCollision(Player player) {
@@ -158,6 +162,18 @@ public class GameMapController {
             player.setPower(powerUp.getPower(), System.nanoTime(), powerUp.getDuration());
             player.appliPower();
             powerUp = null;
+        }
+    }
+
+    public void killPlayer(Player player) {
+        if (player == player1 && player1.getState() == Player.State.ALIVE) {
+            player1.setState(Player.State.DEAD);
+            mapGrid.getChildren().remove(player1Cell);
+            System.out.println("Player 1 died");
+        } else if (player == player2 && player2.getState() == Player.State.ALIVE) {
+            player2.setState(Player.State.DEAD);
+            mapGrid.getChildren().remove(player2Cell);
+            System.out.println("Player 2 died");
         }
     }
 }

@@ -2,6 +2,7 @@ package com.game.models.entities;
 
 import java.util.Objects;
 
+import com.game.controllers.GameMapController;
 import com.game.utils.ResourceLoader;
 
 import javafx.animation.PauseTransition;
@@ -20,11 +21,18 @@ public class Bomb {
     private final StackPane[][] tiles;
     private final Image emptyImg;
 
-    public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg) {
+    private final Player player1;
+    private final Player player2;
+    private final GameMapController controller;
+    
+    public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg, Player player1, Player player2, GameMapController controller) {
         this.mapGrid = mapGrid;
         this.mapData = mapData;
         this.tiles = tiles;
         this.emptyImg = emptyImg;
+        this.player1 = player1;
+        this.player2 = player2;
+        this.controller = controller;
     }
 
     public void place(int row, int col) {
@@ -43,8 +51,8 @@ public class Bomb {
         delay.play();
     }
 
-
     private void explode(int row, int col) {
+
         int[][] directions = {
                 {0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}
         };
@@ -63,6 +71,13 @@ public class Bomb {
                     StackPane newTile = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
                     tiles[r][c] = newTile;
                     mapGrid.add(newTile, c, r);
+                }
+
+                if (player1 != null && player1.getState() == Player.State.ALIVE && player1.getRow() == r && player1.getCol() == c) {
+                    controller.killPlayer(player1);
+                }
+                if (player2 != null && player2.getState() == Player.State.ALIVE && player2.getRow() == r && player2.getCol() == c) {
+                    controller.killPlayer(player2);
                 }
 
                 StackPane explosionPane = new StackPane();

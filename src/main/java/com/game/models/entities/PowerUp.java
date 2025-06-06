@@ -5,11 +5,11 @@ public class PowerUp {
         SPEED, BOMB_RANGE, EXTRA_BOMB
     }
  
-    private Power power;
-    private int row;
-    private int col;
+    private final Power power;
+    private final int row;
+    private final int col;
     private boolean isCollected;
-    private long duration;
+    private final long duration;
 
     public PowerUp(int startRow, int startCol, Power power, long duration) {
         this.row = startRow;
