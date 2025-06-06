@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import com.game.controllers.GameMapController;
+import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
 
 import javafx.animation.PauseTransition;
@@ -56,7 +57,7 @@ public class Bomb {
     }
 
     public void place(int row, int col) {
-        Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
+        Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/"+ImageLibrary.Bomb)));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
         if (mapData[row][col] == 'X') return;

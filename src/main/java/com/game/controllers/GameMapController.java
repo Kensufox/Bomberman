@@ -12,6 +12,7 @@ import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.map.GameMap;
+import com.game.utils.ImageLibrary;
 import com.game.utils.InputHandler;
 import com.game.utils.ResourceLoader;
 
@@ -65,8 +66,8 @@ public class GameMapController {
         gameMap.setupMap(mapGrid);
 
         // Create player images
-        Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player1.png")));
-        Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player2.png")));
+        Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/"+ImageLibrary.Player1)));
+        Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/"+ImageLibrary.Player2)));
 
         // Create players
         Player player1 = new Player(1, 1, Player.State.ALIVE);
@@ -223,10 +224,10 @@ public class GameMapController {
         // Load appropriate image for the power-up type, e.g.:
         String imgPath;
         imgPath = switch (randomPower) {
-            case SPEED -> "/images/power-up-speed.png";
-            case BOMB_RANGE -> "/images/power-up-range.png";
-            case EXTRA_BOMB -> "/images/power-up-amount.png";
-            default -> "/images/power-up-speed.png";
+            case SPEED -> "/images/"+ImageLibrary.PowerSpeed;
+            case BOMB_RANGE -> "/images/"+ImageLibrary.PowerRange;
+            case EXTRA_BOMB -> "/images/"+ImageLibrary.PowerAmount;
+            default -> "/images/"+ImageLibrary.Power;
         }; // add other cases here
 
         Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imgPath)));
