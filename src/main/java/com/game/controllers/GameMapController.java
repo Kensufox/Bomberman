@@ -94,7 +94,7 @@ public class GameMapController {
         } else if (keyPressed == inputHandler.getJ1Right()) {
             dColJ1 = 1;
         } else if (keyPressed == inputHandler.getJ1Bomb()) {
-            bomb.place(player1.getRow(), player1.getCol());
+            bomb.tryPlaceBomb(player1.getRow(), player1.getCol());
         } else if (keyPressed == inputHandler.getJ2Up()) {
             dRowJ2 = -1;
         } else if (keyPressed == inputHandler.getJ2Down()) {
@@ -104,7 +104,7 @@ public class GameMapController {
         } else if (keyPressed == inputHandler.getJ2Right()) {
             dColJ2 = 1;
         } else if (keyPressed == inputHandler.getJ2Bomb()) {
-            bomb.place(player2.getRow(), player2.getCol());
+            bomb.tryPlaceBomb(player2.getRow(), player2.getCol());
         }
 
         int newRowJ1 = player1.getRow() + dRowJ1;

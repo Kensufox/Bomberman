@@ -15,10 +15,12 @@ import javafx.util.Duration;
 public class Bomb {
 
     private static final int TILE_SIZE = 40;
+    private static final double COOLDOWN_SECONDS = 2.0;
     private final GridPane mapGrid;
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
+    private boolean canPlaceBomb = true;
 
     public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg) {
         this.mapGrid = mapGrid;
@@ -26,6 +28,27 @@ public class Bomb {
         this.tiles = tiles;
         this.emptyImg = emptyImg;
     }
+
+    public void tryPlaceBomb(int row, int col) {
+        if (!canPlaceBomb) {
+            System.out.println("Cooldown actif. Impossible de poser une bombe maintenant.");
+            return;
+        }
+
+        if (mapData[row][col] != '.') {
+            System.out.println("Tu ne peux pas poser une bombe ici.");
+            return;
+        }
+
+        // Lancement du cooldown
+        canPlaceBomb = false;
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(COOLDOWN_SECONDS));
+        cooldown.setOnFinished(e -> canPlaceBomb = true);
+        cooldown.play();
+
+        place(row, col);
+    }
+
 
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
