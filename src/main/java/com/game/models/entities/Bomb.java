@@ -94,20 +94,22 @@ public class Bomb {
                     }
                 }
 
-                StackPane explosionPane = new StackPane();
-                Canvas explosionCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
-                explosionCanvas.setOpacity(0.5);
-                GraphicsContext gc = explosionCanvas.getGraphicsContext2D();
-                gc.setFill(javafx.scene.paint.Color.YELLOW);
-                gc.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-                explosionPane.getChildren().add(explosionCanvas);
-                explosionPane.setPrefSize(TILE_SIZE, TILE_SIZE);
+                if (mapData[r][c] == 'B' || mapData[r][c] == '.'){
+                    StackPane explosionPane = new StackPane();
+                    Canvas explosionCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
+                    explosionCanvas.setOpacity(0.5);
+                    GraphicsContext gc = explosionCanvas.getGraphicsContext2D();
+                    gc.setFill(javafx.scene.paint.Color.YELLOW);
+                    gc.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+                    explosionPane.getChildren().add(explosionCanvas);
+                    explosionPane.setPrefSize(TILE_SIZE, TILE_SIZE);
 
-                mapGrid.add(explosionPane, c, r);
+                    mapGrid.add(explosionPane, c, r);
 
-                PauseTransition clear = new PauseTransition(Duration.seconds(0.4));
-                clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
-                clear.play();
+                    PauseTransition clear = new PauseTransition(Duration.seconds(0.4));
+                    clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
+                    clear.play();
+                }
             }
         }
     }
