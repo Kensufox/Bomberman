@@ -13,7 +13,7 @@
         <Button fx:id="btnClassic" text="Classic"  onAction="#classicGame" styleClass="choose-game-button"/>
         <Button fx:id="btnCaptureTheFlag" text="Capture the Flag" styleClass="choose-game-button"/>
         <Button fx:id="btnContreLOrdi" text="Contre l'ordinateur" styleClass="choose-game-button"/>
-        <Button fx:id="btnRetourMenu" text="Retour" onAction="#retourMenu" styleClass="choose-game-button"/>
+        <Button fx:id="btnRetourMenu" text="Retour" onAction="#retourMenu" styleClass="return-choose-button"/>
 
     </VBox>
 </StackPane >
