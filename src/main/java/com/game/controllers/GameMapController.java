@@ -1,5 +1,6 @@
 package com.game.controllers;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -13,6 +14,9 @@ import com.game.utils.ResourceLoader;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -94,12 +98,14 @@ public class GameMapController {
                 int dRowJ1 = 0, dColJ1 = 0;
                 int dRowJ2 = 0, dColJ2 = 0;
 
-                if (pressedKeys.contains(inputHandler.getJ1Up())) dRowJ1 = -1;
+                if (player1.getState() == Player.State.DEAD) return;
+                else if (pressedKeys.contains(inputHandler.getJ1Up())) dRowJ1 = -1;
                 else if (pressedKeys.contains(inputHandler.getJ1Down())) dRowJ1 = 1;
                 else if (pressedKeys.contains(inputHandler.getJ1Left())) dColJ1 = -1;
                 else if (pressedKeys.contains(inputHandler.getJ1Right())) dColJ1 = 1;
 
-                if (pressedKeys.contains(inputHandler.getJ2Up())) dRowJ2 = -1;
+                if (player2.getState() == Player.State.DEAD) return;
+                else if (pressedKeys.contains(inputHandler.getJ2Up())) dRowJ2 = -1;
                 else if (pressedKeys.contains(inputHandler.getJ2Down())) dRowJ2 = 1;
                 else if (pressedKeys.contains(inputHandler.getJ2Left())) dColJ2 = -1;
                 else if (pressedKeys.contains(inputHandler.getJ2Right())) dColJ2 = 1;
@@ -125,12 +131,15 @@ public class GameMapController {
     }
 
     private void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
+
         if (dRow == 0 && dCol == 0) return;
 
         int oldRow = player.getRow();
         int oldCol = player.getCol();
         int newRow = oldRow + dRow;
         int newCol = oldCol + dCol;
+
+        if (gameMap.getMapData()[newRow][newCol] == 'X') return;
 
         if (isWalkable(newRow, newCol)) {
             // Clear previous player position in mapData
@@ -170,10 +179,28 @@ public class GameMapController {
             player1.setState(Player.State.DEAD);
             mapGrid.getChildren().remove(player1Cell);
             System.out.println("Player 1 died");
+            switchToGameOverScreen("Player 2 Wins!");
         } else if (player == player2 && player2.getState() == Player.State.ALIVE) {
             player2.setState(Player.State.DEAD);
             mapGrid.getChildren().remove(player2Cell);
             System.out.println("Player 2 died");
+            switchToGameOverScreen("Player 1 Wins!");
+        }
+    }
+
+    private void switchToGameOverScreen(String winnerText) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GameOver.fxml"));
+            Parent gameOverRoot = loader.load();
+
+            // Optionally pass winner text to controller
+            GameOverController controller = loader.getController();
+            controller.setWinnerText(winnerText);
+
+            Scene scene = new Scene(gameOverRoot);
+            mapGrid.getScene().setRoot(gameOverRoot); // Replaces the current root
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
