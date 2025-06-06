@@ -39,7 +39,9 @@ public class Bomb {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
+        if (mapData[row][col] == 'X') return; // Don't place on existing bomb
         mapData[row][col] = 'X';  // Block the tile while bomb is active
+        System.out.println("Bomb Placed");
         mapGrid.add(bombCell, col, row);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
