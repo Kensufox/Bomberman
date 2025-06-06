@@ -23,6 +23,7 @@ public class Bomb {
     private final StackPane[][] tiles;
     private final Image emptyImg;
     private boolean canPlaceBomb = true;
+    private int range = 1;
 
     private final List<Player> players;
     private final GameMapController controller;
@@ -67,48 +68,58 @@ public class Bomb {
         delay.play();
     }
 
+    public void setRange(int range){
+        this.range = range;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
     private void explode(int row, int col) {
         int[][] directions = {
             {0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}
         };
 
-        for (int[] dir : directions) {
-            int r = row + dir[0];
-            int c = col + dir[1];
+        for (int i = 0; i <= range; i++) {
+            for (int[] dir : directions) {
+                int r = row + (dir[0]*i);
+                int c = col + (dir[1]*i);
 
-            if (r >= 0 && r < mapData.length && c >= 0 && c < mapData[0].length) {
-                if (mapData[r][c] == 'B') {
-                    mapData[r][c] = '.';
-                    StackPane oldTile = tiles[r][c];
-                    mapGrid.getChildren().remove(oldTile);
+                if (r >= 0 && r < mapData.length && c >= 0 && c < mapData[0].length) {
+                    if (mapData[r][c] == 'B') {
+                        mapData[r][c] = '.';
+                        StackPane oldTile = tiles[r][c];
+                        mapGrid.getChildren().remove(oldTile);
 
-                    StackPane newTile = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
-                    tiles[r][c] = newTile;
-                    mapGrid.add(newTile, c, r);
-                }
-
-                // Check all players
-                for (Player player : players) {
-                    if (player != null && player.getState() == Player.State.ALIVE && player.getRow() == r && player.getCol() == c) {
-                        controller.killPlayer(player);
+                        StackPane newTile = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
+                        tiles[r][c] = newTile;
+                        mapGrid.add(newTile, c, r);
                     }
-                }
 
-                if (mapData[r][c] == 'B' || mapData[r][c] == '.'){
-                    StackPane explosionPane = new StackPane();
-                    Canvas explosionCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
-                    explosionCanvas.setOpacity(0.5);
-                    GraphicsContext gc = explosionCanvas.getGraphicsContext2D();
-                    gc.setFill(javafx.scene.paint.Color.YELLOW);
-                    gc.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-                    explosionPane.getChildren().add(explosionCanvas);
-                    explosionPane.setPrefSize(TILE_SIZE, TILE_SIZE);
+                    // Check all players
+                    for (Player player : players) {
+                        if (player != null && player.getState() == Player.State.ALIVE && player.getRow() == r && player.getCol() == c) {
+                            controller.killPlayer(player);
+                        }
+                    }
 
-                    mapGrid.add(explosionPane, c, r);
+                    if (mapData[r][c] == 'B' || mapData[r][c] == '.'){
+                        StackPane explosionPane = new StackPane();
+                        Canvas explosionCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
+                        explosionCanvas.setOpacity(0.5);
+                        GraphicsContext gc = explosionCanvas.getGraphicsContext2D();
+                        gc.setFill(javafx.scene.paint.Color.YELLOW);
+                        gc.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
+                        explosionPane.getChildren().add(explosionCanvas);
+                        explosionPane.setPrefSize(TILE_SIZE, TILE_SIZE);
 
-                    PauseTransition clear = new PauseTransition(Duration.seconds(0.4));
-                    clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
-                    clear.play();
+                        mapGrid.add(explosionPane, c, r);
+
+                        PauseTransition clear = new PauseTransition(Duration.seconds(0.4));
+                        clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
+                        clear.play();
+                    }
                 }
             }
         }
