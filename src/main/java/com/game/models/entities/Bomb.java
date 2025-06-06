@@ -43,10 +43,7 @@ public class Bomb {
             return;
         }
 
-        if (mapData[row][col] != '.') {
-            System.out.println("Tu ne peux pas poser une bombe ici.");
-            return;
-        }
+
 
         // Lancement du cooldown
         canPlaceBomb = false;

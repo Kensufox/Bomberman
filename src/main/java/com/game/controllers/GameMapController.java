@@ -105,9 +105,9 @@ public class GameMapController {
                 else if (pressedKeys.contains(inputHandler.getJ2Right())) dColJ2 = 1;
 
                 if (pressedKeys.contains(inputHandler.getJ1Bomb()))
-                    bomb.place(player1.getRow(), player1.getCol());
+                    bomb.tryPlaceBomb(player1.getRow(), player1.getCol());
                 if (pressedKeys.contains(inputHandler.getJ2Bomb()))
-                    bomb.place(player2.getRow(), player2.getCol());
+                    bomb.tryPlaceBomb(player2.getRow(), player2.getCol());
 
                 if ((dRowJ1 != 0 || dColJ1 != 0) && player1.canMove(now)) {
                     movePlayerIfPossible(player1, player1Cell, dRowJ1, dColJ1);
