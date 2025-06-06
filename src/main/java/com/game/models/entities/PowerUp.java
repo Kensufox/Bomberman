@@ -10,10 +10,10 @@ public class PowerUp {
     private int col;
     private boolean isCollected;
 
-    public PowerUp(int startRow, int startCol) {
+    public PowerUp(int startRow, int startCol, Type type) {
         this.row = startRow;
         this.col = startCol;
-        //this.type = type;
+        this.type = type;
         this.isCollected = false;
     }
 

@@ -1,6 +1,8 @@
 package com.game.controllers;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
@@ -9,6 +11,7 @@ import com.game.models.map.GameMap;
 import com.game.utils.InputHandler;
 import com.game.utils.ResourceLoader;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -36,20 +39,20 @@ public class GameMapController {
 
     private GameMap gameMap;
 
+    private final Set<KeyCode> pressedKeys = new HashSet<>();
+
     public void initialize() {
         this.inputHandler = new InputHandler();
         this.gameMap = new GameMap();
         gameMap.setupBackground(gameMap, backgroundGrid);
         gameMap.setupMap(mapGrid);
 
-        //inputHandler.printConfiguration();
-
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg());
 
         Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player1.png")));
         Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player2.png")));
-        player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), (gameMap.getTileSize()*1.75), 0, 15);
-        player2Cell = ResourceLoader.createPixelatedImageNode(player2Img, gameMap.getTileSize(), (gameMap.getTileSize()*1.75), 0, 15);
+        player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), (gameMap.getTileSize() * 1.75), 0, 15);
+        player2Cell = ResourceLoader.createPixelatedImageNode(player2Img, gameMap.getTileSize(), (gameMap.getTileSize() * 1.75), 0, 15);
         player1Cell.toFront();
         player2Cell.toFront();
 
@@ -58,79 +61,92 @@ public class GameMapController {
         mapGrid.add(player1Cell, player1.getCol(), player1.getRow());
         mapGrid.add(player2Cell, player2.getCol(), player2.getRow());
 
-        Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/power-up.png"))); 
+        Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/power-up.png")));
         powerUpCell = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
-        powerUp = new PowerUp(2, 1);
+        powerUp = new PowerUp(2, 1, PowerUp.Type.SPEED);
         mapGrid.add(powerUpCell, powerUp.getCol(), powerUp.getRow());
 
         mapGrid.setFocusTraversable(true);
-        mapGrid.setOnKeyPressed(this::handleKeyPress);
+        mapGrid.setOnKeyPressed(this::handleKeyPressed);
+        mapGrid.setOnKeyReleased(this::handleKeyReleased);
 
+        startMovementLoop();
+    }
+
+    private void handleKeyPressed(KeyEvent event) {
+        pressedKeys.add(event.getCode());
+    }
+
+    private void handleKeyReleased(KeyEvent event) {
+        pressedKeys.remove(event.getCode());
+    }
+
+    private void startMovementLoop() {
+        AnimationTimer movementLoop = new AnimationTimer() {
+            private long lastUpdate = 0;
+
+            @Override
+            public void handle(long now) {
+                if (now - lastUpdate < 150_000_000) return; // 150 ms entre mouvements
+
+                int dRowJ1 = 0, dColJ1 = 0;
+                int dRowJ2 = 0, dColJ2 = 0;
+
+                if (pressedKeys.contains(inputHandler.getJ1Up())) dRowJ1 = -1;
+                else if (pressedKeys.contains(inputHandler.getJ1Down())) dRowJ1 = 1;
+                else if (pressedKeys.contains(inputHandler.getJ1Left())) dColJ1 = -1;
+                else if (pressedKeys.contains(inputHandler.getJ1Right())) dColJ1 = 1;
+
+                if (pressedKeys.contains(inputHandler.getJ2Up())) dRowJ2 = -1;
+                else if (pressedKeys.contains(inputHandler.getJ2Down())) dRowJ2 = 1;
+                else if (pressedKeys.contains(inputHandler.getJ2Left())) dColJ2 = -1;
+                else if (pressedKeys.contains(inputHandler.getJ2Right())) dColJ2 = 1;
+
+                if (pressedKeys.contains(inputHandler.getJ1Bomb()))
+                    bomb.place(player1.getRow(), player1.getCol());
+                if (pressedKeys.contains(inputHandler.getJ2Bomb()))
+                    bomb.place(player2.getRow(), player2.getCol());
+
+                movePlayerIfPossible(player1, player1Cell, dRowJ1, dColJ1);
+                movePlayerIfPossible(player2, player2Cell, dRowJ2, dColJ2);
+
+                if (dRowJ1 == 0 && dRowJ2 == 0 && dColJ1 == 0 && dColJ2 == 0) return;
+
+                lastUpdate = now;
+            }
+        };
+
+        movementLoop.start();
+    }
+
+    private void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
+        if (dRow == 0 && dCol == 0) return;
+
+        int newRow = player.getRow() + dRow;
+        int newCol = player.getCol() + dCol;
+
+        if (isWalkable(newRow, newCol)) {
+            player.move(dRow, dCol);
+            GridPane.setRowIndex(cell, player.getRow());
+            GridPane.setColumnIndex(cell, player.getCol());
+            checkPowerUpCollision(player);
+        }
+
+        cell.toFront();
+    }
+
+    private boolean isWalkable(int row, int col) {
+        return gameMap.getMapData()[row][col] == '.';
     }
 
     private void checkPowerUpCollision(Player player) {
         if (powerUp == null) return;
 
         if (player.getRow() == powerUp.getRow() && player.getCol() == powerUp.getCol()) {
-            mapGrid.getChildren().remove(powerUpCell);  // Supprime le power-up visuellement
+            mapGrid.getChildren().remove(powerUpCell);
             System.out.println("Player " + (player == player1 ? "1" : "2") +
-                " picked up the power-up at (" + powerUp.getRow() + ", " + powerUp.getCol() + ")");
-            powerUp = null;  // Le power-up n’existe plus
+                    " picked up the power-up at (" + powerUp.getRow() + ", " + powerUp.getCol() + ")");
+            powerUp = null;
         }
-    }
-
-    private void handleKeyPress(KeyEvent event) {
-        KeyCode keyPressed = event.getCode();
-        int dRowJ1 = 0, dColJ1 = 0;
-        int dRowJ2 = 0, dColJ2 = 0;
-
-        // Custom keys (Player 1 & Player 2)
-        if (keyPressed == inputHandler.getJ1Up()) {
-            dRowJ1 = -1;
-        } else if (keyPressed == inputHandler.getJ1Down()) {
-            dRowJ1 = 1;
-        } else if (keyPressed == inputHandler.getJ1Left()) {
-            dColJ1 = -1;
-        } else if (keyPressed == inputHandler.getJ1Right()) {
-            dColJ1 = 1;
-        } else if (keyPressed == inputHandler.getJ1Bomb()) {
-            bomb.place(player1.getRow(), player1.getCol());
-        } else if (keyPressed == inputHandler.getJ2Up()) {
-            dRowJ2 = -1;
-        } else if (keyPressed == inputHandler.getJ2Down()) {
-            dRowJ2 = 1;
-        } else if (keyPressed == inputHandler.getJ2Left()) {
-            dColJ2 = -1;
-        } else if (keyPressed == inputHandler.getJ2Right()) {
-            dColJ2 = 1;
-        } else if (keyPressed == inputHandler.getJ2Bomb()) {
-            bomb.place(player2.getRow(), player2.getCol());
-        }
-
-        int newRowJ1 = player1.getRow() + dRowJ1;
-        int newColJ1 = player1.getCol() + dColJ1;
-        int newRowJ2 = player2.getRow() + dRowJ2;
-        int newColJ2 = player2.getCol() + dColJ2;
-
-        if (isWalkable(newRowJ1, newColJ1)) {
-            player1.move(dRowJ1, dColJ1);
-            GridPane.setRowIndex(player1Cell, player1.getRow());
-            GridPane.setColumnIndex(player1Cell, player1.getCol());
-            checkPowerUpCollision(player1);
-        }
-
-        if (isWalkable(newRowJ2, newColJ2)) {
-            player2.move(dRowJ2, dColJ2);
-            GridPane.setRowIndex(player2Cell, player2.getRow());
-            GridPane.setColumnIndex(player2Cell, player2.getCol());
-            checkPowerUpCollision(player2);
-        }
-
-        player1Cell.toFront();
-        player2Cell.toFront();
-    }
-
-    private boolean isWalkable(int row, int col) {
-        return gameMap.getMapData()[row][col] == '.';
     }
 }
