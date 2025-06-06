@@ -15,7 +15,6 @@ import com.game.utils.ResourceLoader;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -189,15 +188,15 @@ public class GameMapController {
 
     private void switchToGameOverScreen(String winnerText) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GameOver.fxml"));
-            Parent gameOverRoot = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game-over.fxml"));
+            StackPane gameOverRoot = loader.load();
 
             // Optionally pass winner text to controller
             GameOverController controller = loader.getController();
             controller.setWinnerText(winnerText);
 
             Scene scene = new Scene(gameOverRoot);
-            mapGrid.getScene().setRoot(gameOverRoot); // Replaces the current root
+            ((javafx.stage.Stage) mapGrid.getScene().getWindow()).setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
         }
