@@ -2,6 +2,7 @@ package com.game.models.entities;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import com.game.controllers.GameMapController;
 import com.game.utils.ResourceLoader;
@@ -27,6 +28,9 @@ public class Bomb {
 
     private final List<Player> players;
     private final GameMapController controller;
+
+    private final Random random = new Random();
+    private static final double POWER_UP_SPAWN_CHANCE = 0.3;
 
     // New constructor with a list of players
     public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg, List<Player> players, GameMapController controller) {
@@ -95,6 +99,11 @@ public class Bomb {
                         StackPane newTile = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
                         tiles[r][c] = newTile;
                         mapGrid.add(newTile, c, r);
+
+                        // Randomly spawn power-up
+                        if (random.nextDouble() < POWER_UP_SPAWN_CHANCE) {
+                            controller.spawnPowerUpAt(r, c);
+                        }
                     }
 
                     // Check all players
