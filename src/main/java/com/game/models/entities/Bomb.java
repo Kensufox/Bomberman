@@ -1,5 +1,6 @@
 package com.game.models.entities;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.game.controllers.GameMapController;
@@ -23,17 +24,16 @@ public class Bomb {
     private final Image emptyImg;
     private boolean canPlaceBomb = true;
 
-    private final Player player1;
-    private final Player player2;
+    private final List<Player> players;
     private final GameMapController controller;
-    
-    public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg, Player player1, Player player2, GameMapController controller) {
+
+    // New constructor with a list of players
+    public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg, List<Player> players, GameMapController controller) {
         this.mapGrid = mapGrid;
         this.mapData = mapData;
         this.tiles = tiles;
         this.emptyImg = emptyImg;
-        this.player1 = player1;
-        this.player2 = player2;
+        this.players = players;
         this.controller = controller;
     }
 
@@ -42,7 +42,6 @@ public class Bomb {
             return;
         }
 
-        // Lancement du cooldown
         canPlaceBomb = false;
         PauseTransition cooldown = new PauseTransition(Duration.seconds(COOLDOWN_SECONDS));
         cooldown.setOnFinished(e -> canPlaceBomb = true);
@@ -55,23 +54,22 @@ public class Bomb {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
-        if (mapData[row][col] == 'X') return; // Don't place on existing bomb
-        mapData[row][col] = 'X';  // Block the tile while bomb is active
+        if (mapData[row][col] == 'X') return;
+        mapData[row][col] = 'X'; 
         mapGrid.add(bombCell, col, row);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
         delay.setOnFinished(e -> {
             mapGrid.getChildren().remove(bombCell);
-            mapData[row][col] = '.'; // Make walkable again before explosion logic
+            mapData[row][col] = '.';
             explode(row, col);
         });
         delay.play();
     }
 
     private void explode(int row, int col) {
-
         int[][] directions = {
-                {0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}
+            {0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}
         };
 
         for (int[] dir : directions) {
@@ -84,17 +82,16 @@ public class Bomb {
                     StackPane oldTile = tiles[r][c];
                     mapGrid.getChildren().remove(oldTile);
 
-                    
                     StackPane newTile = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
                     tiles[r][c] = newTile;
                     mapGrid.add(newTile, c, r);
                 }
 
-                if (player1 != null && player1.getState() == Player.State.ALIVE && player1.getRow() == r && player1.getCol() == c) {
-                    controller.killPlayer(player1);
-                }
-                if (player2 != null && player2.getState() == Player.State.ALIVE && player2.getRow() == r && player2.getCol() == c) {
-                    controller.killPlayer(player2);
+                // Check all players
+                for (Player player : players) {
+                    if (player != null && player.getState() == Player.State.ALIVE && player.getRow() == r && player.getCol() == c) {
+                        controller.killPlayer(player);
+                    }
                 }
 
                 StackPane explosionPane = new StackPane();

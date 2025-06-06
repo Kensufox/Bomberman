@@ -1,9 +1,12 @@
 package com.game.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
@@ -29,10 +32,8 @@ public class GameMapController {
 
     @FXML
     private GridPane backgroundGrid;
-    
+
     private InputHandler inputHandler;
-    private Player player1, player2;
-    private StackPane player1Cell, player2Cell;
     private PowerUp powerUp;
     private StackPane powerUpCell;
     private Bomb bomb;
@@ -40,26 +41,55 @@ public class GameMapController {
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
 
+    // Generic list of players and their contexts (cells + controls)
+    private final List<PlayerContext> players = new ArrayList<>();
+
+    // Inner class to store info per player
+    private static class PlayerContext {
+        final Player player;
+        final StackPane cell;
+        final InputHandler.PlayerControls controls;
+
+        PlayerContext(Player player, StackPane cell, InputHandler.PlayerControls controls) {
+            this.player = player;
+            this.cell = cell;
+            this.controls = controls;
+        }
+    }
+
     public void initialize() {
         this.inputHandler = new InputHandler();
         this.gameMap = new GameMap();
         gameMap.setupBackground(gameMap, backgroundGrid);
         gameMap.setupMap(mapGrid);
 
+        // Create player images
         Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player1.png")));
         Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player2.png")));
-        player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), (gameMap.getTileSize() * 1.75), 0, 15);
-        player2Cell = ResourceLoader.createPixelatedImageNode(player2Img, gameMap.getTileSize(), (gameMap.getTileSize() * 1.75), 0, 15);
-        player1Cell.toFront();
-        player2Cell.toFront();
 
-        player1 = new Player(1, 1, Player.State.ALIVE);
-        player2 = new Player(11, 13, Player.State.ALIVE);
-        mapGrid.add(player1Cell, player1.getCol(), player1.getRow());
-        mapGrid.add(player2Cell, player2.getCol(), player2.getRow());
+        // Create players
+        Player player1 = new Player(1, 1, Player.State.ALIVE);
+        Player player2 = new Player(11, 13, Player.State.ALIVE);
 
-        this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg(), player1, player2, this);
+        // Create graphical nodes
+        StackPane player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), gameMap.getTileSize() * 1.75, 0, 15);
+        StackPane player2Cell = ResourceLoader.createPixelatedImageNode(player2Img, gameMap.getTileSize(), gameMap.getTileSize() * 1.75, 0, 15);
 
+        // Add players to the list with their controls
+        players.add(new PlayerContext(player1, player1Cell, inputHandler.getJ1Controls()));
+        players.add(new PlayerContext(player2, player2Cell, inputHandler.getJ2Controls()));
+
+        // Add players to the grid
+        for (PlayerContext ctx : players) {
+            mapGrid.add(ctx.cell, ctx.player.getCol(), ctx.player.getRow());
+            ctx.cell.toFront();
+        }
+
+        // Initialize bomb (can be adapted to handle multiple players)
+        this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg(), 
+            players.stream().map(pc -> pc.player).collect(Collectors.toList()), this);
+
+        // Create and place a power-up
         Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/power-up-speed.png")));
         powerUpCell = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
         powerUp = new PowerUp(2, 1, PowerUp.Power.SPEED, 3_000_000_000L);
@@ -76,11 +106,11 @@ public class GameMapController {
         KeyCode code = event.getCode();
         if (!pressedKeys.contains(code)) {
             pressedKeys.add(code);
-            // Exception for placing bomb keybind
-            if (code == inputHandler.getJ1Bomb()) {
-                bomb.tryPlaceBomb(player1.getRow(), player1.getCol());
-            } else if (code == inputHandler.getJ2Bomb()) {
-                bomb.tryPlaceBomb(player2.getRow(), player2.getCol());
+            // Check if the key corresponds to a bomb for any player
+            for (PlayerContext ctx : players) {
+                if (code == ctx.controls.bomb) {
+                    bomb.tryPlaceBomb(ctx.player.getRow(), ctx.player.getCol());
+                }
             }
         }
     }
@@ -93,45 +123,28 @@ public class GameMapController {
         AnimationTimer movementLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (player1.getPower() != null && now >= player1.getPowerEndTime()) {
-                    player1.removePower();
-                }
+                for (PlayerContext ctx : players) {
+                    Player p = ctx.player;
 
-                if (player2.getPower() != null && now >= player2.getPowerEndTime()) {
-                    player2.removePower();
-                }
+                    // Handle power-up expiration
+                    if (p.getPower() != null && now >= p.getPowerEndTime()) {
+                        p.removePower();
+                    }
 
-                int dRowJ1 = 0, dColJ1 = 0;
-                int dRowJ2 = 0, dColJ2 = 0;
+                    if (p.getState() == Player.State.DEAD) continue;
 
-                if (player1.getState() == Player.State.DEAD) return;
-                else if (pressedKeys.contains(inputHandler.getJ1Up())) dRowJ1 = -1;
-                else if (pressedKeys.contains(inputHandler.getJ1Down())) dRowJ1 = 1;
-                else if (pressedKeys.contains(inputHandler.getJ1Left())) dColJ1 = -1;
-                else if (pressedKeys.contains(inputHandler.getJ1Right())) dColJ1 = 1;
+                    int dRow = 0, dCol = 0;
+                    if (pressedKeys.contains(ctx.controls.up)) dRow = -1;
+                    else if (pressedKeys.contains(ctx.controls.down)) dRow = 1;
+                    else if (pressedKeys.contains(ctx.controls.left)) dCol = -1;
+                    else if (pressedKeys.contains(ctx.controls.right)) dCol = 1;
 
-                if (player2.getState() == Player.State.DEAD) return;
-                else if (pressedKeys.contains(inputHandler.getJ2Up())) dRowJ2 = -1;
-                else if (pressedKeys.contains(inputHandler.getJ2Down())) dRowJ2 = 1;
-                else if (pressedKeys.contains(inputHandler.getJ2Left())) dColJ2 = -1;
-                else if (pressedKeys.contains(inputHandler.getJ2Right())) dColJ2 = 1;
+                    if ((dRow != 0 || dCol != 0) && p.canMove(now)) {
+                        movePlayerIfPossible(p, ctx.cell, dRow, dCol);
+                        p.updateLastMoveTime(now);
+                    }
 
-                player1Cell.toFront();
-                player2Cell.toFront();
-/*
-                if (pressedKeys.contains(inputHandler.getJ1Bomb()))
-                    bomb.tryPlaceBomb(player1.getRow(), player1.getCol());
-                if (pressedKeys.contains(inputHandler.getJ2Bomb()))
-                    bomb.tryPlaceBomb(player2.getRow(), player2.getCol());*/
-
-                if ((dRowJ1 != 0 || dColJ1 != 0) && player1.canMove(now)) {
-                    movePlayerIfPossible(player1, player1Cell, dRowJ1, dColJ1);
-                    player1.updateLastMoveTime(now);
-                }
-
-                if ((dRowJ2 != 0 || dColJ2 != 0) && player2.canMove(now)) {
-                    movePlayerIfPossible(player2, player2Cell, dRowJ2, dColJ2);
-                    player2.updateLastMoveTime(now);
+                    ctx.cell.toFront();
                 }
             }
         };
@@ -140,7 +153,6 @@ public class GameMapController {
     }
 
     private void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
-
         int oldRow = player.getRow();
         int oldCol = player.getCol();
         int newRow = oldRow + dRow;
@@ -149,7 +161,6 @@ public class GameMapController {
         if (isWalkable(newRow, newCol)) {
             player.move(dRow, dCol);
 
-            // Visually move the player
             GridPane.setRowIndex(cell, player.getRow());
             GridPane.setColumnIndex(cell, player.getCol());
             checkPowerUpCollision(player);
@@ -158,6 +169,9 @@ public class GameMapController {
     }
 
     private boolean isWalkable(int row, int col) {
+        if (row < 0 || col < 0 || row >= gameMap.getMapData().length || col >= gameMap.getMapData()[0].length) {
+            return false; // safety out of bounds
+        }
         char cell = gameMap.getMapData()[row][col];
         return cell == '.' || cell == 'P';
     }
@@ -167,7 +181,6 @@ public class GameMapController {
 
         if (player.getRow() == powerUp.getRow() && player.getCol() == powerUp.getCol()) {
             mapGrid.getChildren().remove(powerUpCell);
-            //player.setPower(powerUp.getPower());
             player.setPower(powerUp.getPower(), System.nanoTime(), powerUp.getDuration());
             player.appliPower();
             powerUp = null;
@@ -175,25 +188,38 @@ public class GameMapController {
     }
 
     public void killPlayer(Player player) {
-        if (player == player1 && player1.getState() == Player.State.ALIVE) {
-            player1.setState(Player.State.DEAD);
-            mapGrid.getChildren().remove(player1Cell);
-            switchToGameOverScreen("Player 2 Wins!");
-        } else if (player == player2 && player2.getState() == Player.State.ALIVE) {
-            player2.setState(Player.State.DEAD);
-            mapGrid.getChildren().remove(player2Cell);
-            switchToGameOverScreen("Player 1 Wins!");
+        if (player.getState() == Player.State.DEAD) return;
+
+        player.setState(Player.State.DEAD);
+        PlayerContext deadCtx = players.stream().filter(p -> p.player == player).findFirst().orElse(null);
+        if (deadCtx != null) {
+            mapGrid.getChildren().remove(deadCtx.cell);
+        }
+
+        // Check if there is only one player alive to declare the winner
+        List<PlayerContext> alivePlayers = players.stream()
+                .filter(p -> p.player.getState() == Player.State.ALIVE)
+                .collect(Collectors.toList());
+
+        if (alivePlayers.size() == 1) {
+            Player winner = alivePlayers.get(0).player;
+            winner.setScore(winner.getScore() + 1);
+
+            String winnerText = "Player " + (players.indexOf(alivePlayers.get(0)) + 1) + " Wins!";
+            switchToGameOverScreen(winnerText,
+                    players.get(0).player.getScore(),
+                    players.get(1).player.getScore()); // Adjust according to your number of players
         }
     }
 
-    private void switchToGameOverScreen(String winnerText) {
+    private void switchToGameOverScreen(String winnerText, int P1Score, int P2Score) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game-over.fxml"));
             StackPane gameOverRoot = loader.load();
 
-            // Optionally pass winner text to controller
             GameOverController controller = loader.getController();
             controller.setWinnerText(winnerText);
+            controller.setPlayersScore(P1Score, P2Score);
 
             Scene scene = new Scene(gameOverRoot);
             ((javafx.stage.Stage) mapGrid.getScene().getWindow()).setScene(scene);

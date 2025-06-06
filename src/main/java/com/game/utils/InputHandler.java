@@ -1,10 +1,10 @@
 package com.game.utils;
 
-import javafx.scene.input.KeyCode;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import javafx.scene.input.KeyCode;
 
 public class InputHandler {
     private Properties gameProperties;
@@ -18,7 +18,6 @@ public class InputHandler {
         convertStringKeysToKeyCodes();
     }
 
-    // Method load config.properties
     private void loadConfiguration() {
         gameProperties = new Properties();
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
@@ -61,12 +60,9 @@ public class InputHandler {
         j2Bomb = stringToKeyCode(j2BombStr);
     }
 
-    // String to KeyCode conversion method
     public KeyCode stringToKeyCode(String keyString) {
         if (keyString == null) return null;
-
         try {
-            // Managing special cases
             switch (keyString.toLowerCase()) {
                 case "space": return KeyCode.SPACE;
                 case "up": return KeyCode.UP;
@@ -74,7 +70,6 @@ public class InputHandler {
                 case "left": return KeyCode.LEFT;
                 case "right": return KeyCode.RIGHT;
                 default:
-                    // For letters and other keys
                     return KeyCode.valueOf(keyString.toUpperCase());
             }
         } catch (IllegalArgumentException e) {
@@ -83,45 +78,39 @@ public class InputHandler {
         }
     }
 
-    public KeyCode getJ2Bomb() {
-        return j2Bomb;
+    // Classe interne pour regrouper les contrôles d'un joueur
+    public static class PlayerControls {
+        public final KeyCode up, down, left, right, bomb;
+        public PlayerControls(KeyCode up, KeyCode down, KeyCode left, KeyCode right, KeyCode bomb) {
+            this.up = up;
+            this.down = down;
+            this.left = left;
+            this.right = right;
+            this.bomb = bomb;
+        }
     }
 
-    public KeyCode getJ2Right() {
-        return j2Right;
+    // Méthodes pour obtenir les contrôles complets
+    public PlayerControls getJ1Controls() {
+        return new PlayerControls(j1Up, j1Down, j1Left, j1Right, j1Bomb);
     }
 
-    public KeyCode getJ2Left() {
-        return j2Left;
+    public PlayerControls getJ2Controls() {
+        return new PlayerControls(j2Up, j2Down, j2Left, j2Right, j2Bomb);
     }
 
-    public KeyCode getJ2Down() {
-        return j2Down;
-    }
+    // Accesseurs KeyCode individuels (garder si besoin)
+    public KeyCode getJ1Up() { return j1Up; }
+    public KeyCode getJ1Down() { return j1Down; }
+    public KeyCode getJ1Left() { return j1Left; }
+    public KeyCode getJ1Right() { return j1Right; }
+    public KeyCode getJ1Bomb() { return j1Bomb; }
 
-    public KeyCode getJ2Up() {
-        return j2Up;
-    }
-
-    public KeyCode getJ1Bomb() {
-        return j1Bomb;
-    }
-
-    public KeyCode getJ1Right() {
-        return j1Right;
-    }
-
-    public KeyCode getJ1Left() {
-        return j1Left;
-    }
-
-    public KeyCode getJ1Down() {
-        return j1Down;
-    }
-
-    public KeyCode getJ1Up() {
-        return j1Up;
-    }
+    public KeyCode getJ2Up() { return j2Up; }
+    public KeyCode getJ2Down() { return j2Down; }
+    public KeyCode getJ2Left() { return j2Left; }
+    public KeyCode getJ2Right() { return j2Right; }
+    public KeyCode getJ2Bomb() { return j2Bomb; }
 
     public void printConfiguration() {
         System.out.println("=== Configuration des contrôles ===");

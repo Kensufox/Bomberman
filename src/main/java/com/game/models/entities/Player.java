@@ -10,7 +10,7 @@ public class Player {
     private PowerUp.Power power;
     private State state;
     private long powerEndTime = 0;
-
+    private int score = 0;
 
     private long lastMoveTime = 0;
     private long moveDelay = 150_000_000; // 150ms
@@ -89,5 +89,13 @@ public class Player {
             }
 
         }
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
     }
 }

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.geometry.Pos?>
 <?import javafx.scene.control.Button?>
@@ -12,7 +13,10 @@
            fx:controller="com.game.controllers.GameOverController"
            alignment="CENTER">
     <VBox spacing="20" alignment="CENTER">
-    <Label fx:id="winnerLabel" text="Winner!" style="-fx-font-size: 36px; -fx-text-fill: red;" />
+        <Label fx:id="winnerLabel" text="Winner!" style="-fx-font-size: 36px; -fx-text-fill: red;" />
+        <HBox spacing="20" alignment="CENTER">
+            <Label fx:id="scoreLabel" text="score" style="-fx-font-size: 36px; -fx-text-fill: red;" />
+        </HBox>
         <Button fx:id="btnRetourMenu" text="Retour" onAction="#retourMenu" styleClass="choose-game-button"/>
     </VBox>
 </StackPane>
