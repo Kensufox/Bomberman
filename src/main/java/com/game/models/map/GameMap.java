@@ -65,7 +65,7 @@ public class GameMap {
                 } else if ((row <= 2 && col <= 2) || row >= ROWS-3 && col >= COLS-3) {
                     mapData[row][col] = '.';
                     tilePane = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
-                } else if (random.nextDouble() < 0) {
+                } else if (random.nextDouble() < 0.7) {
                     mapData[row][col] = 'B';
                     tilePane = ResourceLoader.createTexturedTile(breakableImg, TILE_SIZE);
                 } else {
