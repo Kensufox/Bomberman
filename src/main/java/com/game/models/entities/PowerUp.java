@@ -1,24 +1,30 @@
 package com.game.models.entities;
 
 public class PowerUp {
-    public enum Type {
+    public enum Power {
         SPEED, BOMB_RANGE, EXTRA_BOMB
     }
-
-    private Type type;
+ 
+    private Power power;
     private int row;
     private int col;
     private boolean isCollected;
+    private long duration;
 
-    public PowerUp(int startRow, int startCol) {
+    public PowerUp(int startRow, int startCol, Power power, long duration) {
         this.row = startRow;
         this.col = startCol;
-        //this.type = type;
+        this.power = power;
+        this.duration = duration;
         this.isCollected = false;
     }
 
-    public Type getType() {
-        return type;
+    public long getDuration() {
+        return duration;
+    }
+
+    public Power getPower() {
+        return power;
     }
 
     public int getRow() {
