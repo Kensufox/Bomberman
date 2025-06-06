@@ -16,7 +16,7 @@ import javafx.util.Duration;
 public class Bomb {
 
     private static final int TILE_SIZE = 40;
-    private static final double COOLDOWN_SECONDS = 2.0;
+    private static final double COOLDOWN_SECONDS = 1.0;
     private final GridPane mapGrid;
     private final char[][] mapData;
     private final StackPane[][] tiles;
@@ -39,11 +39,8 @@ public class Bomb {
 
     public void tryPlaceBomb(int row, int col) {
         if (!canPlaceBomb) {
-            System.out.println("Cooldown actif. Impossible de poser une bombe maintenant.");
             return;
         }
-
-
 
         // Lancement du cooldown
         canPlaceBomb = false;
@@ -54,14 +51,12 @@ public class Bomb {
         place(row, col);
     }
 
-
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bomb.png")));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
         if (mapData[row][col] == 'X') return; // Don't place on existing bomb
         mapData[row][col] = 'X';  // Block the tile while bomb is active
-        System.out.println("Bomb Placed");
         mapGrid.add(bombCell, col, row);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(2));
