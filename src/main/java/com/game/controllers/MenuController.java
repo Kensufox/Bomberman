@@ -35,7 +35,19 @@ public class MenuController {
     }
 
     @FXML
-    public void optionsMenu () {}
+    public void optionsMenu (ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/option_menu.fxml"));
+            AnchorPane root = loader.load();
+
+            // Retrieves the current scene from one of the buttons
+            Button sourceButton = (Button) event.getSource();
+            sourceButton.getScene().setRoot(root);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void exit () {

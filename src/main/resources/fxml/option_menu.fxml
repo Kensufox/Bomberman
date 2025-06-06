@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.game.controllers.OptionsController"
+            stylesheets="/style.css"
+            styleClass="options-pane"
+            prefWidth="600" prefHeight="520">
+
+    <!-- Titre principal centré -->
+    <Label text="OPTIONS" layoutX="250" layoutY="15" styleClass="options-title"/>
+
+    <!-- Conteneur principal horizontal -->
+    <HBox layoutX="20" layoutY="50" spacing="20">
+        <!-- Joueur 1 -->
+        <VBox spacing="10" styleClass="options-section" prefWidth="280">
+            <Label text="Contrôles Joueur 1" styleClass="section-title"/>
+            <GridPane hgap="10" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" prefWidth="100"/>
+                    <ColumnConstraints prefWidth="120"/>
+                </columnConstraints>
+
+                <Label text="Haut:" styleClass="control-label" GridPane.rowIndex="0"/>
+                <Button fx:id="player1UpButton" text="↑" onAction="#changePlayer1Up"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Bas:" styleClass="control-label" GridPane.rowIndex="1"/>
+                <Button fx:id="player1DownButton" text="↓" onAction="#changePlayer1Down"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Gauche:" styleClass="control-label" GridPane.rowIndex="2"/>
+                <Button fx:id="player1LeftButton" text="←" onAction="#changePlayer1Left"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Droite:" styleClass="control-label" GridPane.rowIndex="3"/>
+                <Button fx:id="player1RightButton" text="→" onAction="#changePlayer1Right"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Bombe:" styleClass="control-label" GridPane.rowIndex="4"/>
+                <Button fx:id="player1BombButton" text="SPACE" onAction="#changePlayer1Bomb"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+        </VBox>
+
+        <!-- Joueur 2 -->
+        <VBox spacing="10" styleClass="options-section" prefWidth="280">
+            <Label text="Contrôles Joueur 2" styleClass="section-title"/>
+            <GridPane hgap="10" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" prefWidth="100"/>
+                    <ColumnConstraints prefWidth="120"/>
+                </columnConstraints>
+
+                <Label text="Haut:" styleClass="control-label" GridPane.rowIndex="0"/>
+                <Button fx:id="player2UpButton" text="W" onAction="#changePlayer2Up"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Bas:" styleClass="control-label" GridPane.rowIndex="1"/>
+                <Button fx:id="player2DownButton" text="S" onAction="#changePlayer2Down"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Gauche:" styleClass="control-label" GridPane.rowIndex="2"/>
+                <Button fx:id="player2LeftButton" text="A" onAction="#changePlayer2Left"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Droite:" styleClass="control-label" GridPane.rowIndex="3"/>
+                <Button fx:id="player2RightButton" text="D" onAction="#changePlayer2Right"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Bombe:" styleClass="control-label" GridPane.rowIndex="4"/>
+                <Button fx:id="player2BombButton" text="Q" onAction="#changePlayer2Bomb"
+                        styleClass="key-button" prefWidth="100" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+        </VBox>
+    </HBox>
+
+    <!-- Boutons en bas -->
+    <HBox spacing="15" alignment="CENTER" layoutX="150" layoutY="430">
+        <Button fx:id="resetButton" text="Par défaut" onAction="#resetToDefaults" styleClass="control-button"/>
+        <Button fx:id="applyButton" text="Appliquer" onAction="#applySettings" styleClass="control-button apply-button"/>
+        <Button fx:id="cancelButton" text="Annuler" onAction="#cancelSettings" styleClass="control-button"/>
+        <Button fx:id="backButton" text="Retour" onAction="#backToMenu" styleClass="control-button back-button"/>
+    </HBox>
+
+    <!-- Dialog pour capturer les touches -->
+    <StackPane fx:id="keyCapture" visible="false" styleClass="key-capture-overlay">
+        <VBox spacing="20" alignment="CENTER" styleClass="key-capture-dialog">
+            <Label fx:id="keyCaptureLabel" text="Appuyez sur une touche..." styleClass="key-capture-text"/>
+            <Button text="Annuler" onAction="#cancelKeyCapture" styleClass="key-capture-cancel"/>
+        </VBox>
+    </StackPane>
+
+</AnchorPane>

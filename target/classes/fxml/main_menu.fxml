@@ -12,7 +12,7 @@
     <!-- Background image -->
     <ImageView fitWidth="600" fitHeight="520" preserveRatio="false">
         <image>
-            <Image url="/images/BombermanMenu.jpg" />
+            <Image url="/images/BombermanMenu.jpg"/>
         </image>
     </ImageView>
 
