@@ -24,7 +24,7 @@ public class Bomb {
     private final StackPane[][] tiles;
     private final Image emptyImg;
     private boolean canPlaceBomb = true;
-    private int range = 1;
+    private int range = 10;
 
     private final List<Player> players;
     private final GameMapController controller;
