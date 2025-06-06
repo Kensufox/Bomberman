@@ -9,6 +9,9 @@ public class Player {
     private int col;
     private Power power;
 
+    private long lastMoveTime = 0;
+    private long moveDelay = 150_000_000; // 150ms par défaut
+
     public Player(int startRow, int startCol) {
         this.row = startRow;
         this.col = startCol;
@@ -26,8 +29,28 @@ public class Player {
         this.power = power;
     }
 
+    public Power getPower() {
+        return power;
+    }
+
     public void move(int dRow, int dCol) {
         this.row += dRow;
         this.col += dCol;
+    }
+
+    public boolean canMove(long now) {
+        return now - lastMoveTime >= moveDelay;
+    }
+
+    public void updateLastMoveTime(long now) {
+        lastMoveTime = now;
+    }
+
+    public void setMoveDelay(long delay) {
+        this.moveDelay = delay;
+    }
+
+    public long getMoveDelay() {
+        return moveDelay;
     }
 }

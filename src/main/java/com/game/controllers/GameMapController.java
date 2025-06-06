@@ -83,15 +83,11 @@ public class GameMapController {
 
     private void startMovementLoop() {
         AnimationTimer movementLoop = new AnimationTimer() {
-            private long lastUpdate = 0;
-
             @Override
             public void handle(long now) {
-                if (now - lastUpdate < 150_000_000) return; // 150 ms entre mouvements
-
                 int dRowJ1 = 0, dColJ1 = 0;
                 int dRowJ2 = 0, dColJ2 = 0;
-
+            
                 if (pressedKeys.contains(inputHandler.getJ1Up())) dRowJ1 = -1;
                 else if (pressedKeys.contains(inputHandler.getJ1Down())) dRowJ1 = 1;
                 else if (pressedKeys.contains(inputHandler.getJ1Left())) dColJ1 = -1;
@@ -107,17 +103,21 @@ public class GameMapController {
                 if (pressedKeys.contains(inputHandler.getJ2Bomb()))
                     bomb.place(player2.getRow(), player2.getCol());
 
-                movePlayerIfPossible(player1, player1Cell, dRowJ1, dColJ1);
-                movePlayerIfPossible(player2, player2Cell, dRowJ2, dColJ2);
+                if ((dRowJ1 != 0 || dColJ1 != 0) && player1.canMove(now)) {
+                    movePlayerIfPossible(player1, player1Cell, dRowJ1, dColJ1);
+                    player1.updateLastMoveTime(now);
+                }
 
-                if (dRowJ1 == 0 && dRowJ2 == 0 && dColJ1 == 0 && dColJ2 == 0) return;
-
-                lastUpdate = now;
+                if ((dRowJ2 != 0 || dColJ2 != 0) && player2.canMove(now)) {
+                    movePlayerIfPossible(player2, player2Cell, dRowJ2, dColJ2);
+                    player2.updateLastMoveTime(now);
+                }
             }
         };
 
         movementLoop.start();
     }
+
 
     private void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
         if (dRow == 0 && dCol == 0) return;
