@@ -63,7 +63,7 @@ public class GameMapController {
 
         Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/power-up.png")));
         powerUpCell = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
-        powerUp = new PowerUp(2, 1, PowerUp.Type.SPEED);
+        powerUp = new PowerUp(2, 1, PowerUp.Power.SPEED, 3_000_000_000L);
         mapGrid.add(powerUpCell, powerUp.getCol(), powerUp.getRow());
 
         mapGrid.setFocusTraversable(true);
@@ -85,9 +85,17 @@ public class GameMapController {
         AnimationTimer movementLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                if (player1.getPower() != null && now >= player1.getPowerEndTime()) {
+                    player1.removePower();
+                }
+
+                if (player2.getPower() != null && now >= player2.getPowerEndTime()) {
+                    player2.removePower();
+                }
+
                 int dRowJ1 = 0, dColJ1 = 0;
                 int dRowJ2 = 0, dColJ2 = 0;
-            
+
                 if (pressedKeys.contains(inputHandler.getJ1Up())) dRowJ1 = -1;
                 else if (pressedKeys.contains(inputHandler.getJ1Down())) dRowJ1 = 1;
                 else if (pressedKeys.contains(inputHandler.getJ1Left())) dColJ1 = -1;
@@ -146,6 +154,9 @@ public class GameMapController {
             mapGrid.getChildren().remove(powerUpCell);
             System.out.println("Player " + (player == player1 ? "1" : "2") +
                     " picked up the power-up at (" + powerUp.getRow() + ", " + powerUp.getCol() + ")");
+            //player.setPower(powerUp.getPower());
+            player.setPower(powerUp.getPower(), System.nanoTime(), powerUp.getDuration());
+            player.appliPower();
             powerUp = null;
         }
     }

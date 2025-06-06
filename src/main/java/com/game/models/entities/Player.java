@@ -1,16 +1,15 @@
 package com.game.models.entities;
 
 public class Player {
-    public enum Power {
-        SPEED, BOMB_RANGE, EXTRA_BOMB
-    }
 
     private int row;
     private int col;
-    private Power power;
+    private PowerUp.Power power;
+    private long powerEndTime = 0;
+
 
     private long lastMoveTime = 0;
-    private long moveDelay = 150_000_000; // 150ms par défaut
+    private long moveDelay = 150_000_000; // 150ms
 
     public Player(int startRow, int startCol) {
         this.row = startRow;
@@ -25,13 +24,25 @@ public class Player {
         return col;
     }
 
-    public void setPower(Power power) {
+    public void setPower(PowerUp.Power power, long now, long duration) {
         this.power = power;
+        appliPower();
+        this.powerEndTime = now + duration;
     }
 
-    public Power getPower() {
+    public PowerUp.Power getPower() {
         return power;
     }
+
+    public void removePower() {
+        this.power = null;
+        setMoveDelay(150_000_000); // réinitialise par défaut
+    }
+
+    public long getPowerEndTime() {
+        return powerEndTime;
+    }
+
 
     public void move(int dRow, int dCol) {
         this.row += dRow;
@@ -52,5 +63,18 @@ public class Player {
 
     public long getMoveDelay() {
         return moveDelay;
+    }
+
+    public void appliPower() {
+        switch (power) {
+            case SPEED -> setMoveDelay(50_000_000);
+            case BOMB_RANGE -> {
+            }
+            case EXTRA_BOMB -> {
+            }
+            default -> {
+            }
+
+        }
     }
 }
