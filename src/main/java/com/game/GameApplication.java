@@ -17,8 +17,10 @@ public class GameApplication extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_menu.fxml"));
         Parent root = loader.load();
 
+        root.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setTitle("Bomberman | v0.0.1");
         primaryStage.setScene(new Scene(root, 600, 520));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
