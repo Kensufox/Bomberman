@@ -21,7 +21,8 @@ public class Bomb {
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
-    private boolean canPlaceBomb = true;
+    private boolean canPlaceBomb1 = true;
+    private boolean canPlaceBomb2 = true;
 
     private final Player player1;
     private final Player player2;
@@ -37,15 +38,29 @@ public class Bomb {
         this.controller = controller;
     }
 
-    public void tryPlaceBomb(int row, int col) {
-        if (!canPlaceBomb) {
+    public void tryPlaceBomb1(int row, int col) {
+        if (!canPlaceBomb1) {
             return;
         }
 
         // Lancement du cooldown
-        canPlaceBomb = false;
+        canPlaceBomb1 = false;
         PauseTransition cooldown = new PauseTransition(Duration.seconds(COOLDOWN_SECONDS));
-        cooldown.setOnFinished(e -> canPlaceBomb = true);
+        cooldown.setOnFinished(e -> canPlaceBomb1 = true);
+        cooldown.play();
+
+        place(row, col);
+    }
+
+    public void tryPlaceBomb2(int row, int col) {
+        if (!canPlaceBomb2) {
+            return;
+        }
+
+        // Lancement du cooldown
+        canPlaceBomb2 = false;
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(COOLDOWN_SECONDS));
+        cooldown.setOnFinished(e -> canPlaceBomb2 = true);
         cooldown.play();
 
         place(row, col);

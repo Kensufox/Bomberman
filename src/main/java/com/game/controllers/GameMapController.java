@@ -78,9 +78,9 @@ public class GameMapController {
             pressedKeys.add(code);
             // Exception for placing bomb keybind
             if (code == inputHandler.getJ1Bomb()) {
-                bomb.tryPlaceBomb(player1.getRow(), player1.getCol());
+                bomb.tryPlaceBomb1(player1.getRow(), player1.getCol());
             } else if (code == inputHandler.getJ2Bomb()) {
-                bomb.tryPlaceBomb(player2.getRow(), player2.getCol());
+                bomb.tryPlaceBomb2(player2.getRow(), player2.getCol());
             }
         }
     }
@@ -118,11 +118,11 @@ public class GameMapController {
 
                 player1Cell.toFront();
                 player2Cell.toFront();
-/*
+
                 if (pressedKeys.contains(inputHandler.getJ1Bomb()))
-                    bomb.tryPlaceBomb(player1.getRow(), player1.getCol());
+                    bomb.tryPlaceBomb1(player1.getRow(), player1.getCol());
                 if (pressedKeys.contains(inputHandler.getJ2Bomb()))
-                    bomb.tryPlaceBomb(player2.getRow(), player2.getCol());*/
+                    bomb.tryPlaceBomb2(player2.getRow(), player2.getCol());
 
                 if ((dRowJ1 != 0 || dColJ1 != 0) && player1.canMove(now)) {
                     movePlayerIfPossible(player1, player1Cell, dRowJ1, dColJ1);
