@@ -1,0 +1,3 @@
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.game.controllers.GameOverController">
+    <Label fx:id="winnerLabel" text="Winner!" style="-fx-font-size: 36px; -fx-text-fill: red;" />
+</StackPane>
