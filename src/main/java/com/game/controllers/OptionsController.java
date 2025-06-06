@@ -113,11 +113,8 @@ public class OptionsController implements Initializable {
         if (currentKeyButton != null) {
             KeyCode newKey = event.getCode();
 
-            // Vérifier si la touche n'est pas déjà utilisée
-            if (isKeyAlreadyUsed(newKey, currentPlayer, currentAction)) {
-                showKeyConflictDialog(newKey);
-                return;
-            }
+            // Réaffecter la touche même si elle était déjà utilisée ailleurs
+            isKeyAlreadyUsed(newKey, currentPlayer, currentAction); // efface automatiquement si utilisée
 
             // Mettre à jour le bouton et les paramètres
             updateKeyButtonText(currentKeyButton, newKey);
@@ -128,9 +125,24 @@ public class OptionsController implements Initializable {
         event.consume();
     }
 
+    // Méthode pour retirer une touche assignée à un autre joueur/action
+    private void clearKeyAssignment(KeyCode keyCode) {
+        if (settings.getPlayer1UpKey() == keyCode) settings.setPlayer1UpKey(null);
+        else if (settings.getPlayer1DownKey() == keyCode) settings.setPlayer1DownKey(null);
+        else if (settings.getPlayer1LeftKey() == keyCode) settings.setPlayer1LeftKey(null);
+        else if (settings.getPlayer1RightKey() == keyCode) settings.setPlayer1RightKey(null);
+        else if (settings.getPlayer1BombKey() == keyCode) settings.setPlayer1BombKey(null);
+        else if (settings.getPlayer2UpKey() == keyCode) settings.setPlayer2UpKey(null);
+        else if (settings.getPlayer2DownKey() == keyCode) settings.setPlayer2DownKey(null);
+        else if (settings.getPlayer2LeftKey() == keyCode) settings.setPlayer2LeftKey(null);
+        else if (settings.getPlayer2RightKey() == keyCode) settings.setPlayer2RightKey(null);
+        else if (settings.getPlayer2BombKey() == keyCode) settings.setPlayer2BombKey(null);
+    }
+
+    // Méthode mise à jour : si déjà utilisée, on la supprime de là où elle était
     private boolean isKeyAlreadyUsed(KeyCode keyCode, String excludePlayer, String excludeAction) {
-        // Vérifier toutes les touches des deux joueurs
-        return (settings.getPlayer1UpKey() == keyCode && !("player1".equals(excludePlayer) && "up".equals(excludeAction))) ||
+        // Si la touche est utilisée ailleurs, on la supprime
+        if ((settings.getPlayer1UpKey() == keyCode && !("player1".equals(excludePlayer) && "up".equals(excludeAction))) ||
                 (settings.getPlayer1DownKey() == keyCode && !("player1".equals(excludePlayer) && "down".equals(excludeAction))) ||
                 (settings.getPlayer1LeftKey() == keyCode && !("player1".equals(excludePlayer) && "left".equals(excludeAction))) ||
                 (settings.getPlayer1RightKey() == keyCode && !("player1".equals(excludePlayer) && "right".equals(excludeAction))) ||
@@ -139,15 +151,12 @@ public class OptionsController implements Initializable {
                 (settings.getPlayer2DownKey() == keyCode && !("player2".equals(excludePlayer) && "down".equals(excludeAction))) ||
                 (settings.getPlayer2LeftKey() == keyCode && !("player2".equals(excludePlayer) && "left".equals(excludeAction))) ||
                 (settings.getPlayer2RightKey() == keyCode && !("player2".equals(excludePlayer) && "right".equals(excludeAction))) ||
-                (settings.getPlayer2BombKey() == keyCode && !("player2".equals(excludePlayer) && "bomb".equals(excludeAction)));
-    }
+                (settings.getPlayer2BombKey() == keyCode && !("player2".equals(excludePlayer) && "bomb".equals(excludeAction)))) {
 
-    private void showKeyConflictDialog(KeyCode conflictKey) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Conflit de touche");
-        alert.setHeaderText("Touche déjà utilisée");
-        alert.setContentText("La touche " + getKeyDisplayText(conflictKey) + " est déjà assignée à une autre action.\nVeuillez choisir une autre touche.");
-        alert.showAndWait();
+            clearKeyAssignment(keyCode);
+            return true;
+        }
+        return false;
     }
 
     private void updateKeyBinding(String player, String action, KeyCode keyCode) {
