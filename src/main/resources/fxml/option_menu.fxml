@@ -6,15 +6,15 @@
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.game.controllers.OptionsController"
-            stylesheets="/style.css"
+            stylesheets="/css/options.css"
             styleClass="options-pane"
             prefWidth="600" prefHeight="520">
 
     <!-- Titre principal centré -->
-    <Label text="OPTIONS" layoutX="250" layoutY="15" styleClass="options-title"/>
+    <Label text="Configuration des touches" layoutX="60" layoutY="15" styleClass="options-title"/>
 
     <!-- Conteneur principal horizontal -->
-    <HBox layoutX="20" layoutY="50" spacing="20">
+    <HBox layoutX="10" layoutY="85" spacing="20">
         <!-- Joueur 1 -->
         <VBox spacing="10" styleClass="options-section" prefWidth="280">
             <Label text="Contrôles Joueur 1" styleClass="section-title"/>
@@ -79,10 +79,10 @@
     </HBox>
 
     <!-- Boutons en bas -->
-    <HBox spacing="15" alignment="CENTER" layoutX="150" layoutY="430">
+    <HBox spacing="15" alignment="CENTER" layoutX="70" layoutY="430">
         <Button fx:id="resetButton" text="Par défaut" onAction="#resetToDefaults" styleClass="control-button"/>
         <Button fx:id="applyButton" text="Appliquer" onAction="#applySettings" styleClass="control-button apply-button"/>
-        <Button fx:id="cancelButton" text="Annuler" onAction="#cancelSettings" styleClass="control-button"/>
+        <Button fx:id="cancelButton" text="Annuler" onAction="#cancelSettings" styleClass="control-button "/>
         <Button fx:id="backButton" text="Retour" onAction="#backToMenu" styleClass="control-button back-button"/>
     </HBox>
 

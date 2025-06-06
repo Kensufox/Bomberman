@@ -5,7 +5,7 @@
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.game.controllers.MenuController"
-            stylesheets="/style.css" styleClass="choose-game-pane">
+            stylesheets="/css/chooseGame.css" styleClass="choose-game-pane">
 
     <VBox spacing="20" alignment="CENTER">
 
