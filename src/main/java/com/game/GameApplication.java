@@ -22,7 +22,7 @@ public class GameApplication extends Application {
         primaryStage.setTitle("Bomberman | v0.0.1");
         primaryStage.setScene(new Scene(root, 600, 520));
         primaryStage.setResizable(false);
-        MusicPlayer.play(MusicLibrary.ACTION3, false);
+        MusicPlayer.play(MusicLibrary.ACTION3, MusicPlayer.Mode.RANDOM);
         primaryStage.show();
     }
 
