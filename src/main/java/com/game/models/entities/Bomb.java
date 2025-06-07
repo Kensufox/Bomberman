@@ -113,19 +113,24 @@ public class Bomb {
                         }
                     }
 
-                    if (mapData[r][c] == 'B' || mapData[r][c] == '.'){/* 
-                        StackPane explosionPane = new StackPane();
-                        Canvas explosionCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
-                        explosionCanvas.setOpacity(0.5);
-                        GraphicsContext gc = explosionCanvas.getGraphicsContext2D();
-                        gc.setFill(javafx.scene.paint.Color.YELLOW);
-                        gc.fillRect(0, 0, TILE_SIZE, TILE_SIZE);
-                        explosionPane.getChildren().add(explosionCanvas);
-                        explosionPane.setPrefSize(TILE_SIZE, TILE_SIZE);
-
-                        mapGrid.add(explosionPane, c, r);*/
-
-                        Image img = new Image(ImageLibrary.CenterFire);
+                    if (mapData[r][c] == 'B' || mapData[r][c] == '.'){
+                        Image img;
+                        System.out.println(i+ " "+ range+ " "+ r+ " "+ c);
+                        if (r-row == 0 && c-col == 0) img = new Image(ImageLibrary.CenterFire);
+                        else if (i == range){
+                            if (dir[1] > 0) img = new Image(ImageLibrary.Right1Fire);
+                            else if (dir[1] < 0) img = new Image(ImageLibrary.Left1Fire);
+                            else if (dir[0] < 0) img = new Image(ImageLibrary.Up1Fire);
+                            else if (dir[0] > 0) img = new Image(ImageLibrary.Down1Fire);
+                            else img = new Image(ImageLibrary.Empty);
+                        }
+                        else {
+                            if (dir[1] > 0) img = new Image(ImageLibrary.Right2Fire);
+                            else if (dir[1] < 0) img = new Image(ImageLibrary.Left2Fire);
+                            else if (dir[0] < 0) img = new Image(ImageLibrary.Up2Fire);
+                            else if (dir[0] > 0) img = new Image(ImageLibrary.Down2Fire);
+                            else img = new Image(ImageLibrary.Empty);
+                        }
                         StackPane explosionPane = ResourceLoader.createTexturedTile(img, TILE_SIZE);
                         tiles[r][c] = explosionPane;
                         mapGrid.add(explosionPane, c, r);
