@@ -1,11 +1,7 @@
 package com.game.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.game.models.entities.Bomb;
@@ -28,24 +24,24 @@ import javafx.scene.layout.StackPane;
 public class GameMapController {
 
     @FXML
-    private GridPane mapGrid;
+    protected GridPane mapGrid;
 
     @FXML
-    private GridPane backgroundGrid;
+    protected GridPane backgroundGrid;
 
-    private InputHandler inputHandler;
-    private PowerUp powerUp;
-    private StackPane powerUpCell;
-    private Bomb bomb;
-    private GameMap gameMap;
+    protected InputHandler inputHandler;
+    protected PowerUp powerUp;
+    protected StackPane powerUpCell;
+    protected Bomb bomb;
+    protected GameMap gameMap;
 
-    private final Set<KeyCode> pressedKeys = new HashSet<>();
+    protected final Set<KeyCode> pressedKeys = new HashSet<>();
 
     // Generic list of players and their contexts (cells + controls)
-    private final List<PlayerContext> players = new ArrayList<>();
+    protected final List<PlayerContext> players = new ArrayList<>();
 
     // Inner class to store info per player
-    private static class PlayerContext {
+    protected static class PlayerContext {
         final Player player;
         final StackPane cell;
         final InputHandler.PlayerControls controls;
@@ -68,8 +64,10 @@ public class GameMapController {
         Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player2.png")));
 
         // Create players
-        Player player1 = new Player(1, 1, Player.State.ALIVE);
-        Player player2 = new Player(11, 13, Player.State.ALIVE);
+        Player[] players_temps = createPlayers();
+        Player player1 = players_temps[0];
+        Player player2 = players_temps[1];
+
 
         // Create graphical nodes
         StackPane player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), gameMap.getTileSize() * 1.75, 0, 15);
@@ -102,7 +100,13 @@ public class GameMapController {
         startMovementLoop();
     }
 
-    private void handleKeyPressed(KeyEvent event) {
+    protected Player[] createPlayers() {
+        Player player1 = new Player(1, 1, Player.State.ALIVE);
+        Player player2 = new Player(11, 13, Player.State.ALIVE);
+        return new Player[] { player1, player2 };
+    }
+
+    protected void handleKeyPressed(KeyEvent event) {
         KeyCode code = event.getCode();
         if (!pressedKeys.contains(code)) {
             pressedKeys.add(code);
@@ -115,11 +119,11 @@ public class GameMapController {
         }
     }
 
-    private void handleKeyReleased(KeyEvent event) {
+    protected void handleKeyReleased(KeyEvent event) {
         pressedKeys.remove(event.getCode());
     }
 
-    private void startMovementLoop() {
+    protected void startMovementLoop() {
         AnimationTimer movementLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -152,7 +156,7 @@ public class GameMapController {
         movementLoop.start();
     }
 
-    private void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
+    protected void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
         int oldRow = player.getRow();
         int oldCol = player.getCol();
         int newRow = oldRow + dRow;
@@ -168,7 +172,7 @@ public class GameMapController {
         cell.toFront();
     }
 
-    private boolean isWalkable(int row, int col) {
+    protected boolean isWalkable(int row, int col) {
         if (row < 0 || col < 0 || row >= gameMap.getMapData().length || col >= gameMap.getMapData()[0].length) {
             return false; // safety out of bounds
         }
@@ -176,7 +180,7 @@ public class GameMapController {
         return cell == '.' || cell == 'P';
     }
 
-    private void checkPowerUpCollision(Player player) {
+    protected void checkPowerUpCollision(Player player) {
         if (powerUp == null) return;
 
         if (player.getRow() == powerUp.getRow() && player.getCol() == powerUp.getCol()) {
@@ -212,7 +216,7 @@ public class GameMapController {
         }
     }
 
-    private void switchToGameOverScreen(String winnerText, int P1Score, int P2Score) {
+    protected void switchToGameOverScreen(String winnerText, int P1Score, int P2Score) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game-over.fxml"));
             StackPane gameOverRoot = loader.load();

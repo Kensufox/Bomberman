@@ -5,20 +5,23 @@ public class Player {
         ALIVE, DEAD, GHOST
     }
 
-    private int row;
-    private int col;
-    private PowerUp.Power power;
-    private State state;
-    private long powerEndTime = 0;
-    private int score = 0;
+    protected int row;
+    protected int col;
+    protected PowerUp.Power power;
+    protected State state;
+    protected long powerEndTime = 0;
+    protected int score = 0;
 
-    private long lastMoveTime = 0;
-    private long moveDelay = 150_000_000; // 150ms
+    private boolean isBot = false;
+
+    protected long lastMoveTime = 0;
+    protected long moveDelay;
 
     public Player(int startRow, int startCol, State state) {
         this.row = startRow;
         this.col = startCol;
         this.state = state;
+        this.moveDelay = 150_000_000; // 150ms
     }
 
     public int getRow() {
@@ -89,6 +92,14 @@ public class Player {
             }
 
         }
+    }
+
+    public void setIsBot(boolean isBot) {
+        this.isBot = isBot;
+    }
+
+    public boolean getIsBot() {
+        return isBot;
     }
 
     public void setScore(int score) {

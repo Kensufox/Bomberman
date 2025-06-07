@@ -59,6 +59,23 @@ public class MenuController {
     public void classicGame (ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_map.fxml"));
+            loader.setController(new GameMapController());
+            StackPane root = loader.load();
+
+            // Retrieves the current scene from one of the buttons
+            Button sourceButton = (Button) event.getSource();
+            sourceButton.getScene().setRoot(root);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void VsComputer (ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_map.fxml"));
+            loader.setController(new GameMapControllerbot());
             StackPane root = loader.load();
 
             // Retrieves the current scene from one of the buttons

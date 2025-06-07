@@ -2,7 +2,7 @@
 
 <?import javafx.scene.layout.*?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.game.controllers.GameMapController">
+<StackPane xmlns:fx="http://javafx.com/fxml">
     <GridPane fx:id="backgroundGrid" />
     <GridPane fx:id="mapGrid"
               hgap="0" vgap="0" />
