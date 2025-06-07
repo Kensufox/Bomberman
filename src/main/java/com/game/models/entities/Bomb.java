@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import com.game.controllers.GameMapController;
+import com.game.utils.GameData;
 import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
 
@@ -49,7 +50,7 @@ public class Bomb {
         }
 
         canPlaceBomb = false;
-        PauseTransition cooldown = new PauseTransition(Duration.seconds(COOLDOWN_SECONDS));
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(COOLDOWN_SECONDS/GameData.gameSpeed));
         cooldown.setOnFinished(e -> canPlaceBomb = true);
         cooldown.play();
 
@@ -64,7 +65,7 @@ public class Bomb {
         mapData[row][col] = 'X'; 
         mapGrid.add(bombCell, col, row);
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(2));
+        PauseTransition delay = new PauseTransition(Duration.seconds(2/GameData.gameSpeed));
         delay.setOnFinished(e -> {
             mapGrid.getChildren().remove(bombCell);
             mapData[row][col] = '.';
@@ -126,7 +127,7 @@ public class Bomb {
 
                         mapGrid.add(explosionPane, c, r);
 
-                        PauseTransition clear = new PauseTransition(Duration.seconds(0.4));
+                        PauseTransition clear = new PauseTransition(Duration.seconds(0.4/GameData.gameSpeed));
                         clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
                         clear.play();
                     }

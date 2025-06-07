@@ -12,6 +12,7 @@ import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.map.GameMap;
+import com.game.utils.GameData;
 import com.game.utils.ImageLibrary;
 import com.game.utils.InputHandler;
 import com.game.utils.ResourceLoader;
@@ -219,7 +220,7 @@ public class GameMapController {
         PowerUp.Power randomPower = possiblePowers[new java.util.Random().nextInt(possiblePowers.length)];
 
         // Create the PowerUp object (adjust duration and position)
-        PowerUp newPowerUp = new PowerUp(row, col, randomPower, 3_000_000_000L);
+        PowerUp newPowerUp = new PowerUp(row, col, randomPower, 3_000_000_000L/GameData.gameSpeed);
 
         // Load appropriate image for the power-up type, e.g.:
         String imgPath;

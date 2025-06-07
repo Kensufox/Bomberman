@@ -1,5 +1,7 @@
 package com.game.models.entities;
 
+import com.game.utils.GameData;
+
 public class Player {
     public enum State {
         ALIVE, DEAD, GHOST
@@ -13,7 +15,7 @@ public class Player {
     private int score = 0;
 
     private long lastMoveTime = 0;
-    private long moveDelay = 150_000_000; // 150ms
+    private long moveDelay = 150_000_000/GameData.gameSpeed; // 150ms
 
     public Player(int startRow, int startCol, State state) {
         this.row = startRow;
@@ -41,7 +43,7 @@ public class Player {
 
     public void removePower() {
         this.power = null;
-        setMoveDelay(150_000_000); // réinitialise par défaut
+        setMoveDelay(150_000_000/GameData.gameSpeed); // réinitialise par défaut
     }
 
     public long getPowerEndTime() {
@@ -63,7 +65,7 @@ public class Player {
     }
 
     public void setMoveDelay(long delay) {
-        this.moveDelay = delay;
+        this.moveDelay = delay/GameData.gameSpeed;
     }
 
     public long getMoveDelay() {
@@ -80,7 +82,7 @@ public class Player {
 
     public void appliPower() {
         switch (power) {
-            case SPEED -> setMoveDelay(50_000_000);
+            case SPEED -> setMoveDelay(50_000_000/GameData.gameSpeed);
             case BOMB_RANGE -> {
             }
             case EXTRA_BOMB -> {
