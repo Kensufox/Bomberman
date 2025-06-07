@@ -10,8 +10,6 @@ import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
 
 import javafx.animation.PauseTransition;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -58,7 +56,7 @@ public class Bomb {
     }
 
     public void place(int row, int col) {
-        Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/"+ImageLibrary.Bomb)));
+        Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Bomb)));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
         if (mapData[row][col] == 'X') return;
@@ -115,7 +113,7 @@ public class Bomb {
                         }
                     }
 
-                    if (mapData[r][c] == 'B' || mapData[r][c] == '.'){
+                    if (mapData[r][c] == 'B' || mapData[r][c] == '.'){/* 
                         StackPane explosionPane = new StackPane();
                         Canvas explosionCanvas = new Canvas(TILE_SIZE, TILE_SIZE);
                         explosionCanvas.setOpacity(0.5);
@@ -125,6 +123,11 @@ public class Bomb {
                         explosionPane.getChildren().add(explosionCanvas);
                         explosionPane.setPrefSize(TILE_SIZE, TILE_SIZE);
 
+                        mapGrid.add(explosionPane, c, r);*/
+
+                        Image img = new Image(ImageLibrary.CenterFire);
+                        StackPane explosionPane = ResourceLoader.createTexturedTile(img, TILE_SIZE);
+                        tiles[r][c] = explosionPane;
                         mapGrid.add(explosionPane, c, r);
 
                         PauseTransition clear = new PauseTransition(Duration.seconds(0.4/GameData.gameSpeed));

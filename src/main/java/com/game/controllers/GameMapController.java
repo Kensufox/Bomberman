@@ -67,8 +67,8 @@ public class GameMapController {
         gameMap.setupMap(mapGrid);
 
         // Create player images
-        Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/"+ImageLibrary.Player1)));
-        Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/"+ImageLibrary.Player2)));
+        Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Player1)));
+        Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Player2)));
 
         // Create players
         Player player1 = new Player(1, 1, Player.State.ALIVE);
@@ -225,10 +225,10 @@ public class GameMapController {
         // Load appropriate image for the power-up type, e.g.:
         String imgPath;
         imgPath = switch (randomPower) {
-            case SPEED -> "/images/"+ImageLibrary.PowerSpeed;
-            case BOMB_RANGE -> "/images/"+ImageLibrary.PowerRange;
-            case EXTRA_BOMB -> "/images/"+ImageLibrary.PowerAmount;
-            default -> "/images/"+ImageLibrary.Power;
+            case SPEED ->      ImageLibrary.PowerSpeed;
+            case BOMB_RANGE -> ImageLibrary.PowerRange;
+            case EXTRA_BOMB -> ImageLibrary.PowerAmount;
+            default ->         ImageLibrary.Power;
         }; // add other cases here
 
         Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imgPath)));
