@@ -7,7 +7,7 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.game.controllers.MenuController"
             prefWidth="600" prefHeight="520"
-            stylesheets="/style.css">
+            stylesheets="/css/main.css">
 
     <!-- Background image -->
     <ImageView fitWidth="600" fitHeight="520" preserveRatio="false">

@@ -10,7 +10,9 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import com.game.controllers.GameSettings;
+
+import com.game.utils.InputHandler;
+import com.game.utils.InputHandler.PlayerControls;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,89 +20,68 @@ import java.util.ResourceBundle;
 
 public class OptionsController implements Initializable {
 
-    // Audio Controls
-    @FXML private Slider masterVolumeSlider;
-    @FXML private Slider sfxVolumeSlider;
-    @FXML private Slider musicVolumeSlider;
-    @FXML private Label masterVolumeLabel;
-    @FXML private Label sfxVolumeLabel;
-    @FXML private Label musicVolumeLabel;
-
-    // Player 1 Controls
     @FXML private Button player1UpButton;
     @FXML private Button player1DownButton;
     @FXML private Button player1LeftButton;
     @FXML private Button player1RightButton;
     @FXML private Button player1BombButton;
 
-    // Player 2 Controls
     @FXML private Button player2UpButton;
     @FXML private Button player2DownButton;
     @FXML private Button player2LeftButton;
     @FXML private Button player2RightButton;
     @FXML private Button player2BombButton;
 
-    // Gameplay Controls
-    @FXML private ComboBox<String> difficultyComboBox;
-    @FXML private Slider gameSpeedSlider;
-    @FXML private Label gameSpeedLabel;
-    @FXML private CheckBox screenShakeCheckBox;
-    @FXML private CheckBox particlesCheckBox;
-
-    // Control Buttons
     @FXML private Button resetButton;
     @FXML private Button applyButton;
     @FXML private Button cancelButton;
     @FXML private Button backButton;
 
-    // Key Capture Dialog
     @FXML private StackPane keyCapture;
     @FXML private Label keyCaptureLabel;
 
-    private GameSettings settings;
+    private InputHandler inputHandler;
+
     private Button currentKeyButton;
     private String currentPlayer;
     private String currentAction;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        settings = GameSettings.getInstance();
+        inputHandler = new InputHandler();
         loadCurrentSettings();
         setupKeyCapture();
     }
 
     private void loadCurrentSettings() {
-        // Load key bindings
-        updateKeyButtonText(player1UpButton, settings.getPlayer1UpKey());
-        updateKeyButtonText(player1DownButton, settings.getPlayer1DownKey());
-        updateKeyButtonText(player1LeftButton, settings.getPlayer1LeftKey());
-        updateKeyButtonText(player1RightButton, settings.getPlayer1RightKey());
-        updateKeyButtonText(player1BombButton, settings.getPlayer1BombKey());
+        PlayerControls j1 = inputHandler.getJ1Controls();
+        PlayerControls j2 = inputHandler.getJ2Controls();
 
-        updateKeyButtonText(player2UpButton, settings.getPlayer2UpKey());
-        updateKeyButtonText(player2DownButton, settings.getPlayer2DownKey());
-        updateKeyButtonText(player2LeftButton, settings.getPlayer2LeftKey());
-        updateKeyButtonText(player2RightButton, settings.getPlayer2RightKey());
-        updateKeyButtonText(player2BombButton, settings.getPlayer2BombKey());
+        updateKeyButtonText(player1UpButton, j1.up);
+        updateKeyButtonText(player1DownButton, j1.down);
+        updateKeyButtonText(player1LeftButton, j1.left);
+        updateKeyButtonText(player1RightButton, j1.right);
+        updateKeyButtonText(player1BombButton, j1.bomb);
+
+        updateKeyButtonText(player2UpButton, j2.up);
+        updateKeyButtonText(player2DownButton, j2.down);
+        updateKeyButtonText(player2LeftButton, j2.left);
+        updateKeyButtonText(player2RightButton, j2.right);
+        updateKeyButtonText(player2BombButton, j2.bomb);
     }
 
     private void updateKeyButtonText(Button button, KeyCode keyCode) {
-        String keyText = getKeyDisplayText(keyCode);
-        button.setText(keyText);
-    }
-
-    private String getKeyDisplayText(KeyCode keyCode) {
+        if (keyCode == null) {
+            button.setText("NONE");
+            return;
+        }
         switch (keyCode) {
-            case UP: return "↑";
-            case DOWN: return "↓";
-            case LEFT: return "←";
-            case RIGHT: return "→";
-            case SPACE: return "SPACE";
-            case ENTER: return "ENTER";
-            case SHIFT: return "SHIFT";
-            case CONTROL: return "CTRL";
-            case ALT: return "ALT";
-            default: return keyCode.getName().toUpperCase();
+            case UP: button.setText("↑"); break;
+            case DOWN: button.setText("↓"); break;
+            case LEFT: button.setText("←"); break;
+            case RIGHT: button.setText("→"); break;
+            case SPACE: button.setText("SPACE"); break;
+            default: button.setText(keyCode.getName().toUpperCase()); break;
         }
     }
 
@@ -113,10 +94,9 @@ public class OptionsController implements Initializable {
         if (currentKeyButton != null) {
             KeyCode newKey = event.getCode();
 
-            // Réaffecter la touche même si elle était déjà utilisée ailleurs
-            isKeyAlreadyUsed(newKey, currentPlayer, currentAction); // efface automatiquement si utilisée
+            // Enlever si déjà utilisée
+            clearKeyAssignment(newKey);
 
-            // Mettre à jour le bouton et les paramètres
             updateKeyButtonText(currentKeyButton, newKey);
             updateKeyBinding(currentPlayer, currentAction, newKey);
 
@@ -125,56 +105,35 @@ public class OptionsController implements Initializable {
         event.consume();
     }
 
-    // Méthode pour retirer une touche assignée à un autre joueur/action
     private void clearKeyAssignment(KeyCode keyCode) {
-        if (settings.getPlayer1UpKey() == keyCode) settings.setPlayer1UpKey(null);
-        else if (settings.getPlayer1DownKey() == keyCode) settings.setPlayer1DownKey(null);
-        else if (settings.getPlayer1LeftKey() == keyCode) settings.setPlayer1LeftKey(null);
-        else if (settings.getPlayer1RightKey() == keyCode) settings.setPlayer1RightKey(null);
-        else if (settings.getPlayer1BombKey() == keyCode) settings.setPlayer1BombKey(null);
-        else if (settings.getPlayer2UpKey() == keyCode) settings.setPlayer2UpKey(null);
-        else if (settings.getPlayer2DownKey() == keyCode) settings.setPlayer2DownKey(null);
-        else if (settings.getPlayer2LeftKey() == keyCode) settings.setPlayer2LeftKey(null);
-        else if (settings.getPlayer2RightKey() == keyCode) settings.setPlayer2RightKey(null);
-        else if (settings.getPlayer2BombKey() == keyCode) settings.setPlayer2BombKey(null);
-    }
-
-    // Méthode mise à jour : si déjà utilisée, on la supprime de là où elle était
-    private boolean isKeyAlreadyUsed(KeyCode keyCode, String excludePlayer, String excludeAction) {
-        // Si la touche est utilisée ailleurs, on la supprime
-        if ((settings.getPlayer1UpKey() == keyCode && !("player1".equals(excludePlayer) && "up".equals(excludeAction))) ||
-                (settings.getPlayer1DownKey() == keyCode && !("player1".equals(excludePlayer) && "down".equals(excludeAction))) ||
-                (settings.getPlayer1LeftKey() == keyCode && !("player1".equals(excludePlayer) && "left".equals(excludeAction))) ||
-                (settings.getPlayer1RightKey() == keyCode && !("player1".equals(excludePlayer) && "right".equals(excludeAction))) ||
-                (settings.getPlayer1BombKey() == keyCode && !("player1".equals(excludePlayer) && "bomb".equals(excludeAction))) ||
-                (settings.getPlayer2UpKey() == keyCode && !("player2".equals(excludePlayer) && "up".equals(excludeAction))) ||
-                (settings.getPlayer2DownKey() == keyCode && !("player2".equals(excludePlayer) && "down".equals(excludeAction))) ||
-                (settings.getPlayer2LeftKey() == keyCode && !("player2".equals(excludePlayer) && "left".equals(excludeAction))) ||
-                (settings.getPlayer2RightKey() == keyCode && !("player2".equals(excludePlayer) && "right".equals(excludeAction))) ||
-                (settings.getPlayer2BombKey() == keyCode && !("player2".equals(excludePlayer) && "bomb".equals(excludeAction)))) {
-
-            clearKeyAssignment(keyCode);
-            return true;
-        }
-        return false;
+        if (inputHandler.getJ1Up() == keyCode) inputHandler.setJ1Up(null);
+        else if (inputHandler.getJ1Down() == keyCode) inputHandler.setJ1Down(null);
+        else if (inputHandler.getJ1Left() == keyCode) inputHandler.setJ1Left(null);
+        else if (inputHandler.getJ1Right() == keyCode) inputHandler.setJ1Right(null);
+        else if (inputHandler.getJ1Bomb() == keyCode) inputHandler.setJ1Bomb(null);
+        else if (inputHandler.getJ2Up() == keyCode) inputHandler.setJ2Up(null);
+        else if (inputHandler.getJ2Down() == keyCode) inputHandler.setJ2Down(null);
+        else if (inputHandler.getJ2Left() == keyCode) inputHandler.setJ2Left(null);
+        else if (inputHandler.getJ2Right() == keyCode) inputHandler.setJ2Right(null);
+        else if (inputHandler.getJ2Bomb() == keyCode) inputHandler.setJ2Bomb(null);
     }
 
     private void updateKeyBinding(String player, String action, KeyCode keyCode) {
         if ("player1".equals(player)) {
             switch (action) {
-                case "up": settings.setPlayer1UpKey(keyCode); break;
-                case "down": settings.setPlayer1DownKey(keyCode); break;
-                case "left": settings.setPlayer1LeftKey(keyCode); break;
-                case "right": settings.setPlayer1RightKey(keyCode); break;
-                case "bomb": settings.setPlayer1BombKey(keyCode); break;
+                case "up": inputHandler.setJ1Up(keyCode); break;
+                case "down": inputHandler.setJ1Down(keyCode); break;
+                case "left": inputHandler.setJ1Left(keyCode); break;
+                case "right": inputHandler.setJ1Right(keyCode); break;
+                case "bomb": inputHandler.setJ1Bomb(keyCode); break;
             }
         } else if ("player2".equals(player)) {
             switch (action) {
-                case "up": settings.setPlayer2UpKey(keyCode); break;
-                case "down": settings.setPlayer2DownKey(keyCode); break;
-                case "left": settings.setPlayer2LeftKey(keyCode); break;
-                case "right": settings.setPlayer2RightKey(keyCode); break;
-                case "bomb": settings.setPlayer2BombKey(keyCode); break;
+                case "up": inputHandler.setJ2Up(keyCode); break;
+                case "down": inputHandler.setJ2Down(keyCode); break;
+                case "left": inputHandler.setJ2Left(keyCode); break;
+                case "right": inputHandler.setJ2Right(keyCode); break;
+                case "bomb": inputHandler.setJ2Bomb(keyCode); break;
             }
         }
     }
@@ -210,57 +169,29 @@ public class OptionsController implements Initializable {
         currentAction = null;
     }
 
-    // Event Handlers for Player 1
-    @FXML
-    private void changePlayer1Up() {
-        showKeyCapture(player1UpButton, "player1", "up");
-    }
+    // Event handlers for buttons:
 
     @FXML
-    private void changePlayer1Down() {
-        showKeyCapture(player1DownButton, "player1", "down");
-    }
+    private void changePlayer1Up() { showKeyCapture(player1UpButton, "player1", "up"); }
+    @FXML
+    private void changePlayer1Down() { showKeyCapture(player1DownButton, "player1", "down"); }
+    @FXML
+    private void changePlayer1Left() { showKeyCapture(player1LeftButton, "player1", "left"); }
+    @FXML
+    private void changePlayer1Right() { showKeyCapture(player1RightButton, "player1", "right"); }
+    @FXML
+    private void changePlayer1Bomb() { showKeyCapture(player1BombButton, "player1", "bomb"); }
 
     @FXML
-    private void changePlayer1Left() {
-        showKeyCapture(player1LeftButton, "player1", "left");
-    }
-
+    private void changePlayer2Up() { showKeyCapture(player2UpButton, "player2", "up"); }
     @FXML
-    private void changePlayer1Right() {
-        showKeyCapture(player1RightButton, "player1", "right");
-    }
-
+    private void changePlayer2Down() { showKeyCapture(player2DownButton, "player2", "down"); }
     @FXML
-    private void changePlayer1Bomb() {
-        showKeyCapture(player1BombButton, "player1", "bomb");
-    }
-
-    // Event Handlers for Player 2
+    private void changePlayer2Left() { showKeyCapture(player2LeftButton, "player2", "left"); }
     @FXML
-    private void changePlayer2Up() {
-        showKeyCapture(player2UpButton, "player2", "up");
-    }
-
+    private void changePlayer2Right() { showKeyCapture(player2RightButton, "player2", "right"); }
     @FXML
-    private void changePlayer2Down() {
-        showKeyCapture(player2DownButton, "player2", "down");
-    }
-
-    @FXML
-    private void changePlayer2Left() {
-        showKeyCapture(player2LeftButton, "player2", "left");
-    }
-
-    @FXML
-    private void changePlayer2Right() {
-        showKeyCapture(player2RightButton, "player2", "right");
-    }
-
-    @FXML
-    private void changePlayer2Bomb() {
-        showKeyCapture(player2BombButton, "player2", "bomb");
-    }
+    private void changePlayer2Bomb() { showKeyCapture(player2BombButton, "player2", "bomb"); }
 
     @FXML
     private void cancelKeyCapture() {
@@ -275,17 +206,15 @@ public class OptionsController implements Initializable {
         alert.setContentText("Êtes-vous sûr de vouloir réinitialiser tous les paramètres aux valeurs par défaut ?");
 
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            settings.resetToDefaults();
+            inputHandler.resetToDefaults();  // Il faut implémenter cette méthode dans InputHandler
             loadCurrentSettings();
         }
     }
 
     @FXML
     private void applySettings() {
-        // Sauvegarder dans un fichier
-        settings.saveSettings();
+        inputHandler.saveSettings();  // Il faut implémenter cette méthode dans InputHandler
 
-        // Afficher confirmation
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Paramètres sauvegardés");
         alert.setHeaderText("Succès");
@@ -295,8 +224,8 @@ public class OptionsController implements Initializable {
 
     @FXML
     private void cancelSettings() {
-        // Recharger les paramètres depuis le fichier
-        settings.loadSettings();
+        inputHandler.loadConfiguration(); // Reload config
+        inputHandler.convertStringKeysToKeyCodes();
         loadCurrentSettings();
     }
 

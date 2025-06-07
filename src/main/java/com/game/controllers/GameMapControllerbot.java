@@ -4,7 +4,6 @@ import com.game.models.entities.BotPlayer;
 import com.game.models.entities.Player;
 import javafx.animation.AnimationTimer;
 
-import java.util.Arrays;
 
 public class GameMapControllerbot extends GameMapController {
     public GameMapControllerbot() {

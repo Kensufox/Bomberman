@@ -3,6 +3,7 @@ package com.game.models.map;
 import java.util.Objects;
 import java.util.Random;
 
+import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
 
 import javafx.scene.image.Image;
@@ -25,9 +26,9 @@ public class GameMap {
     private final Image emptyImg;
 
     public GameMap() {
-        wallImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/inf_wall.png")));
-        breakableImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/weak_wall.png")));
-        emptyImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/empty.png")));
+        wallImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.InfWall)));
+        breakableImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.WeakWall)));
+        emptyImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Empty)));
     }
 
     public void setupMap(GridPane mapGrid) {

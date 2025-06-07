@@ -1,0 +1,55 @@
+
+.choose-game-pane {
+    -fx-background-color: #1a1a1a;
+    -fx-padding: 40;
+}
+
+/* btns games */
+.choose-game-button {
+    -fx-background-color: #222;
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-max-width: 350px;
+    -fx-border-color: #ffcc00;
+    -fx-border-width: 3;
+    -fx-border-radius: 14;
+    -fx-padding: 12 40;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, #ffcc00, 6, 0, 0, 0);
+    -fx-min-width: 220px;
+    -fx-alignment: center;
+}
+
+/* btns hames hover */
+.choose-game-button:hover {
+    -fx-background-color: #ffcc00;
+    -fx-text-fill: #1a1a1a;
+    -fx-effect: dropshadow(one-pass-box, #cc9900, 8, 0, 0, 0);
+}
+
+/* btn return */
+.return-choose-button {
+    -fx-background-color: #222;
+    -fx-text-fill: #00cccc;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-max-width: 350px;
+    -fx-border-color: #00cccc;
+    -fx-border-width: 3;
+    -fx-border-radius: 14;
+    -fx-padding: 12 40;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0);
+    -fx-min-width: 220px;
+    -fx-alignment: center;
+}
+
+/* btn return hover */
+.return-choose-button:hover {
+    -fx-background-color: #00cccc;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(one-pass-box, #00cccc, 8, 0, 0, 0);
+}

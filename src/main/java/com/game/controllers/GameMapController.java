@@ -8,6 +8,8 @@ import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.map.GameMap;
+import com.game.utils.GameData;
+import com.game.utils.ImageLibrary;
 import com.game.utils.InputHandler;
 import com.game.utils.ResourceLoader;
 
@@ -40,6 +42,9 @@ public class GameMapController {
     // Generic list of players and their contexts (cells + controls)
     protected final List<PlayerContext> players = new ArrayList<>();
 
+    private final List<PowerUp> activePowerUps = new ArrayList<>();
+    private final List<StackPane> activePowerUpCells = new ArrayList<>();
+
     // Inner class to store info per player
     protected static class PlayerContext {
         final Player player;
@@ -60,8 +65,8 @@ public class GameMapController {
         gameMap.setupMap(mapGrid);
 
         // Create player images
-        Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player1.png")));
-        Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/player2.png")));
+        Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Player1)));
+        Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Player2)));
 
         // Create players
         Player[] players_temps = createPlayers();
@@ -83,15 +88,9 @@ public class GameMapController {
             ctx.cell.toFront();
         }
 
-        // Initialize bomb (can be adapted to handle multiple players)
+        // Initialize bomb
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg(), 
             players.stream().map(pc -> pc.player).collect(Collectors.toList()), this);
-
-        // Create and place a power-up
-        Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/power-up-speed.png")));
-        powerUpCell = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
-        powerUp = new PowerUp(2, 1, PowerUp.Power.SPEED, 3_000_000_000L);
-        mapGrid.add(powerUpCell, powerUp.getCol(), powerUp.getRow());
 
         mapGrid.setFocusTraversable(true);
         mapGrid.setOnKeyPressed(this::handleKeyPressed);
@@ -180,17 +179,6 @@ public class GameMapController {
         return cell == '.' || cell == 'P';
     }
 
-    protected void checkPowerUpCollision(Player player) {
-        if (powerUp == null) return;
-
-        if (player.getRow() == powerUp.getRow() && player.getCol() == powerUp.getCol()) {
-            mapGrid.getChildren().remove(powerUpCell);
-            player.setPower(powerUp.getPower(), System.nanoTime(), powerUp.getDuration());
-            player.appliPower();
-            powerUp = null;
-        }
-    }
-
     public void killPlayer(Player player) {
         if (player.getState() == Player.State.DEAD) return;
 
@@ -229,6 +217,54 @@ public class GameMapController {
             ((javafx.stage.Stage) mapGrid.getScene().getWindow()).setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void spawnPowerUpAt(int row, int col) {
+        // Decide type randomly or fixed for now
+        PowerUp.Power[] possiblePowers = PowerUp.Power.values();
+        PowerUp.Power randomPower = possiblePowers[new java.util.Random().nextInt(possiblePowers.length)];
+
+        // Create the PowerUp object (adjust duration and position)
+        PowerUp newPowerUp = new PowerUp(row, col, randomPower, 3_000_000_000L/GameData.gameSpeed);
+
+        // Load appropriate image for the power-up type, e.g.:
+        String imgPath;
+        imgPath = switch (randomPower) {
+            case SPEED ->      ImageLibrary.PowerSpeed;
+            case BOMB_RANGE -> ImageLibrary.PowerRange;
+            case EXTRA_BOMB -> ImageLibrary.PowerAmount;
+            default ->         ImageLibrary.Power;
+        }; // add other cases here
+
+        Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imgPath)));
+
+        StackPane powerUpNode = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
+
+        // Add power-up to your tracking lists
+        activePowerUps.add(newPowerUp);
+        activePowerUpCells.add(powerUpNode);
+
+        // Add to the grid
+        mapGrid.add(powerUpNode, newPowerUp.getCol(), newPowerUp.getRow());
+    }
+
+    private void checkPowerUpCollision(Player player) {
+        if (activePowerUps.isEmpty()) return;
+
+        for (int i = 0; i < activePowerUps.size(); i++) {
+            PowerUp powerUp = activePowerUps.get(i);
+            if (player.getRow() == powerUp.getRow() && player.getCol() == powerUp.getCol()) {
+                // Remove power-up from the grid and lists
+                mapGrid.getChildren().remove(activePowerUpCells.get(i));
+                activePowerUps.remove(i);
+                activePowerUpCells.remove(i);
+
+                player.setPower(powerUp.getPower(), System.nanoTime(), powerUp.getDuration());
+                player.appliPower();
+
+                break;
+            }
         }
     }
 }
