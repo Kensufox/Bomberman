@@ -19,6 +19,11 @@ import javafx.util.Duration;
 public class Bomb {
 
     private static final int TILE_SIZE = 40;
+
+    public static double getCOOLDOWN_SECONDS() {
+        return COOLDOWN_SECONDS;
+    }
+
     private static final double COOLDOWN_SECONDS = 1.0;
     private final GridPane mapGrid;
     private final char[][] mapData;
@@ -43,18 +48,6 @@ public class Bomb {
         this.controller = controller;
     }
 
-    public void tryPlaceBomb(int row, int col) {
-        if (!canPlaceBomb) {
-            return;
-        }
-
-        canPlaceBomb = false;
-        PauseTransition cooldown = new PauseTransition(Duration.seconds(COOLDOWN_SECONDS/GameData.gameSpeed));
-        cooldown.setOnFinished(e -> canPlaceBomb = true);
-        cooldown.play();
-
-        place(row, col);
-    }
 
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Bomb)));

@@ -112,7 +112,7 @@ public class GameMapController {
             // Check if the key corresponds to a bomb for any player
             for (PlayerContext ctx : players) {
                 if (code == ctx.controls.bomb) {
-                    bomb.tryPlaceBomb(ctx.player.getRow(), ctx.player.getCol());
+                    ctx.player.tryPlaceBomb(ctx.player.getRow(), ctx.player.getCol(), bomb);
                 }
             }
         }

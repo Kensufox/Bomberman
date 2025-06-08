@@ -21,7 +21,7 @@ public class MovementStrategy {
     private static final int BOMB_RANGE = 3;
     
     /** Cooldown entre deux bombes (en nanosecondes) */
-    private static final long BOMB_COOLDOWN = 1_500_000_000L;
+    private static final long BOMB_COOLDOWN = 2_000_000_000L;
 
     private final BombAnalyzer bombAnalyzer;
     private final PathFinder pathFinder;

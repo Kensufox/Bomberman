@@ -1,6 +1,10 @@
 package com.game.models.entities;
 
 import com.game.utils.GameData;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+
+
 
 public class Player {
     public enum State {
@@ -14,10 +18,11 @@ public class Player {
     protected long powerEndTime = 0;
     protected int score = 0;
 
-    private boolean isBot = false;
     protected long lastMoveTime = 0;
     protected long moveDelay;
     protected long originalMoveDelay;
+
+    protected boolean canPlaceBomb = true;
 
     public Player(int startRow, int startCol, State state) {
         this.row = startRow;
@@ -25,6 +30,29 @@ public class Player {
         this.state = state;
         this.moveDelay =  150_000_000/GameData.gameSpeed;
         this.originalMoveDelay = moveDelay;
+    }
+    /**
+     * Méthode pour poser la bombe si le joueur est autorisé.
+     * Elle met à jour l'heure de la dernière bombe posée et lance le cooldown.
+     *
+     * @param row La ligne de la position où poser la bombe.
+     * @param col La colonne de la position où poser la bombe.
+     * @param currentTime Temps actuel en nanosecondes.
+     */
+    public void tryPlaceBomb(int row, int col, Bomb bomb) {
+        if (!canPlaceBomb) {
+            return; // Si le joueur ne peut pas poser de bombe, on sort de la méthode
+        }
+
+        canPlaceBomb = false;
+
+        // Gérer le cooldown (on utilise un timer ici pour éviter de poser une autre bombe trop rapidement)
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(bomb.getCOOLDOWN_SECONDS() / GameData.gameSpeed));
+        cooldown.setOnFinished(e -> canPlaceBomb = true);
+        cooldown.play();
+
+        // Appeler la méthode place() de Bombe pour poser la bombe
+        bomb.place(row, col);
     }
 
     public int getRow() {
@@ -99,13 +127,7 @@ public class Player {
         }
     }
 
-    public void setIsBot(boolean isBot) {
-        this.isBot = isBot;
-    }
 
-    public boolean getIsBot() {
-        return isBot;
-    }
 
     public void setScore(int score) {
         this.score = score;

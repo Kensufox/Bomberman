@@ -77,8 +77,8 @@ public class GameMapControllerbot extends GameMapController {
 
                             // Si le bot doit poser une bombe, on la place
                             if (placeBomb) {
+                                p.tryPlaceBomb(bot.getRow(), bot.getCol(), bomb);
                                 bot.setLastBombTime(now);
-                                bomb.tryPlaceBomb(bot.getRow(), bot.getCol());
                                 //System.out.println("Bot placing bomb at: [" + bot.getRow() + ", " + bot.getCol() + "]");
                             }
 
