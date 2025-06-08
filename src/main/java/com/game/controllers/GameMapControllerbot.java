@@ -1,87 +1,113 @@
 package com.game.controllers;
 
-import com.game.models.entities.BotPlayer;
+import com.game.models.entities.bot.BotPlayer;
 import com.game.models.entities.Player;
 import javafx.animation.AnimationTimer;
 
-
+/**
+ * Contrôleur pour la gestion de la carte du jeu avec un bot.
+ * Cette classe étend {@link GameMapController} et surcharge certaines méthodes pour adapter le comportement du bot.
+ */
 public class GameMapControllerbot extends GameMapController {
+
+    /**
+     * Constructeur de la classe {@link GameMapControllerbot}.
+     * Appelle le constructeur de la classe parente {@link GameMapController}.
+     */
     public GameMapControllerbot() {
         super();
     }
 
+    /**
+     * Crée et initialise les joueurs du jeu.
+     * Un joueur humain et un bot sont créés et ajoutés à la liste des joueurs.
+     *
+     * @return Un tableau contenant les joueurs créés : un joueur humain et un bot.
+     */
     @Override
-    protected Player[] createPlayers(){
-        Player player1 = new Player(1, 1, Player.State.ALIVE);
-        Player player2 = new BotPlayer(11, 13, Player.State.ALIVE, gameMap);
-        return new Player[] { player1, player2 };
+    protected Player[] createPlayers() {
+        Player player1 = new Player(1, 1, Player.State.ALIVE); // Le joueur humain
+        Player player2 = new BotPlayer(11, 13, Player.State.ALIVE, gameMap); // Le bot
+        return new Player[]{player1, player2};
     }
 
+    /**
+     * Démarre la boucle de mouvement des joueurs.
+     * Cette boucle utilise {@link AnimationTimer} pour mettre à jour les actions des joueurs et du bot à chaque frame.
+     */
     @Override
     protected void startMovementLoop() {
         AnimationTimer movementLoop = new AnimationTimer() {
+
+            /**
+             * Gère les actions de chaque joueur à chaque image (frame).
+             * Vérifie l'état des pouvoirs, gère le mouvement et place les bombes pour le bot.
+             *
+             * @param now Le temps actuel en nanosecondes.
+             */
             @Override
             public void handle(long now) {
                 for (PlayerContext ctx : players) {
                     Player p = ctx.player;
 
-                    // Gestion expiration des pouvoirs
+                    // Gestion de l'expiration des pouvoirs
                     if (p.getPower() != null && now >= p.getPowerEndTime()) {
-                        p.removePower();
+                        p.removePower(); // Supprimer le pouvoir lorsque son temps est écoulé
                     }
 
+                    // Si le joueur est mort, on passe à l'itération suivante
                     if (p.getState() == Player.State.DEAD) continue;
 
                     int dRow = 0, dCol = 0;
 
+                    // Si le joueur est un bot, décide de ses actions
                     if (p instanceof BotPlayer bot) {
                         if (bot.canMove(now)) {
                             Player enemy = players.get(0).player; // Le joueur humain
 
+                            // Debug des informations du bot
+                            //System.out.println(bot.getDebugInfo());
 
+                            // Décision d'action du bot : mouvement et placement de bombe
+                            int[] action = bot.decideAction(System.nanoTime(), enemy);
+                            int[] move = {action[0], action[1]};
 
-                            System.out.println(bot.getDebugInfo());
-                            //System.out.println(bot.validateState());
-                            // Décider du placement de bombe (séparément du mouvement)
-//                            if (bot.shouldPlaceBomb(now, enemy)) {
-//                                bomb.tryPlaceBomb(bot.getRow(), bot.getCol());
-//                                System.out.println("Bot placing bomb at: [" + bot.getRow() + ", " + bot.getCol() + "]");
-//                            }
-                            System.out.println(now);
-                            // Décider du mouvement
-                            int[] move = bot.decideMove(now, enemy);
+                            boolean placeBomb = action[2] == 1;
 
-                            // Debug: afficher les décisions du bot
-                           // System.out.println("Bot decision - Move: [" + move[0] + ", " + move[1] + "]");
+                            // Si le bot doit poser une bombe, on la place
+                            if (placeBomb) {
+                                bot.setLastBombTime(now);
+                                bomb.tryPlaceBomb(bot.getRow(), bot.getCol());
+                                //System.out.println("Bot placing bomb at: [" + bot.getRow() + ", " + bot.getCol() + "]");
+                            }
 
-
-                            System.out.println("\n");
-
-                            // Effectuer le mouvement
+                            // Effectuer le mouvement si nécessaire
                             if (move[0] != 0 || move[1] != 0) {
                                 movePlayerIfPossible(bot, ctx.cell, move[0], move[1]);
                                 bot.updateLastMoveTime(now);
                             }
-
                         }
                     } else {
-                        // Contrôles du joueur humain
+                        // Contrôles du joueur humain : détection des touches appuyées
                         if (pressedKeys.contains(ctx.controls.up)) dRow = -1;
                         else if (pressedKeys.contains(ctx.controls.down)) dRow = 1;
                         else if (pressedKeys.contains(ctx.controls.left)) dCol = -1;
                         else if (pressedKeys.contains(ctx.controls.right)) dCol = 1;
 
+                        // Si le joueur humain a appuyé sur une touche et peut se déplacer, on effectue le mouvement
                         if ((dRow != 0 || dCol != 0) && p.canMove(now)) {
                             movePlayerIfPossible(p, ctx.cell, dRow, dCol);
                             p.updateLastMoveTime(now);
                         }
                     }
 
+                    // Mettre à jour l'affichage de la cellule du joueur (au premier plan)
                     ctx.cell.toFront();
                 }
             }
         };
 
+        // Démarrer la boucle de mouvement
         movementLoop.start();
     }
 }
