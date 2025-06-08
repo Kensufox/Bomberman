@@ -16,13 +16,15 @@ public class Player {
 
     private boolean isBot = false;
     protected long lastMoveTime = 0;
-    protected long moveDelay = 150_000_000/GameData.gameSpeed; // 150ms
+    protected long moveDelay;
+    protected long originalMoveDelay;
 
     public Player(int startRow, int startCol, State state) {
         this.row = startRow;
         this.col = startCol;
         this.state = state;
-        this.moveDelay = 150_000_000; // 150ms
+        this.moveDelay =  150_000_000/GameData.gameSpeed;
+        this.originalMoveDelay = moveDelay;
     }
 
     public int getRow() {
@@ -34,8 +36,10 @@ public class Player {
     }
 
     public void setPower(PowerUp.Power power, long now, long duration) {
-        this.power = power;
-        appliPower();
+        if (this.power != power){
+            this.power = power;
+            appliPower();
+        }
         this.powerEndTime = now + duration;
     }
 
@@ -45,7 +49,7 @@ public class Player {
 
     public void removePower() {
         this.power = null;
-        setMoveDelay(150_000_000/GameData.gameSpeed); // réinitialise par défaut
+        setMoveDelay(originalMoveDelay); // réinitialise par défaut
     }
 
     public long getPowerEndTime() {
@@ -84,7 +88,7 @@ public class Player {
 
     public void appliPower() {
         switch (power) {
-            case SPEED -> setMoveDelay(50_000_000/GameData.gameSpeed);
+            case SPEED -> setMoveDelay(moveDelay/3);
             case BOMB_RANGE -> {
             }
             case EXTRA_BOMB -> {

@@ -25,7 +25,7 @@ public class Bomb {
     private final StackPane[][] tiles;
     private final Image emptyImg;
     private boolean canPlaceBomb = true;
-    private int range = 10;
+    private static int range = 2;
 
     private final List<Player> players;
     private final GameMapController controller;
@@ -77,7 +77,7 @@ public class Bomb {
         this.range = range;
     }
 
-    public int getRange() {
+    public static int getRange() {
         return range;
     }
 

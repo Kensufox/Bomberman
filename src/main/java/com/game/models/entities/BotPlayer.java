@@ -3,6 +3,8 @@
 package com.game.models.entities;
 
 import com.game.models.map.GameMap;
+import com.game.utils.GameData;
+
 import java.util.*;
 
 /**
@@ -13,11 +15,8 @@ import java.util.*;
  */
 public class BotPlayer extends Player {
 
-    /** Délai entre les mouvements du bot (en nanosecondes) */
-    private static final long MOVE_DELAY_NS = 400_000_000L; // 800ms
-
     /** Portée d'explosion des bombes */
-    private static final int BOMB_RANGE = 2;
+    private static final int BOMB_RANGE = Bomb.getRange() + 1; // +1 pour inclure la case de la bombe elle-même
 
     /** Référence vers la carte de jeu */
     private final GameMap gameMap;
@@ -34,8 +33,9 @@ public class BotPlayer extends Player {
      */
     public BotPlayer(int startRow, int startCol, State state, GameMap map) {
         super(startRow, startCol, state);
+        moveDelay = 350_000_000/ GameData.gameSpeed;
         this.gameMap = Objects.requireNonNull(map, "GameMap ne peut pas être null");
-        this.moveDelay = MOVE_DELAY_NS;
+        this.originalMoveDelay = moveDelay;
     }
 
     /**
@@ -45,13 +45,9 @@ public class BotPlayer extends Player {
         Objects.requireNonNull(enemy, "L'ennemi ne peut pas être null");
         this.enemy = enemy;
 
-        // PRIORITÉ ABSOLUE: Si on est directement sur une bombe, fuir immédiatement
-        if (isOnBomb(getRow(), getCol())) {
-            return findUrgentEscapeMove();
-        }
-
         // Si on est dans une zone dangereuse, fuir
         if (isDangerousPosition(getRow(), getCol())) {
+            System.out.println("HELLLLLLLLPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
             return findEscapeMove();
         }
 
@@ -60,28 +56,44 @@ public class BotPlayer extends Player {
 
         if (path != null && path.size() > 1) {
             Node nextStep = path.get(1); // Le premier est notre position actuelle
+            System.out.println("Next step: " + nextStep.row + ", " + nextStep.col);
             return new int[]{nextStep.row - getRow(), nextStep.col - getCol()};
         }
 
-        // Si pas de chemin trouvé, choisir au hasard tant qu'il ne mene pas dans un endroit dangereux
-        int max_search = directions.length - 1;
-        int randomIndex = (int)(Math.random() * directions.length);
-        int new_row = getRow() + directions[randomIndex][0];
-        int new_col = getCol() + directions[randomIndex][1];
-        while ((!isValidPosition(new_row, new_col)
-                || isDangerousPosition(new_row, new_col)) && max_search > 0) {
-            randomIndex = (int)(Math.random() * directions.length);
-            new_row = getRow() + directions[randomIndex][0];
-            new_col = getCol() + directions[randomIndex][1];
-            max_search--;
+        // Recherche systématique
+        int[] safeMove = findSafeMoveTowardsEnemy();
+        if (safeMove != null) {
+            return safeMove;
+        }
+        return new int[]{0, 0}; // Rester sur place si aucune option n'est trouvée
+    }
+
+
+    private int[] findSafeMoveTowardsEnemy() {
+        int bestScore = -1;
+        int[] bestMove = null;
+
+        for (int[] dir : directions) {
+            int newRow = getRow() + dir[0];
+            int newCol = getCol() + dir[1];
+
+            // Ne considérer que les positions sûres
+            if (isValidPosition(newRow, newCol) && !isDangerousPosition(newRow, newCol)) {
+                // Calculer si ce mouvement nous rapproche de l'ennemi
+                int currentDist = manhattanDistance(getRow(), getCol(), enemy.getRow(), enemy.getCol());
+                int newDist = manhattanDistance(newRow, newCol, enemy.getRow(), enemy.getCol());
+
+                // Privilégier les mouvements qui nous rapprochent
+                int score = currentDist - newDist;
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = dir;
+                }
+            }
         }
 
-        //si aucune pos trouvé alors, on essaye la position de base ou le joueur ne bouge
-        if (max_search == 0 && (!isValidPosition(getRow(), getCol())
-                || isDangerousPosition(getRow(), getCol()))){
-            return new int[]{0, 0};
-        }
-        return directions[randomIndex];
+        return bestMove;
     }
 
     /**
@@ -92,50 +104,6 @@ public class BotPlayer extends Player {
         return mapData[row][col] == 'X';
     }
 
-    /**
-     * Trouve un mouvement d'évasion d'urgence quand on est sur une bombe.
-     * Accepte même les positions légèrement dangereuses pour survivre.
-     */
-    private int[] findUrgentEscapeMove() {
-        // Premiere priorité: recherche récursive d'une zone sûre
-        for (int[] dir : directions) {
-            if (canReachSafeZoneInSteps(getRow() + dir[0], getCol() + dir[1], 6)) {
-                return dir;
-            }
-        }
-
-        // Deuxieme priorité: n'importe quelle position valide (même dangereuse)
-        for (int[] dir : directions) {
-            int newRow = getRow() + dir[0];
-            int newCol = getCol() + dir[1];
-
-            if (isValidPosition(newRow, newCol)) {
-                return dir;
-            }
-        }
-
-        return new int[]{0, 0};
-    }
-
-    private boolean canReachSafeZoneInSteps(int startRow, int startCol, int maxSteps) {
-        if (maxSteps <= 0 || !isValidPosition(startRow, startCol)) return false;
-        if (maxSteps <= 3 && isDangerousPosition(startRow, startCol)) return false;
-
-        // Si cette position est déjà sûre
-        if (maxSteps == 1 && !isDangerousPosition(startRow, startCol)) return true;
-
-        // Sinon, chercher récursivement
-        for (int[] dir : directions) {
-            int newRow = startRow + dir[0];
-            int newCol = startCol + dir[1];
-
-            if (canReachSafeZoneInSteps(newRow, newCol, maxSteps - 1)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * Trouve un mouvement d'évasion avec recherche récursive si nécessaire.
@@ -143,69 +111,79 @@ public class BotPlayer extends Player {
     private int[] findEscapeMove() {
 
         // recherche récursive de la position sûre la plus proche
-        int[] safestPos = findSafestPosition(getRow(), getCol(), 5);
+        int[] safestPos = findSafestDirection(getRow(), getCol(), 15);
         if (safestPos != null) {
-            // Retourne la direction vers cette position
-            int deltaRow = Integer.compare(safestPos[0] - getRow(), 0);
-            int deltaCol = Integer.compare(safestPos[1] - getCol(), 0);
 
-//            System.out.println("POS :" + deltaRow + " " + deltaCol);
-//            System.out.println("POS :" + Arrays.toString(safestPos));
-//            System.out.println(isValidPosition(safestPos[0], getCol()) && !isOnBomb(safestPos[0], getCol()));
-//            System.out.println(isValidPosition(getRow(), safestPos[1]) && !isOnBomb(getRow(), safestPos[1]));
+            System.out.println("POS :" + safestPos[0] + " " + safestPos[1]);
 
-            for (int[] direction : directions) {
-                if (direction[0] == deltaRow && direction[1] == deltaCol) {
-                    return new int[]{deltaRow, deltaCol};
+
+            for (int i = 0; i < gameMap.getMapData().length; i++) {
+                for (int j = 0; j < gameMap.getMapData()[i].length; j++) {
+                    System.out.print(gameMap.getMapData()[i][j] + " ");
                 }
+                System.out.println(); // Saut de ligne après chaque rangée
             }
+            System.out.println(gameMap.getMapData()[getRow() + safestPos[0]][getCol() + safestPos[1]]);
 
-            // Mouvement vertical d'abord, sinon horizontal
-            if(isValidPosition(safestPos[0], getCol()) && !isOnBomb(safestPos[0], getCol()))  {
-                //System.out.println(Arrays.toString(new int[]{deltaRow, getCol()}));
-                return new int[]{deltaRow, 0};
-            } else if (isValidPosition(getRow(), safestPos[1]) && !isOnBomb(getRow(), safestPos[1])) {
-                //System.out.println(Arrays.toString(new int[]{0, deltaCol}));
-                return new int[]{0, deltaCol};
-            }
+
+
+
+            return safestPos; // Retourne la direction trouvée
 
         }
 
         return new int[]{0, 0}; // Rester sur place en dernier recours
     }
 
-    private int[] findSafestPosition(int startRow, int startCol, int maxDepth) {
-        if (maxDepth <= 0) return null;
+    private int[] findSafestDirection(int startRow, int startCol, int maxDepth) {
+    Set<String> visited = new HashSet<>();
+    return findSafestDirection(startRow, startCol, maxDepth, visited);
+}
 
-        int[] bestPos = null;
-        int maxDistanceFromEnemy = -1;
+private int[] findSafestDirection(int startRow, int startCol, int maxDepth, Set<String> visited) {
+    if (maxDepth <= 0) return null;
+    
+    String currentPos = startRow + "," + startCol;
+    if (visited.contains(currentPos)) return null;
+    
+    visited.add(currentPos);
+    
+    int[] bestDirection = null;
+    int maxDistanceFromEnemy = -1;
 
-        for (int[] dir : directions) {
-            int newRow = startRow + dir[0];
-            int newCol = startCol + dir[1];
+    for (int[] dir : directions) {
+        int newRow = startRow + dir[0];
+        int newCol = startCol + dir[1];
 
-            if (isValidPosition(newRow, newCol)) {
-                if (!isDangerousPosition(newRow, newCol)) {
-                    int distFromEnemy = manhattanDistance(newRow, newCol,  enemy.row, enemy.col);
+        if (isValidPosition(newRow, newCol) && !isWall(newRow, newCol) && 
+            gameMap.getMapData()[newRow][newCol] != 'B' && !isOnBomb(newRow, newCol)) {
+            
+            if (!isDangerousPosition(newRow, newCol)) {
+                int distFromEnemy = manhattanDistance(newRow, newCol, enemy.getRow(), enemy.getCol());
+                if (distFromEnemy > maxDistanceFromEnemy) {
+                    maxDistanceFromEnemy = distFromEnemy;
+                    bestDirection = dir;
+                }
+            } else {
+                // Recherche récursive avec mémorisation
+                int[] recursiveDir = findSafestDirection(newRow, newCol, maxDepth - 1, visited);
+                if (recursiveDir != null) {
+                    int futureRow = newRow + recursiveDir[0];
+                    int futureCol = newCol + recursiveDir[1];
+                    int distFromEnemy = manhattanDistance(futureRow, futureCol, enemy.getRow(), enemy.getCol());
                     if (distFromEnemy > maxDistanceFromEnemy) {
                         maxDistanceFromEnemy = distFromEnemy;
-                        bestPos = new int[]{newRow, newCol};
-                    }
-                } else {
-                    // Recherche récursive
-                    int[] recursiveResult = findSafestPosition(newRow, newCol, maxDepth - 1);
-                    if (recursiveResult != null) {
-                        int distFromEnemy = manhattanDistance(recursiveResult[0], recursiveResult[1],  enemy.row, enemy.col);
-                        if (distFromEnemy > maxDistanceFromEnemy) {
-                            maxDistanceFromEnemy = distFromEnemy;
-                            bestPos = recursiveResult;
-                        }
+                        bestDirection = dir;
                     }
                 }
             }
         }
-        return bestPos;
     }
+    
+    visited.remove(currentPos); // Backtrack
+    return bestDirection;
+}
+
 
     /**
      * Utilise l'algorithme A* pour trouver le chemin optimal vers l'ennemi.
@@ -241,7 +219,7 @@ public class BotPlayer extends Player {
                 int newCol = current.col + dir[1];
                 String neighborKey = newRow + "," + newCol;
 
-                if ((!isValidPosition(newRow, newCol)) || closedSet.contains(neighborKey) || isDangerousPosition(newRow, newCol)) {
+                if ((!isValidPosition(newRow, newCol)) || gameMap.getMapData()[newRow][newCol] != '.' || closedSet.contains(neighborKey) || isDangerousPosition(newRow, newCol)) {
                     continue;
                 }
 
@@ -303,7 +281,7 @@ public class BotPlayer extends Player {
      */
     private boolean isInExplosionRange(int targetRow, int targetCol, int bombRow, int bombCol, char[][] mapData) {
         // Position de la bombe elle-même
-        if (targetRow == bombRow && targetCol == bombCol) {
+        if (isOnBomb(targetRow, targetCol)) {
             return true;
         }
 
@@ -357,10 +335,7 @@ public class BotPlayer extends Player {
         char[][] mapData = gameMap.getMapData();
         if (row < 0 || col < 0 || row >= mapData.length || col >= mapData[0].length) {
             return false;
-        }
-
-        char cell = mapData[row][col];
-        return cell == '.' || cell == 'P'; // Cases vides ou power-ups
+        }return true;
     }
 
     /**
@@ -397,12 +372,13 @@ public class BotPlayer extends Player {
 
 
     private boolean isWall(int row, int col) {
-        if (!isValidPosition(row, col)) {
-            return true; // Hors limites = mur
+        char[][] mapData = gameMap.getMapData();
+        if (row < 0 || col < 0 || row >= mapData.length || col >= mapData[0].length) {
+            return false;
         }
 
         char cell = gameMap.getMapData()[row][col];
-        return cell == 'B' || cell == 'W'; // Seulement les vrais murs, pas les bombes
+        return cell == 'W'; // Seulement les vrais murs, pas les bombes
     }
 
     /**
