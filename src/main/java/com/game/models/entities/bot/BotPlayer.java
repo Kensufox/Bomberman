@@ -17,8 +17,6 @@ import java.util.Objects;
 
 
 public class BotPlayer extends Player {
-    /** Délai de cooldown entre les bombes */
-    private static final long BOMB_COOLDOWN = 1_500_000_000L;
     
     /** Composants de l'architecture MVC - Modèle */
     private final GameMap gameMap;

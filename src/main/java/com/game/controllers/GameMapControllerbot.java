@@ -70,7 +70,8 @@ public class GameMapControllerbot extends GameMapController {
 
                             // Décision d'action du bot : mouvement et placement de bombe
                             int[] action = bot.decideAction(System.nanoTime(), enemy);
-                            int[] move = {action[0], action[1]};
+                            dRow = action[0];
+                            dCol = action[1];
 
                             boolean placeBomb = action[2] == 1;
 
@@ -82,8 +83,8 @@ public class GameMapControllerbot extends GameMapController {
                             }
 
                             // Effectuer le mouvement si nécessaire
-                            if (move[0] != 0 || move[1] != 0) {
-                                movePlayerIfPossible(bot, ctx.cell, move[0], move[1]);
+                            if (dRow != 0 || dCol != 0) {
+                                movePlayerIfPossible(bot, ctx.cell, dRow, dCol);
                                 bot.updateLastMoveTime(now);
                             }
                         }
