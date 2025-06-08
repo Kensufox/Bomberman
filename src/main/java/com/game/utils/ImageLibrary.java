@@ -21,6 +21,16 @@ public class ImageLibrary {
     public static final String Right2Fire    = "/images/right-2-fire.png";
     public static final String Up1Fire       = "/images/up-1-fire.png";
     public static final String Up2Fire       = "/images/up-2-fire.png";
+    public static final String CenterUDFire  = "/images/center-ud-fire.png";
+    public static final String CenterLRFire  = "/images/center-lr-fire.png";
+    public static final String CenterULFire  = "/images/center-ul-fire.png";
+    public static final String CenterURFire   = "/images/center-ur-fire.png";
+    public static final String CenterDLFire  = "/images/center-dl-fire.png";
+    public static final String CenterDRFire  = "/images/center-dr-fire.png";
+    public static final String CenterUDLFire = "/images/center-udl-fire.png";
+    public static final String CenterUDRFire = "/images/center-udr-fire.png";
+    public static final String CenterULRFire = "/images/center-ulr-fire.png";
+    public static final String CenterDLRFire = "/images/center-dlr-fire.png";
     public static final String WeakWall      = "/images/weak_wall.png";
 
 
