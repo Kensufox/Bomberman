@@ -1,7 +1,11 @@
 package com.game.controllers;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.game.models.entities.Bomb;
@@ -131,7 +135,7 @@ public class GameMapController {
 
                     // Handle power-up expiration
                     if (p.getPower() != null && now >= p.getPowerEndTime()) {
-                        p.removePower();
+                        p.removePower(bomb);
                     }
 
                     if (p.getState() == Player.State.DEAD) continue;
@@ -260,8 +264,7 @@ public class GameMapController {
                 activePowerUps.remove(i);
                 activePowerUpCells.remove(i);
 
-                player.setPower(powerUp.getPower(), System.nanoTime(), powerUp.getDuration());
-                player.appliPower();
+                player.setPower(powerUp.getPower(), System.nanoTime(), powerUp.getDuration(), bomb);
 
                 break;
             }

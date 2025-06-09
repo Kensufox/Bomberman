@@ -20,16 +20,13 @@ public class Bomb {
 
     private static final int TILE_SIZE = 40;
 
-    public static double getCOOLDOWN_SECONDS() {
-        return COOLDOWN_SECONDS;
-    }
-
     private static final double COOLDOWN_SECONDS = 1.0;
     private final GridPane mapGrid;
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
-    private static int range = 2;
+    private int range = 2;
+    private final static int originalRange = 2;
 
     private final List<Player> players;
     private final GameMapController controller;
@@ -69,8 +66,16 @@ public class Bomb {
         this.range = range;
     }
 
-    public static int getRange() {
+    public int getRange() {
         return range;
+    }
+
+    public static int getOriginalRange() {
+        return originalRange;
+    }
+
+    public static double getCOOLDOWN_SECONDS() {
+        return COOLDOWN_SECONDS;
     }
 
     private boolean directionFinished(List<int[]> list, int[] target) {

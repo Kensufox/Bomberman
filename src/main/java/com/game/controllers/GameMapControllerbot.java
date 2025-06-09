@@ -1,7 +1,8 @@
 package com.game.controllers;
 
-import com.game.models.entities.bot.BotPlayer;
 import com.game.models.entities.Player;
+import com.game.models.entities.bot.BotPlayer;
+
 import javafx.animation.AnimationTimer;
 
 /**
@@ -52,7 +53,7 @@ public class GameMapControllerbot extends GameMapController {
 
                     // Gestion de l'expiration des pouvoirs
                     if (p.getPower() != null && now >= p.getPowerEndTime()) {
-                        p.removePower(); // Supprimer le pouvoir lorsque son temps est écoulé
+                        p.removePower(bomb); // Supprimer le pouvoir lorsque son temps est écoulé
                     }
 
                     // Si le joueur est mort, on passe à l'itération suivante

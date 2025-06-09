@@ -1,8 +1,9 @@
 package com.game.models.entities.bot;
 
+import java.util.Objects;
+
 import com.game.models.entities.Bomb;
 import com.game.models.map.GameMap;
-import java.util.Objects;
 
 /**
  * Analyseur spécialisé dans la détection des bombes et zones dangereuses.
@@ -16,7 +17,7 @@ import java.util.Objects;
 
 public class BombAnalyzer {
     /** Portée d'explosion d'une bombe */
-    private static final int BOMB_RANGE = Bomb.getRange() + 1;
+    private static final int BOMB_RANGE = Bomb.getOriginalRange() + 1;
     
     /** Référence vers la carte de jeu */
     private final GameMap gameMap;
