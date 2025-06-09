@@ -1,5 +1,6 @@
 package com.game.models.map;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
 
@@ -33,7 +34,9 @@ public class GameMap {
 
     public void setupMap(GridPane mapGrid) {
         setupGrid(mapGrid);
-        generateMap(mapGrid);
+        //generateMap(mapGrid);
+        loadMapFromFile("src/main/resources/map/saved-map.txt", mapGrid);
+        //saveMapToFile("src/main/resources/map/saved-map.txt");
     }
 
     private void setupGrid(GridPane mapGrid) {
@@ -106,6 +109,58 @@ public class GameMap {
                 tile.setStyle("-fx-background-color: " + color + ";");
                 backgroundGrid.add(tile, col, row);
             }
+        }
+    }
+
+    public void saveMapToFile(String filename) {
+        try (java.io.PrintWriter writer = new java.io.PrintWriter(filename)) {
+            for (int row = 0; row < ROWS; row++) {
+                for (int col = 0; col < COLS; col++) {
+                    char cell = mapData[row][col];
+                    // Only save 'W' and '.'; use '.' as default otherwise
+                    writer.print((cell == 'W' || cell == '.') ? cell : '.');
+                }
+                writer.println();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadMapFromFile(String filename, GridPane mapGrid) {
+        try (java.util.Scanner scanner = new java.util.Scanner(new java.io.File(filename))) {
+            for (int row = 0; row < ROWS; row++) {
+                if (!scanner.hasNextLine()) break;
+                String line = scanner.nextLine();
+
+                for (int col = 0; col < COLS; col++) {
+                    StackPane tilePane;
+                    char c = (col < line.length()) ? line.charAt(col) : '.';
+
+                    if (c == 'W') {
+                        mapData[row][col] = 'W';
+                        tilePane = ResourceLoader.createTexturedTile(wallImg, TILE_SIZE);
+                    } else if ((row <= 2 && col <= 2) || row >= ROWS - 3 && col >= COLS - 3) {
+                        // keep spawn zones empty
+                        mapData[row][col] = '.';
+                        tilePane = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
+                    } else {
+                        // Randomly regenerate breakables in other empty spots
+                        if (Math.random() < 0.7) {
+                            mapData[row][col] = 'B';
+                            tilePane = ResourceLoader.createTexturedTile(breakableImg, TILE_SIZE);
+                        } else {
+                            mapData[row][col] = '.';
+                            tilePane = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
+                        }
+                    }
+
+                    tiles[row][col] = tilePane;
+                    mapGrid.add(tilePane, col, row);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

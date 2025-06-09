@@ -29,7 +29,6 @@ public class Bomb {
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
-    private boolean canPlaceBomb = true;
     private static int range = 2;
 
     private final List<Player> players;
