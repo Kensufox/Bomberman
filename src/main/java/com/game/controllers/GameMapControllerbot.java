@@ -66,7 +66,7 @@ public class GameMapControllerbot extends GameMapController {
                             Player enemy = players.get(0).player; // Le joueur humain
 
                             // Debug des informations du bot
-                            //System.out.println(bot.getDebugInfo());
+                            if(bot.getState() == Player.State.ALIVE) System.out.println(bot.getDebugInfo() + "\n"); //si joueur mort, plus de debug
 
                             // Décision d'action du bot : mouvement et placement de bombe
                             int[] action = bot.decideAction(System.nanoTime(), enemy);

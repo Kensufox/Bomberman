@@ -43,7 +43,7 @@ public class BombAnalyzer {
         
         for (int r = 0; r < mapData.length; r++) {
             for (int c = 0; c < mapData[0].length; c++) {
-                if (mapData[r][c] == 'X' && isInExplosionRange(row, col, r, c)) {
+                if (isOnBomb(r, c) && isInExplosionRange(row, col, r, c)) {
                     return true;
                 }
             }
