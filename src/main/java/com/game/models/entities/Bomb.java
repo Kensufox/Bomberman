@@ -20,17 +20,13 @@ public class Bomb {
 
     private static final int TILE_SIZE = 40;
 
-    public static double getCOOLDOWN_SECONDS() {
-        return COOLDOWN_SECONDS;
-    }
-
     private static final double COOLDOWN_SECONDS = 1.0;
     private final GridPane mapGrid;
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
-    private boolean canPlaceBomb = true;
-    private static int range = 2;
+    private int range = 2;
+    private final static int originalRange = 2;
 
     private final List<Player> players;
     private final GameMapController controller;
@@ -70,8 +66,16 @@ public class Bomb {
         this.range = range;
     }
 
-    public static int getRange() {
+    public int getRange() {
         return range;
+    }
+
+    public static int getOriginalRange() {
+        return originalRange;
+    }
+
+    public static double getCOOLDOWN_SECONDS() {
+        return COOLDOWN_SECONDS;
     }
 
     private boolean directionFinished(List<int[]> list, int[] target) {
@@ -88,28 +92,26 @@ public class Bomb {
         List<int[]> finishedDirection = new ArrayList<>();
 
         for (int[] dir : directions) {
-            for (int i = 0; i <= range; i++) {
-                int r = row + dir[0] * i;
-                int c = col + dir[1] * i;
+            int start = (dir[0] == 0 && dir[1] == 0) ? 0 : 1;
+            for (int i = start; i <= range; i++) {
+                int r = row + (dir[0] * i);
+                int c = col + (dir[1] * i);
 
                 if (r < 0 || r >= mapData.length || c < 0 || c >= mapData[0].length) break;
                 if (directionFinished(finishedDirection, dir)) break;
 
                 char tile = mapData[r][c];
 
-                // Stop at unbreakable block
                 if (tile == 'W') {
                     finishedDirection.add(dir);
                     break;
                 }
 
-                // Destroy breakable block but allow explosion to continue
                 if (tile == 'B') {
                     mapData[r][c] = '.';
-                    StackPane oldTile = tiles[r][c];
-                    mapGrid.getChildren().remove(oldTile);
 
                     StackPane newTile = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
+                    mapGrid.getChildren().remove(tiles[r][c]);
                     tiles[r][c] = newTile;
                     mapGrid.add(newTile, c, r);
 
@@ -118,7 +120,6 @@ public class Bomb {
                     }
                 }
 
-                // Kill any player in explosion
                 for (Player player : players) {
                     if (player != null && player.getState() == Player.State.ALIVE
                             && player.getRow() == r && player.getCol() == c) {
@@ -126,11 +127,35 @@ public class Bomb {
                     }
                 }
 
-                // Draw explosion fire
                 if (tile == '.' || tile == 'B') {
+                    if (i > 0 && r == row && c == col) continue;
                     Image img;
                     if (i == 0) {
-                        img = new Image(ImageLibrary.CenterFire);
+                        int up    = (mapData[r-1][c] == 'W') ? 1 : 0;
+                        int down  = (mapData[r+1][c] == 'W') ? 1 : 0;
+                        int left  = (mapData[r][c-1] == 'W') ? 1 : 0;
+                        int right = (mapData[r][c+1] == 'W') ? 1 : 0;
+
+                        int code = (up << 3) | (down << 2) | (left << 1) | right;
+
+                        img = switch (code) {
+                            case 15 -> new Image(ImageLibrary.CenterFire);
+                            case 11 -> new Image(ImageLibrary.Down1Fire);
+                            case 13 -> new Image(ImageLibrary.Left1Fire);
+                            case 14 -> new Image(ImageLibrary.Right1Fire);
+                            case 7  -> new Image(ImageLibrary.Up1Fire);
+                            case 5  -> new Image(ImageLibrary.CenterULFire);
+                            case 6  -> new Image(ImageLibrary.CenterURFire);
+                            case 3  -> new Image(ImageLibrary.CenterUDFire);
+                            case 9  -> new Image(ImageLibrary.CenterDLFire);
+                            case 10 -> new Image(ImageLibrary.CenterDRFire);
+                            case 12 -> new Image(ImageLibrary.CenterLRFire);
+                            case 1  -> new Image(ImageLibrary.CenterUDLFire);
+                            case 2  -> new Image(ImageLibrary.CenterUDRFire);
+                            case 4  -> new Image(ImageLibrary.CenterULRFire);
+                            case 8  -> new Image(ImageLibrary.CenterDLRFire);
+                            default -> new Image(ImageLibrary.CenterFire);
+                        };
                     } else if (i == range || mapData[r][c] == 'W') {
                         if (dir[1] > 0) img = new Image(ImageLibrary.Right1Fire);
                         else if (dir[1] < 0) img = new Image(ImageLibrary.Left1Fire);
@@ -144,6 +169,7 @@ public class Bomb {
                     }
 
                     StackPane explosionPane = ResourceLoader.createTexturedTile(img, TILE_SIZE);
+                    mapGrid.getChildren().remove(tiles[r][c]);
                     tiles[r][c] = explosionPane;
                     mapGrid.add(explosionPane, c, r);
 

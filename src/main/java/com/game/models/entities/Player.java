@@ -1,6 +1,7 @@
 package com.game.models.entities;
 
 import com.game.utils.GameData;
+
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 
@@ -17,6 +18,8 @@ public class Player {
     protected State state;
     protected long powerEndTime = 0;
     protected int score = 0;
+    private float placementSpeed = 1;
+    private final float OriginalPlacementSpeed = 1;
 
     protected long lastMoveTime = 0;
     protected long moveDelay;
@@ -47,7 +50,7 @@ public class Player {
         canPlaceBomb = false;
 
         // Gérer le cooldown (on utilise un timer ici pour éviter de poser une autre bombe trop rapidement)
-        PauseTransition cooldown = new PauseTransition(Duration.seconds(bomb.getCOOLDOWN_SECONDS() / GameData.gameSpeed));
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(Bomb.getCOOLDOWN_SECONDS() / GameData.gameSpeed / placementSpeed));
         cooldown.setOnFinished(e -> canPlaceBomb = true);
         cooldown.play();
 
@@ -63,10 +66,10 @@ public class Player {
         return col;
     }
 
-    public void setPower(PowerUp.Power power, long now, long duration) {
+    public void setPower(PowerUp.Power power, long now, long duration, Bomb bomb) {
         if (this.power != power){
             this.power = power;
-            appliPower();
+            appliPower(bomb);
         }
         this.powerEndTime = now + duration;
     }
@@ -75,9 +78,12 @@ public class Player {
         return power;
     }
 
-    public void removePower() {
+    public void removePower(Bomb bomb) {
         this.power = null;
         setMoveDelay(originalMoveDelay); // réinitialise par défaut
+        bomb.setRange(Bomb.getOriginalRange());
+        setPlacementSpeed(OriginalPlacementSpeed);
+    
     }
 
     public long getPowerEndTime() {
@@ -114,20 +120,28 @@ public class Player {
         return state;
     }
 
-    public void appliPower() {
+    public void setPlacementSpeed(float placementSpeed) {
+        this.placementSpeed = placementSpeed;
+    }
+
+    public float getPlacementSpeed() {
+        return placementSpeed;
+    }
+
+    public void appliPower(Bomb bomb) {
         switch (power) {
             case SPEED -> setMoveDelay(moveDelay/3);
             case BOMB_RANGE -> {
+                bomb.setRange(bomb.getRange()+1);
             }
             case EXTRA_BOMB -> {
+                setPlacementSpeed((float) 0.5);
             }
             default -> {
             }
 
         }
     }
-
-
 
     public void setScore(int score) {
         this.score = score;
