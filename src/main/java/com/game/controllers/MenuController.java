@@ -1,5 +1,8 @@
 package com.game.controllers;
 
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +11,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 
 public class MenuController {
+
+    @FXML
+    public void initialize() {
+        SFXPlayer.setupHoverSound(jouer);
+        SFXPlayer.setupHoverSound(options);
+        SFXPlayer.setupHoverSound(quitter);
+        SFXPlayer.setupHoverSound(btnClassic);
+        SFXPlayer.setupHoverSound(btnCaptureTheFlag);
+        SFXPlayer.setupHoverSound(btnContreLOrdi);
+    }
 
     // Menu Principal
     @FXML private Button jouer;
@@ -25,6 +38,7 @@ public class MenuController {
     @FXML
     public void jouer(ActionEvent event) {
         try {
+            SFXPlayer.play(SFXLibrary.FINISH);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/choose_game.fxml"));
             StackPane root = loader.load();
 
@@ -43,6 +57,7 @@ public class MenuController {
     @FXML
     public void optionsMenu (ActionEvent event) {
         try {
+            SFXPlayer.play(SFXLibrary.FINISH);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/option_menu.fxml"));
             AnchorPane root = loader.load();
 
@@ -67,6 +82,7 @@ public class MenuController {
     @FXML
     public void classicGame (ActionEvent event) {
         try {
+            SFXPlayer.play(SFXLibrary.FINISH);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_map.fxml"));
             loader.setController(new GameMapController());
             StackPane root = loader.load();
@@ -86,6 +102,7 @@ public class MenuController {
     @FXML
     public void VsComputer (ActionEvent event) {
         try {
+            SFXPlayer.play(SFXLibrary.FINISH);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_map.fxml"));
             loader.setController(new GameMapControllerbot());
             StackPane root = loader.load();
@@ -105,6 +122,7 @@ public class MenuController {
     @FXML
     public void retourMenu (ActionEvent event) {
         try {
+            SFXPlayer.play(SFXLibrary.CANCEL);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_menu.fxml"));
             AnchorPane root = loader.load();
 
