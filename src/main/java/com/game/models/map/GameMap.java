@@ -13,6 +13,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 
+/**
+ * Represents the visual and logical game map composed of tiles.
+ * Each tile can be a wall, breakable wall, or empty space.
+ * The map can be generated procedurally or loaded from a file.
+ */
 public class GameMap {
 
     private final int TILE_SIZE = 40;
@@ -26,14 +31,19 @@ public class GameMap {
     private final Image breakableImg;
     private final Image emptyImg;
 
+    /**
+     * Constructs a new GameMap, loading tile images using {@link ImageLibrary}.
+     */
     public GameMap() {
         wallImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.InfWall)));
         breakableImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.WeakWall)));
         emptyImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Empty)));
     }
 
-    /** 
-     * @param mapGrid
+    /**
+     * Initializes the game map and loads tile layout from a saved file.
+     *
+     * @param mapGrid The GridPane to which the tile nodes are added.
      */
     public void setupMap(GridPane mapGrid) {
         setupGrid(mapGrid);
@@ -42,8 +52,10 @@ public class GameMap {
         //saveMapToFile("src/main/resources/map/saved-map.txt");
     }
 
-    /** 
-     * @param mapGrid
+    /**
+     * Configures the GridPane with the correct tile sizes.
+     *
+     * @param mapGrid The GridPane to configure.
      */
     private void setupGrid(GridPane mapGrid) {
         mapGrid.setHgap(0);
@@ -62,8 +74,11 @@ public class GameMap {
         }
     }
 
-    /** 
-     * @param mapGrid
+    /**
+     * Procedurally generates a game map layout.
+     * This can be used for random maps instead of loading from a file.
+     *
+     * @param mapGrid The GridPane to populate with generated tiles.
      */
     private void generateMap(GridPane mapGrid) {
         Random random = new Random();
@@ -91,9 +106,11 @@ public class GameMap {
         }
     }
 
-    /** 
-     * @param gameMap
-     * @param backgroundGrid
+    /**
+     * Creates a background color pattern for the map grid (green checkerboard).
+     *
+     * @param gameMap        The game map instance for tile size reference.
+     * @param backgroundGrid The GridPane to apply the background to.
      */
     public void setupBackground(GameMap gameMap, GridPane backgroundGrid) {
         int rows = gameMap.getMapData().length;
@@ -125,8 +142,10 @@ public class GameMap {
         }
     }
 
-    /** 
-     * @param filename
+    /**
+     * Saves the current map layout to a file. Breakables are saved as empty.
+     *
+     * @param filename The path to the output file.
      */
     public void saveMapToFile(String filename) {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(filename)) {
@@ -142,9 +161,11 @@ public class GameMap {
         }
     }
 
-    /** 
-     * @param filename
-     * @param mapGrid
+    /**
+     * Loads a map layout from a file, populating both the logic grid and visual tiles.
+     *
+     * @param filename The path to the saved map file.
+     * @param mapGrid  The GridPane to populate.
      */
     public void loadMapFromFile(String filename, GridPane mapGrid) {
         try (java.util.Scanner scanner = new java.util.Scanner(new java.io.File(filename))) {
@@ -182,29 +203,29 @@ public class GameMap {
         }
     }
 
-    /** 
-     * @return char[][]
+    /**
+     * @return The logical character map (W, B, .).
      */
     public char[][] getMapData() {
         return mapData;
     }
 
-    /** 
-     * @return StackPane[][]
+    /**
+     * @return The 2D array of visual tiles (StackPane).
      */
     public StackPane[][] getTiles() {
         return tiles;
     }
 
-    /** 
-     * @return int
+    /**
+     * @return The size of a single tile in pixels.
      */
     public int getTileSize() {
         return TILE_SIZE;
     }
 
-    /** 
-     * @return Image
+    /**
+     * @return The image used for empty tiles.
      */
     public Image getEmptyImg() {
         return emptyImg;
