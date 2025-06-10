@@ -71,7 +71,7 @@
     -fx-padding: 8 20;
     -fx-cursor: hand;
     -fx-effect: dropshadow( one-pass-box , #ffcc00 , 3 , 0 , 0 , 0);
-    -fx-min-width: 100px; /* uniformisation taille */
+    -fx-min-width: 100px;
 }
 
 .control-button:hover, .apply-button:hover, .back-button:hover {

@@ -13,14 +13,18 @@ public class GameOverController {
     private Label winnerLabel;
 
     @FXML
-    private Label scoreLabel;
+    private Label scoreJ1;
+
+    @FXML
+    private Label scoreJ2;
 
     public void setWinnerText(String text) {
         winnerLabel.setText(text);
     }
 
     public void setPlayersScore(int P1Score, int P2Score) {
-        scoreLabel.setText("Player 1 Score : " + P1Score + "      Player 2 Score : " + P2Score);
+        scoreJ1.setText("Player 1 Score : " + P1Score);
+        scoreJ2.setText("Player 2 Score : " + P2Score);
     }
 
     @FXML
