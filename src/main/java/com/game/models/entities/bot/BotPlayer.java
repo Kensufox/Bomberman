@@ -42,7 +42,7 @@ public class BotPlayer extends Player {
         super(startRow, startCol, state);
         
         // Configuration du timing
-        moveDelay = 350_000_000 / GameData.gameSpeed;
+        moveDelay = 350_000_000 / GameData.getGameSpeed();
         this.originalMoveDelay = moveDelay;
         
         // Initialisation du modèle

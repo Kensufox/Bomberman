@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
-
 import javafx.scene.input.KeyCode;
 
 public class InputHandler {

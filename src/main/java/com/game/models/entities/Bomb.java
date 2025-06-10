@@ -6,11 +6,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import com.game.controllers.GameMapController;
-import com.game.utils.GameData;
-import com.game.utils.ImageLibrary;
-import com.game.utils.ResourceLoader;
-import com.game.utils.SFXLibrary;
-import com.game.utils.SFXPlayer;
+import com.game.utils.*;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -59,7 +55,7 @@ public class Bomb {
         mapData[row][col] = 'X'; 
         mapGrid.add(bombCell, col, row);
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(2/GameData.gameSpeed));
+        PauseTransition delay = new PauseTransition(Duration.seconds(2/ GameData.getGameSpeed()));
         delay.setOnFinished(e -> {
             mapGrid.getChildren().remove(bombCell);
             mapData[row][col] = '.';
@@ -201,7 +197,7 @@ public class Bomb {
                     tiles[r][c] = explosionPane;
                     mapGrid.add(explosionPane, c, r);
 
-                    PauseTransition clear = new PauseTransition(Duration.seconds(0.4 / GameData.gameSpeed));
+                    PauseTransition clear = new PauseTransition(Duration.seconds(0.4 / GameData.getGameSpeed()));
                     clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
                     clear.play();
                 }

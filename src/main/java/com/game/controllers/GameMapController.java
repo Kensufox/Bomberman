@@ -263,7 +263,7 @@ public class GameMapController {
         PowerUp.Power randomPower = possiblePowers[new java.util.Random().nextInt(possiblePowers.length)];
 
         // Create the PowerUp object (adjust duration and position)
-        PowerUp newPowerUp = new PowerUp(row, col, randomPower, 3_000_000_000L/GameData.gameSpeed);
+        PowerUp newPowerUp = new PowerUp(row, col, randomPower, 3_000_000_000L/GameData.getGameSpeed());
 
         // Load appropriate image for the power-up type, e.g.:
         String imgPath;

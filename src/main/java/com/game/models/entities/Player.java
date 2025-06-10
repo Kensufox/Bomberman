@@ -31,7 +31,7 @@ public class Player {
         this.row = startRow;
         this.col = startCol;
         this.state = state;
-        this.moveDelay =  150_000_000/GameData.gameSpeed;
+        this.moveDelay =  150_000_000/GameData.getGameSpeed();
         this.originalMoveDelay = moveDelay;
     }
     /**
@@ -50,7 +50,7 @@ public class Player {
         canPlaceBomb = false;
 
         // Gérer le cooldown (on utilise un timer ici pour éviter de poser une autre bombe trop rapidement)
-        PauseTransition cooldown = new PauseTransition(Duration.seconds(Bomb.getCOOLDOWN_SECONDS() / GameData.gameSpeed / placementSpeed));
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(Bomb.getCOOLDOWN_SECONDS() / GameData.getGameSpeed() / placementSpeed));
         cooldown.setOnFinished(e -> canPlaceBomb = true);
         cooldown.play();
 
@@ -140,7 +140,7 @@ public class Player {
      * @param delay
      */
     public void setMoveDelay(long delay) {
-        this.moveDelay = delay/GameData.gameSpeed;
+        this.moveDelay = delay/GameData.getGameSpeed();
     }
 
     /** 
