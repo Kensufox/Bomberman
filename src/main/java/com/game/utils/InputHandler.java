@@ -6,8 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+
 import javafx.scene.input.KeyCode;
 
+/**
+ * Handles loading, saving, and managing player input configurations for a game.
+ * 
+ * <p>Supports reading key bindings for two players from a properties file,
+ * converting them to {@link KeyCode}, providing getters/setters,
+ * resetting to defaults, and saving updated configurations.</p>
+ */
 public class InputHandler {
     private Properties gameProperties;
 
@@ -16,12 +24,19 @@ public class InputHandler {
     private KeyCode j1Up, j1Down, j1Left, j1Right, j1Bomb;
     private KeyCode j2Up, j2Down, j2Left, j2Right, j2Bomb;
 
-    // Constructeur
+    /**
+     * Constructs an InputHandler, loading configuration from file or
+     * falling back to default key bindings if loading fails.
+     */
     public InputHandler() {
         loadConfiguration();
         convertStringKeysToKeyCodes();
     }
 
+    /**
+     * Loads key bindings from the properties configuration file.
+     * If the file cannot be found or an error occurs, resets to default keys.
+     */
     public void loadConfiguration() {
         gameProperties = new Properties();
         try (InputStream input = new FileInputStream(CONFIG_FILE)) {
@@ -37,6 +52,11 @@ public class InputHandler {
         }
     }
 
+    /**
+     * Converts string representations of key names from the loaded properties
+     * into {@link KeyCode} objects.
+     * If a key is missing or invalid, sets the corresponding key to a default value.
+     */
     public void convertStringKeysToKeyCodes() {
         // Player 1
         String j1UpStr = gameProperties.getProperty("j1.up");
@@ -65,7 +85,7 @@ public class InputHandler {
         j2Right = stringToKeyCode(j2RightStr);
         j2Bomb = stringToKeyCode(j2BombStr);
 
-        // Si une touche est nulle, on met une valeur par défaut
+        // Set defaults if any key is null
         if (j1Up == null) j1Up = KeyCode.Z;
         if (j1Down == null) j1Down = KeyCode.S;
         if (j1Left == null) j1Left = KeyCode.Q;
@@ -79,9 +99,12 @@ public class InputHandler {
         if (j2Bomb == null) j2Bomb = KeyCode.CONTROL;
     }
 
-    /** 
-     * @param keyString
-     * @return KeyCode
+    /**
+     * Converts a string representation of a key to a {@link KeyCode}.
+     * Supports special names like "space", "up", "down", "left", "right", and "control".
+     * 
+     * @param keyString the string representation of the key
+     * @return the corresponding KeyCode, or null if the string is invalid or empty
      */
     public KeyCode stringToKeyCode(String keyString) {
         if (keyString == null || keyString.isEmpty()) return null;
@@ -102,9 +125,11 @@ public class InputHandler {
         }
     }
 
-    /** 
-     * @param key
-     * @return String
+    /**
+     * Converts a {@link KeyCode} to its string representation suitable for saving.
+     * 
+     * @param key the KeyCode to convert
+     * @return the string representation of the key, or an empty string if key is null
      */
     private String keyCodeToString(KeyCode key) {
         if (key == null) return "";
@@ -119,9 +144,21 @@ public class InputHandler {
         }
     }
 
-    // Classe interne pour regrouper les contrôles d'un joueur
+    /**
+     * Encapsulates the key controls for a single player.
+     */
     public static class PlayerControls {
         public final KeyCode up, down, left, right, bomb;
+
+        /**
+         * Creates a new PlayerControls instance.
+         * 
+         * @param up key for moving up
+         * @param down key for moving down
+         * @param left key for moving left
+         * @param right key for moving right
+         * @param bomb key for placing a bomb
+         */
         public PlayerControls(KeyCode up, KeyCode down, KeyCode left, KeyCode right, KeyCode bomb) {
             this.up = up;
             this.down = down;
@@ -131,54 +168,55 @@ public class InputHandler {
         }
     }
 
-    /** 
-     * @return PlayerControls
+    /**
+     * Returns the controls for player 1.
+     * 
+     * @return a PlayerControls object containing player 1's key bindings
      */
-    // Getters groupés
     public PlayerControls getJ1Controls() {
         return new PlayerControls(j1Up, j1Down, j1Left, j1Right, j1Bomb);
     }
 
-    /** 
-     * @return PlayerControls
+    /**
+     * Returns the controls for player 2.
+     * 
+     * @return a PlayerControls object containing player 2's key bindings
      */
     public PlayerControls getJ2Controls() {
         return new PlayerControls(j2Up, j2Down, j2Left, j2Right, j2Bomb);
     }
 
-    /** 
-     * @param resetToDefaults(
-     */
-    // Setters individuels
+    // Individual setters for player 1 keys
     public void setJ1Up(KeyCode key) { this.j1Up = key; }
     public void setJ1Down(KeyCode key) { this.j1Down = key; }
     public void setJ1Left(KeyCode key) { this.j1Left = key; }
     public void setJ1Right(KeyCode key) { this.j1Right = key; }
     public void setJ1Bomb(KeyCode key) { this.j1Bomb = key; }
 
+    // Individual setters for player 2 keys
     public void setJ2Up(KeyCode key) { this.j2Up = key; }
     public void setJ2Down(KeyCode key) { this.j2Down = key; }
     public void setJ2Left(KeyCode key) { this.j2Left = key; }
     public void setJ2Right(KeyCode key) { this.j2Right = key; }
     public void setJ2Bomb(KeyCode key) { this.j2Bomb = key; }
 
-    /** 
-     * @param resetToDefaults(
-     * @return KeyCode
-     */
-    // Getters individuels
+    // Individual getters for player 1 keys
     public KeyCode getJ1Up() { return j1Up; }
     public KeyCode getJ1Down() { return j1Down; }
     public KeyCode getJ1Left() { return j1Left; }
     public KeyCode getJ1Right() { return j1Right; }
     public KeyCode getJ1Bomb() { return j1Bomb; }
 
+    // Individual getters for player 2 keys
     public KeyCode getJ2Up() { return j2Up; }
     public KeyCode getJ2Down() { return j2Down; }
     public KeyCode getJ2Left() { return j2Left; }
     public KeyCode getJ2Right() { return j2Right; }
     public KeyCode getJ2Bomb() { return j2Bomb; }
 
+    /**
+     * Resets all player keys to their default values.
+     */
     public void resetToDefaults() {
         j1Up = KeyCode.Z;
         j1Down = KeyCode.S;
@@ -193,6 +231,10 @@ public class InputHandler {
         j2Bomb = KeyCode.CONTROL;
     }
 
+    /**
+     * Saves the current key bindings to the configuration file.
+     * If saving fails, an error message is printed.
+     */
     public void saveSettings() {
         if (gameProperties == null) gameProperties = new Properties();
 
