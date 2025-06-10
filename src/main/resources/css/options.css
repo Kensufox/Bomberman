@@ -1,7 +1,7 @@
 /* options.css */
 
 .options-pane {
-    -fx-background-color: #1a1a1a; /* sombre, presque noir */
+    -fx-background-color: #1a1a1a;
     -fx-padding: 20;
     -fx-font-family: "Courier New", monospace;
     -fx-font-size: 14px;
@@ -12,7 +12,7 @@
 .options-title {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-text-fill: #ffcc00; /* jaune rétro */
+    -fx-text-fill: #ffcc00;
     -fx-effect: dropshadow( gaussian , #cc9900 , 3 , 0 , 0 , 0);
 }
 
@@ -59,23 +59,23 @@
 }
 
 /* Boutons de contrôle en bas */
-.control-button, .apply-button, .back-button {
+.control-button {
     -fx-background-color: #222;
-    -fx-text-fill: #ffcc00;
+    -fx-text-fill: #00cccc;
     -fx-font-family: "Courier New", monospace;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-border-color: #ffcc00;
+    -fx-border-color: #00cccc;
     -fx-border-width: 2;
     -fx-border-radius: 6;
     -fx-padding: 8 20;
     -fx-cursor: hand;
-    -fx-effect: dropshadow( one-pass-box , #ffcc00 , 3 , 0 , 0 , 0);
+    -fx-effect: dropshadow( one-pass-box , #00cccc , 3 , 0 , 0 , 0);
     -fx-min-width: 100px;
 }
 
-.control-button:hover, .apply-button:hover, .back-button:hover {
-    -fx-background-color: #ffcc00;
+.control-button:hover {
+    -fx-background-color: #00cccc;
     -fx-text-fill: #1a1a1a;
 }
 
