@@ -6,7 +6,11 @@ import java.util.Objects;
 import java.util.Random;
 
 import com.game.controllers.GameMapController;
-import com.game.utils.*;
+import com.game.utils.GameData;
+import com.game.utils.ImageLibrary;
+import com.game.utils.ResourceLoader;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -14,6 +18,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+/**
+ * Represents a bomb entity in the game. Handles the placement, explosion,
+ * and visual effects of the bomb, as well as player damage and potential
+ * power-up generation after destroying breakable tiles.
+ */
 public class Bomb {
 
     private static final int TILE_SIZE = 40;
@@ -32,7 +41,16 @@ public class Bomb {
     private final Random random = new Random();
     private static final double POWER_UP_SPAWN_CHANCE = 0.3;
 
-    // New constructor with a list of players
+    /**
+     * Constructs a Bomb object with necessary map data and game references.
+     *
+     * @param mapGrid    The GridPane representing the game map.
+     * @param mapData    A 2D char array representing tile types on the map.
+     * @param tiles      A 2D array of StackPanes representing each map tile.
+     * @param emptyImg   The image used for empty (cleared) tiles.
+     * @param players    A list of players in the game.
+     * @param controller Reference to the GameMapController for interaction.
+     */
     public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg, List<Player> players, GameMapController controller) {
         this.mapGrid = mapGrid;
         this.mapData = mapData;
@@ -42,10 +60,11 @@ public class Bomb {
         this.controller = controller;
     }
 
-
-    /** 
-     * @param row
-     * @param col
+    /**
+     * Places a bomb at the specified grid location and schedules its explosion.
+     *
+     * @param row The row index on the map.
+     * @param col The column index on the map.
      */
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Bomb)));
@@ -64,38 +83,48 @@ public class Bomb {
         delay.play();
     }
 
-    /** 
-     * @param range
+    /**
+     * Sets the explosion range of the bomb.
+     *
+     * @param range The number of tiles the explosion will extend.
      */
     public void setRange(int range){
         this.range = range;
     }
 
-    /** 
-     * @return int
+    /**
+     * Gets the current explosion range of the bomb.
+     *
+     * @return The number of tiles the explosion will extend.
      */
     public int getRange() {
         return range;
     }
 
-    /** 
-     * @return int
+    /**
+     * Gets the default explosion range.
+     *
+     * @return The default explosion range.
      */
     public static int getOriginalRange() {
         return originalRange;
     }
 
-    /** 
-     * @return double
+    /**
+     * Gets the cooldown period (in seconds) for placing another bomb.
+     *
+     * @return Cooldown time in seconds.
      */
     public static double getCOOLDOWN_SECONDS() {
         return COOLDOWN_SECONDS;
     }
 
-    /** 
-     * @param list
-     * @param target
-     * @return boolean
+    /**
+     * Determines whether a direction has already been blocked or completed.
+     *
+     * @param list   List of already finished directions.
+     * @param target The direction to check.
+     * @return true if the direction is already finished; false otherwise.
      */
     private boolean directionFinished(List<int[]> list, int[] target) {
         for (int[] d : list) {
@@ -104,9 +133,12 @@ public class Bomb {
         return false;
     }
 
-    /** 
-     * @param row
-     * @param col
+    /**
+     * Triggers the explosion logic from the bomb's position,
+     * updating the map and affecting players and tiles.
+     *
+     * @param row The row index where the bomb exploded.
+     * @param col The column index where the bomb exploded.
      */
     private void explode(int row, int col) {
         SFXPlayer.play(SFXLibrary.HURT);

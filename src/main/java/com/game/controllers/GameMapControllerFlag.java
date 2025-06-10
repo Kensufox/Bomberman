@@ -1,3 +1,9 @@
+/**
+ * GameMapControllerFlag extends GameMapController to implement Capture the Flag mechanics.
+ * It sets up the map, players, flags, power-ups, and handles movement, collisions,
+ * flag capture logic, and transition to the game over screen.
+ */
+
 package com.game.controllers;
 
 import java.io.IOException;
@@ -32,33 +38,46 @@ import javafx.scene.layout.StackPane;
 
 public class GameMapControllerFlag extends GameMapController {
 
-    @FXML
-    protected GridPane mapGrid;
+    /** The primary grid representing game elements */
+    @FXML protected GridPane mapGrid;
 
-    @FXML
-    protected GridPane backgroundGrid;
+    /** The background grid behind the game map */
+    @FXML protected GridPane backgroundGrid;
 
+    /** Handles player inputs */
     protected InputHandler inputHandler;
+
+    /** Represents the current power-up in the game */
     protected PowerUp powerUp;
+
+    /** The graphical node of the active power-up */
     protected StackPane powerUpCell;
+
+    /** Handles bomb-related logic */
     protected Bomb bomb;
+
+    /** The current game map */
     protected GameMap gameMap;
 
+    /** Tracks the currently pressed keys */
     protected final Set<KeyCode> pressedKeys = new HashSet<>();
 
-    // Generic list of players and their contexts (cells + controls)
+    /** Stores the players and their visual/contextual data */
     protected final List<PlayerContext> players = new ArrayList<>();
 
+    /** Active power-ups on the grid */
     private final List<PowerUp> activePowerUps = new ArrayList<>();
+
+    /** Visual nodes representing active power-ups */
     private final List<StackPane> activePowerUpCells = new ArrayList<>();
 
-    // Capture the Flag specific variables
+    /** Capture the Flag specific variables */
     private Flag player1Flag;
     private Flag player2Flag;
     private StackPane player1FlagCell;
     private StackPane player2FlagCell;
 
-    // Inner class to store info per player
+    /** Inner class for storing a player, their cell, and controls */
     protected static class PlayerContext {
         final Player player;
         final StackPane cell;
@@ -131,6 +150,11 @@ public class GameMapControllerFlag extends GameMapController {
         }
     }
 
+    /**
+     * Initializes the game map and players, sets up input handling,
+     * flags, bombs, and starts the movement loop.
+     */
+    @Override
     public void initialize() {
         this.inputHandler = new InputHandler();
         this.gameMap = new GameMap();
@@ -174,14 +198,17 @@ public class GameMapControllerFlag extends GameMapController {
         startMovementLoop();
     }
 
+    /**
+     * Sets up the flags for both players at their respective spawn points.
+     */
     private void setupFlags() {
         // Create flags at each player's spawn point
         player1Flag = new Flag(1, 1); // Player 1's spawn
         player2Flag = new Flag(11, 13); // Player 2's spawn
 
         // Create flag images (you might want to use different images for each team)
-        Image flag1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Power))); // Replace with actual flag image
-        Image flag2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Power))); // Replace with actual flag image
+        Image flag1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Flag1))); // Replace with actual flag image
+        Image flag2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Flag2))); // Replace with actual flag image
 
         // Create flag visual nodes
         player1FlagCell = ResourceLoader.createPixelatedImageNode(flag1Img, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
@@ -192,8 +219,10 @@ public class GameMapControllerFlag extends GameMapController {
         mapGrid.add(player2FlagCell, player2Flag.getCol(), player2Flag.getRow());
     }
 
-    /** 
-     * @return Player[]
+    /**
+     * Creates and returns the players for Capture the Flag.
+     *
+     * @return an array of Player objects representing both players
      */
     protected Player[] createPlayers() {
         Player player1 = new Player(1, 1, Player.State.ALIVE);
@@ -201,8 +230,10 @@ public class GameMapControllerFlag extends GameMapController {
         return new Player[] { player1, player2 };
     }
 
-    /** 
-     * @param event
+    /**
+     * Handles key press events for player movement and bomb placement.
+     *
+     * @param event KeyEvent representing the pressed key
      */
     protected void handleKeyPressed(KeyEvent event) {
         KeyCode code = event.getCode();
@@ -217,13 +248,20 @@ public class GameMapControllerFlag extends GameMapController {
         }
     }
 
-    /** 
-     * @param event
+    /**
+     * Handles key release events and removes keys from the pressed set.
+     *
+     * @param event KeyEvent representing the released key
      */
     protected void handleKeyReleased(KeyEvent event) {
         pressedKeys.remove(event.getCode());
     }
 
+    /**
+     * Starts the animation loop to continuously update player movement
+     * and flag tracking based on input.
+     */
+    @Override
     protected void startMovementLoop() {
         AnimationTimer movementLoop = new AnimationTimer() {
             @Override
@@ -260,6 +298,9 @@ public class GameMapControllerFlag extends GameMapController {
         movementLoop.start();
     }
 
+    /**
+     * Updates the positions of any carried flags to match the carrier's location.
+     */
     private void updateCarriedFlags() {
         // Update player 1 flag position if carried
         if (player1Flag.isCarried() && player1Flag.getCarrier() != null) {
@@ -278,12 +319,16 @@ public class GameMapControllerFlag extends GameMapController {
         }
     }
 
-    /** 
-     * @param player
-     * @param cell
-     * @param dRow
-     * @param dCol
+    /**
+     * Attempts to move the player in the given direction if the destination is walkable.
+     * Also checks for flag and power-up interactions.
+     *
+     * @param player the player to move
+     * @param cell the StackPane associated with the player
+     * @param dRow the row direction delta
+     * @param dCol the column direction delta
      */
+    @Override
     protected void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
         int oldRow = player.getRow();
         int oldCol = player.getCol();
@@ -306,6 +351,11 @@ public class GameMapControllerFlag extends GameMapController {
         cell.toFront();
     }
 
+    /**
+     * Checks if a player can interact with flags (pickup or score).
+     *
+     * @param player the player to check for flag interaction
+     */
     private void checkFlagInteraction(Player player) {
         PlayerContext playerCtx = players.stream()
             .filter(p -> p.player == player)
@@ -364,10 +414,12 @@ public class GameMapControllerFlag extends GameMapController {
         }
     }
 
-    /** 
-     * @param row
-     * @param col
-     * @return boolean
+    /**
+     * Checks if the tile at the given position is walkable.
+     *
+     * @param row row index
+     * @param col column index
+     * @return true if walkable, false otherwise
      */
     protected boolean isWalkable(int row, int col) {
         if (row < 0 || col < 0 || row >= gameMap.getMapData().length || col >= gameMap.getMapData()[0].length) {
@@ -377,9 +429,13 @@ public class GameMapControllerFlag extends GameMapController {
         return cell == '.' || cell == 'P';
     }
 
-    /** 
-     * @param player
+    /**
+     * Kills the given player, removes them from the map, and returns any carried flag.
+     * Checks if only one player remains to determine winner.
+     *
+     * @param player the player to eliminate
      */
+    @Override
     public void killPlayer(Player player) {
         if (player.getState() == Player.State.DEAD) return;
 
@@ -427,10 +483,12 @@ public class GameMapControllerFlag extends GameMapController {
         }
     }
 
-    /** 
-     * @param winnerText
-     * @param P1Score
-     * @param P2Score
+    /**
+     * Switches the scene to the Game Over screen and displays the result.
+     *
+     * @param winnerText the message to show on the game over screen
+     * @param P1Score Player 1's score
+     * @param P2Score Player 2's score
      */
     protected void switchToGameOverScreen(String winnerText, int P1Score, int P2Score) {
         try {
@@ -448,9 +506,11 @@ public class GameMapControllerFlag extends GameMapController {
         }
     }
 
-    /** 
-     * @param row
-     * @param col
+    /**
+     * Spawns a power-up at the given map location with a random type.
+     *
+     * @param row the row to spawn the power-up
+     * @param col the column to spawn the power-up
      */
     public void spawnPowerUpAt(int row, int col) {
         // Decide type randomly or fixed for now
@@ -481,8 +541,10 @@ public class GameMapControllerFlag extends GameMapController {
         mapGrid.add(powerUpNode, newPowerUp.getCol(), newPowerUp.getRow());
     }
 
-    /** 
-     * @param player
+    /**
+     * Checks if a player has collided with a power-up and applies its effects.
+     *
+     * @param player the player to check for collision
      */
     private void checkPowerUpCollision(Player player) {
         if (activePowerUps.isEmpty()) return;

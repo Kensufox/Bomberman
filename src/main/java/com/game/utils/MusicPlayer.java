@@ -14,9 +14,21 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+/**
+ * Utility class for playing background music tracks with support for different modes
+ * such as normal play, loop, and random track selection. Provides fade-in and fade-out effects.
+ */
 public class MusicPlayer {
+    /**
+     * Enumeration of playback modes.
+     */
     public enum Mode {
-        NORMAL, LOOP, RANDOM
+        /** Play the selected track once. */
+        NORMAL,
+        /** Loop the selected track indefinitely. */
+        LOOP,
+        /** Play random tracks from the music folder without repeating the same track consecutively. */
+        RANDOM
     }
 
     private static MediaPlayer mediaPlayer;
@@ -26,8 +38,11 @@ public class MusicPlayer {
     private static Mode currentMode = Mode.NORMAL;
     private static String currentTrack = null;
 
-    /** 
-     * @return List<String>
+    /**
+     * Retrieves a list of all mp3 music files from the resource folder "/audio/music/".
+     * 
+     * @return List of music file names found in the folder
+     * @throws RuntimeException if the folder cannot be found or is invalid
      */
     private static List<String> getMusicFiles() {
         URL folderURL = MusicPlayer.class.getResource("/audio/music/");
@@ -44,9 +59,13 @@ public class MusicPlayer {
                 .collect(Collectors.toList());
     }
 
-    /** 
-     * @param filename
-     * @param mode
+    /**
+     * Starts playing the specified music file with the given playback mode.
+     * If mode is RANDOM, selects a random track different from the current one.
+     * Supports fade-in and fade-out effects.
+     * 
+     * @param filename the name of the music file to play, or null if mode is RANDOM (will select automatically)
+     * @param mode the playback mode (NORMAL, LOOP, RANDOM)
      */
     public static void play(String filename, Mode mode) {
         stopImmediate();
@@ -80,7 +99,7 @@ public class MusicPlayer {
 
         switch (mode) {
             case LOOP -> mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            case NORMAL, RANDOM -> mediaPlayer.setCycleCount((int) 0.5);
+            case NORMAL, RANDOM -> mediaPlayer.setCycleCount(1);
         }
 
         mediaPlayer.setOnReady(() -> {
@@ -104,9 +123,11 @@ public class MusicPlayer {
         fadeIn(mediaPlayer, FADE_IN_SECONDS);
     }
 
-    /** 
-     * @param player
-     * @param durationSeconds
+    /**
+     * Gradually increases the volume of the given MediaPlayer from 0 to 1 over the specified duration.
+     * 
+     * @param player the MediaPlayer to fade in
+     * @param durationSeconds duration of the fade-in in seconds
      */
     private static void fadeIn(MediaPlayer player, int durationSeconds) {
         double targetVolume = 1.0;
@@ -122,9 +143,12 @@ public class MusicPlayer {
         timeline.play();
     }
 
-    /** 
-     * @param player
-     * @param durationSeconds
+    /**
+     * Gradually decreases the volume of the given MediaPlayer to 0 over the specified duration,
+     * then stops the playback if not in RANDOM mode.
+     * 
+     * @param player the MediaPlayer to fade out
+     * @param durationSeconds duration of the fade-out in seconds
      */
     private static void fadeOut(MediaPlayer player, int durationSeconds) {
         double initialVolume = player.getVolume();
@@ -146,12 +170,18 @@ public class MusicPlayer {
         fadeOutTimeline.play();
     }
 
+    /**
+     * Stops the current playback with a fade-out effect.
+     */
     public static void stop() {
         if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
             fadeOut(mediaPlayer, FADE_OUT_SECONDS);
         }
     }
 
+    /**
+     * Immediately stops the current playback without any fade effect.
+     */
     public static void stopImmediate() {
         if (fadeOutTimeline != null) {
             fadeOutTimeline.stop();
@@ -162,8 +192,10 @@ public class MusicPlayer {
         }
     }
 
-    /** 
-     * @param volume
+    /**
+     * Sets the volume of the current music playback.
+     * 
+     * @param volume volume level between 0.0 (mute) and 1.0 (max)
      */
     public static void setVolume(double volume) {
         if (mediaPlayer != null) {
@@ -171,8 +203,10 @@ public class MusicPlayer {
         }
     }
 
-    /** 
-     * @return boolean
+    /**
+     * Checks if music is currently playing.
+     * 
+     * @return true if music is playing, false otherwise
      */
     public static boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING;

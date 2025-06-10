@@ -1,6 +1,14 @@
 package com.game.utils;
 
+/**
+ * Utility class containing constant paths to image resources used in the game.
+ * <p>
+ * This class should not be instantiated.
+ * Each constant represents the path to an image located in the <code>/images/</code> directory
+ * within the resource folder.
+ */
 public class ImageLibrary {
+
     public static final String Bomb          = "/images/bomb.png";
     public static final String BombermanMenu = "/images/BombermanMenu.jpg";
     public static final String CenterFire    = "/images/center-fire.png";
@@ -24,7 +32,7 @@ public class ImageLibrary {
     public static final String CenterUDFire  = "/images/center-ud-fire.png";
     public static final String CenterLRFire  = "/images/center-lr-fire.png";
     public static final String CenterULFire  = "/images/center-ul-fire.png";
-    public static final String CenterURFire   = "/images/center-ur-fire.png";
+    public static final String CenterURFire  = "/images/center-ur-fire.png";
     public static final String CenterDLFire  = "/images/center-dl-fire.png";
     public static final String CenterDRFire  = "/images/center-dr-fire.png";
     public static final String CenterUDLFire = "/images/center-udl-fire.png";
@@ -32,9 +40,14 @@ public class ImageLibrary {
     public static final String CenterULRFire = "/images/center-ulr-fire.png";
     public static final String CenterDLRFire = "/images/center-dlr-fire.png";
     public static final String WeakWall      = "/images/weak_wall.png";
+    public static final String Flag1         = "/images/Flag2.png";
+    public static final String Flag2         = "/images/Flag1.png";
 
-
+    /**
+     * Private constructor to prevent instantiation.
+     * This class is intended to be used statically.
+     */
     private ImageLibrary() {
-        // Empêche l'instanciation
+        // Prevent instantiation
     }
 }
