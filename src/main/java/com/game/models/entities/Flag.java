@@ -30,35 +30,59 @@ public class Flag {
         this.teamId = teamId;
     }
 
+    /** 
+     * @return int
+     */
     // Getters
     public int getRow() { 
         return row; 
     }
 
+    /** 
+     * @return int
+     */
     public int getCol() { 
         return col; 
     }
 
+    /** 
+     * @return int
+     */
     public int getHomeRow() { 
         return homeRow; 
     }
 
+    /** 
+     * @return int
+     */
     public int getHomeCol() { 
         return homeCol; 
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isAtHome() { 
         return isAtHome; 
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isCarried() { 
         return isCarried; 
     }
 
+    /** 
+     * @return Player
+     */
     public Player getCarrier() { 
         return carrier; 
     }
 
+    /** 
+     * @return int
+     */
     public int getTeamId() { 
         return teamId; 
     }

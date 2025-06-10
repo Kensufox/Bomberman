@@ -1,3 +1,8 @@
+/**
+ * Controller class responsible for managing the game map, including player movements,
+ * bomb placements, power-up handling, and transitions to the game over screen.
+ */
+
 package com.game.controllers;
 
 import java.io.IOException;
@@ -12,7 +17,13 @@ import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.map.GameMap;
-import com.game.utils.*;
+import com.game.utils.GameData;
+import com.game.utils.ImageLibrary;
+import com.game.utils.InputHandler;
+import com.game.utils.ResourceLoader;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
+import com.game.utils.ScoreManager;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -26,27 +37,40 @@ import javafx.scene.layout.StackPane;
 
 public class GameMapController {
 
-    @FXML
-    protected GridPane mapGrid;
+    /** The primary grid representing game elements */
+    @FXML protected GridPane mapGrid;
 
-    @FXML
-    protected GridPane backgroundGrid;
+    /** The background grid behind the game map */
+    @FXML protected GridPane backgroundGrid;
 
+    /** Handles player inputs */
     protected InputHandler inputHandler;
+
+    /** Represents the current power-up in the game */
     protected PowerUp powerUp;
+
+    /** The graphical node of the active power-up */
     protected StackPane powerUpCell;
+
+    /** Handles bomb-related logic */
     protected Bomb bomb;
+
+    /** The current game map */
     protected GameMap gameMap;
 
+    /** Tracks the currently pressed keys */
     protected final Set<KeyCode> pressedKeys = new HashSet<>();
 
-    // Generic list of players and their contexts (cells + controls)
+    /** Stores the players and their visual/contextual data */
     protected final List<PlayerContext> players = new ArrayList<>();
 
+    /** Active power-ups on the grid */
     private final List<PowerUp> activePowerUps = new ArrayList<>();
+
+    /** Visual nodes representing active power-ups */
     private final List<StackPane> activePowerUpCells = new ArrayList<>();
 
-    // Inner class to store info per player
+    /** Inner class for storing a player, their cell, and controls */
     protected static class PlayerContext {
         final Player player;
         final StackPane cell;
@@ -59,6 +83,9 @@ public class GameMapController {
         }
     }
 
+    /**
+     * Initializes the game map, players, bombs, and sets up input handling and the animation loop.
+     */
     public void initialize() {
         this.inputHandler = new InputHandler();
         this.gameMap = new GameMap();
@@ -100,8 +127,9 @@ public class GameMapController {
         startMovementLoop();
     }
 
-    /** 
-     * @return Player[]
+    /**
+     * Creates and returns two players initialized with default positions and states.
+     * @return an array containing player 1 and player 2
      */
     protected Player[] createPlayers() {
         Player player1 = new Player(1, 1, Player.State.ALIVE);
@@ -109,8 +137,9 @@ public class GameMapController {
         return new Player[] { player1, player2 };
     }
 
-    /** 
-     * @param event
+    /**
+     * Handles key press events and bomb placements.
+     * @param event the key press event
      */
     protected void handleKeyPressed(KeyEvent event) {
         KeyCode code = event.getCode();
@@ -125,13 +154,17 @@ public class GameMapController {
         }
     }
 
-    /** 
-     * @param event
+    /**
+     * Handles key release events by updating the pressed key set.
+     * @param event the key release event
      */
     protected void handleKeyReleased(KeyEvent event) {
         pressedKeys.remove(event.getCode());
     }
 
+    /**
+     * Starts the animation loop responsible for moving players and applying power-up effects.
+     */
     protected void startMovementLoop() {
         AnimationTimer movementLoop = new AnimationTimer() {
             @Override
@@ -165,11 +198,12 @@ public class GameMapController {
         movementLoop.start();
     }
 
-    /** 
-     * @param player
-     * @param cell
-     * @param dRow
-     * @param dCol
+    /**
+     * Moves the player in the given direction if the destination is walkable.
+     * @param player the player to move
+     * @param cell the StackPane representing the player on the grid
+     * @param dRow the row direction offset
+     * @param dCol the column direction offset
      */
     protected void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
         int oldRow = player.getRow();
@@ -188,10 +222,11 @@ public class GameMapController {
         cell.toFront();
     }
 
-    /** 
-     * @param row
-     * @param col
-     * @return boolean
+    /**
+     * Determines whether a given map cell is walkable.
+     * @param row the row index
+     * @param col the column index
+     * @return true if the cell is walkable, false otherwise
      */
     protected boolean isWalkable(int row, int col) {
         if (row < 0 || col < 0 || row >= gameMap.getMapData().length || col >= gameMap.getMapData()[0].length) {
@@ -201,8 +236,9 @@ public class GameMapController {
         return cell == '.' || cell == 'P';
     }
 
-    /** 
-     * @param player
+    /**
+     * Marks a player as dead, removes them from the grid, and checks for a winner.
+     * @param player the player to mark as dead
      */
     public void killPlayer(Player player) {
         if (player.getState() == Player.State.DEAD) return;
@@ -232,10 +268,11 @@ public class GameMapController {
         }
     }
 
-    /** 
-     * @param winnerText
-     * @param P1Score
-     * @param P2Score
+    /**
+     * Switches to the game over screen and displays the scores.
+     * @param winnerText the message indicating the winner
+     * @param P1Score the score of player 1
+     * @param P2Score the score of player 2
      */
     protected void switchToGameOverScreen(String winnerText, int P1Score, int P2Score) {
         try {
@@ -249,36 +286,34 @@ public class GameMapController {
             Scene scene = new Scene(gameOverRoot);
             ((javafx.stage.Stage) mapGrid.getScene().getWindow()).setScene(scene);
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    /** 
-     * @param row
-     * @param col
+    /**
+     * Spawns a new power-up at the given grid coordinates.
+     * @param row the row coordinate
+     * @param col the column coordinate
      */
     public void spawnPowerUpAt(int row, int col) {
-        // Decide type randomly or fixed for now
+        // Decide type randomly
         PowerUp.Power[] possiblePowers = PowerUp.Power.values();
         PowerUp.Power randomPower = possiblePowers[new java.util.Random().nextInt(possiblePowers.length)];
-
-        // Create the PowerUp object (adjust duration and position)
         PowerUp newPowerUp = new PowerUp(row, col, randomPower, 3_000_000_000L/GameData.getGameSpeed());
 
-        // Load appropriate image for the power-up type, e.g.:
+        // Load appropriate image for the power-up type
         String imgPath;
         imgPath = switch (randomPower) {
             case SPEED ->      ImageLibrary.PowerSpeed;
             case BOMB_RANGE -> ImageLibrary.PowerRange;
             case EXTRA_BOMB -> ImageLibrary.PowerAmount;
             default ->         ImageLibrary.Power;
-        }; // add other cases here
+        };
 
         Image powerUpImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imgPath)));
 
         StackPane powerUpNode = ResourceLoader.createPixelatedImageNode(powerUpImg, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
 
-        // Add power-up to your tracking lists
+        // Add power-up to tracking lists
         activePowerUps.add(newPowerUp);
         activePowerUpCells.add(powerUpNode);
 
@@ -286,8 +321,9 @@ public class GameMapController {
         mapGrid.add(powerUpNode, newPowerUp.getCol(), newPowerUp.getRow());
     }
 
-    /** 
-     * @param player
+    /**
+     * Checks if the player has collided with any active power-up, and applies the effect if so.
+     * @param player the player to check
      */
     private void checkPowerUpCollision(Player player) {
         if (activePowerUps.isEmpty()) return;
