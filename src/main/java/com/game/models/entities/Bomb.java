@@ -27,7 +27,7 @@ public class Bomb {
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
-    private final static int originalRange = 1;
+    private final static int originalRange = 2;
     private int range = getOriginalRange();
 
     private final List<Player> players;

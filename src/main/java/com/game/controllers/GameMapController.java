@@ -299,6 +299,7 @@ public class GameMapController {
             PowerUp powerUp = activePowerUps.get(i);
             if (player.getRow() == powerUp.getRow() && player.getCol() == powerUp.getCol()) {
                 // Remove power-up from the grid and lists
+                SFXPlayer.play(SFXLibrary.POWER_UP);
                 mapGrid.getChildren().remove(activePowerUpCells.get(i));
                 activePowerUps.remove(i);
                 activePowerUpCells.remove(i);
