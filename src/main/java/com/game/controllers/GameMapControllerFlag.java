@@ -180,8 +180,8 @@ public class GameMapControllerFlag extends GameMapController {
         player2Flag = new Flag(11, 13); // Player 2's spawn
 
         // Create flag images (you might want to use different images for each team)
-        Image flag1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Power))); // Replace with actual flag image
-        Image flag2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Power))); // Replace with actual flag image
+        Image flag1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Flag1))); // Replace with actual flag image
+        Image flag2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Flag2))); // Replace with actual flag image
 
         // Create flag visual nodes
         player1FlagCell = ResourceLoader.createPixelatedImageNode(flag1Img, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);

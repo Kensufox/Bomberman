@@ -100,7 +100,7 @@ public class MenuController {
         try {
             SFXPlayer.play(SFXLibrary.FINISH);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_map.fxml"));
-            loader.setController(new GameMapController());
+            loader.setController(new GameMapControllerFlag());
             StackPane root = loader.load();
 
             // Retrieves the current scene from one of the buttons
