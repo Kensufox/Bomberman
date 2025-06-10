@@ -11,6 +11,8 @@ import javafx.animation.AnimationTimer;
  */
 public class GameMapControllerbot extends GameMapController {
 
+    private String botDifficulty = "MEDIUM"; // Difficulté par défaut
+
     /**
      * Constructeur de la classe {@link GameMapControllerbot}.
      * Appelle le constructeur de la classe parente {@link GameMapController}.
@@ -20,16 +22,70 @@ public class GameMapControllerbot extends GameMapController {
     }
 
     /**
+     * Définit la difficulté du bot.
+     * @param difficulty La difficulté : "EASY", "MEDIUM", ou "HARD"
+     */
+    public void setBotDifficulty(String difficulty) {
+        this.botDifficulty = difficulty;
+    }
+
+    /**
+     * Récupère la difficulté du bot.
+     * @return La difficulté actuelle du bot
+     */
+    public String getBotDifficulty() {
+        return this.botDifficulty;
+    }
+
+    /**
      * Crée et initialise les joueurs du jeu.
      * Un joueur humain et un bot sont créés et ajoutés à la liste des joueurs.
+     * La difficulté du bot est configurée selon le paramètre défini.
      *
      * @return Un tableau contenant les joueurs créés : un joueur humain et un bot.
      */
     @Override
     protected Player[] createPlayers() {
         Player player1 = new Player(1, 1, Player.State.ALIVE); // Le joueur humain
-        Player player2 = new BotPlayer(11, 13, Player.State.ALIVE, gameMap); // Le bot
+        BotPlayer player2 = new BotPlayer(11, 13, Player.State.ALIVE, gameMap); // Le bot
+
+        // Configurer la difficulté du bot
+        configureBotDifficulty(player2);
+
         return new Player[]{player1, player2};
+    }
+
+    /**
+     * Configure les paramètres du bot selon la difficulté choisie.
+     * @param bot Le bot à configurer
+     */
+    private void configureBotDifficulty(BotPlayer bot) {
+        switch (botDifficulty) {
+            case "EASY":
+                // Bot facile : plus lent, moins intelligent
+                bot.setMoveDelay(500_000_000L); // 500ms entre les mouvements
+                bot.setBombDelay(3); // 3 secondes entre les bombes
+                bot.setIntelligenceLevel(1); // Niveau d'intelligence bas
+                break;
+            case "MEDIUM":
+                // Bot moyen : vitesse normale
+                bot.setMoveDelay(300_000_000L); // 300ms entre les mouvements
+                bot.setBombDelay(2); // 2 secondes entre les bombes
+                bot.setIntelligenceLevel(2); // Niveau d'intelligence moyen
+                break;
+            case "HARD":
+                // Bot difficile : rapide et intelligent
+                bot.setMoveDelay(150_000_000L); // 150ms entre les mouvements
+                bot.setBombDelay(1); // 1 seconde entre les bombes
+                bot.setIntelligenceLevel(3); // Niveau d'intelligence élevé
+                break;
+            default:
+                // Difficulté par défaut (MEDIUM)
+                bot.setMoveDelay(300_000_000L);
+                bot.setBombDelay(2);
+                bot.setIntelligenceLevel(2);
+                break;
+        }
     }
 
     /**
@@ -66,8 +122,20 @@ public class GameMapControllerbot extends GameMapController {
                         if (bot.canMove(now)) {
                             Player enemy = players.get(0).player; // Le joueur humain
 
-                            // Debug des informations du bot
-                            if(bot.getState() == Player.State.ALIVE) System.out.println(bot.getDebugInfo() + "\n"); //si joueur mort, plus de debug
+                            // Debug des informations du bot (optionnel)
+                            if(bot.getState() == Player.State.ALIVE && enemy.getState() == Player.State.ALIVE) {
+                                // System.out.println("Bot Difficulty: " + botDifficulty);
+                                System.out.println(bot.getDebugInfo() + "\n");
+
+                                /* Debug de la carte (décommenté si nécessaire)
+                                for (int i = 0; i < gameMap.getMapData().length; i++) {
+                                    for (int j = 0; j < gameMap.getMapData()[i].length; j++) {
+                                        System.out.print(gameMap.getMapData()[i][j] + " ");
+                                    }
+                                    System.out.println();
+                                }
+                                */
+                            }
 
                             // Décision d'action du bot : mouvement et placement de bombe
                             int[] action = bot.decideAction(System.nanoTime(), enemy);
@@ -80,7 +148,7 @@ public class GameMapControllerbot extends GameMapController {
                             if (placeBomb) {
                                 p.tryPlaceBomb(bot.getRow(), bot.getCol(), bomb);
                                 bot.setLastBombTime(now);
-                                //System.out.println("Bot placing bomb at: [" + bot.getRow() + ", " + bot.getCol() + "]");
+                                //System.out.println("Bot placing bomb at: [" + bot.getRow() + ", " + bot.getCol() + "] (Difficulty: " + botDifficulty + ")");
                             }
 
                             // Effectuer le mouvement si nécessaire

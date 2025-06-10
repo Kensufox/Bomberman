@@ -21,9 +21,10 @@ import java.util.Objects;
 
 
 public class BotPlayer extends Player {
-    
+
     /** Composants de l'architecture MVC - Modèle */
     private final GameMap gameMap;
+    private char[][] map;
     private final BombAnalyzer bombAnalyzer;
     private final PathFinder pathFinder;
     private final MovementStrategy movementStrategy;
@@ -31,6 +32,7 @@ public class BotPlayer extends Player {
     /** État du bot */
     private Player enemy;
     private long lastBombTime = 0;
+    private int intelligenceLevel;
 
     /**
      * Constructeur du bot player.
@@ -39,10 +41,10 @@ public class BotPlayer extends Player {
      * @param startRow Position initiale (ligne)
      * @param startCol Position initiale (colonne)
      * @param state État initial du joueur
-     * @param map Carte de jeu
+     * @param gameMap Carte de jeu
      * @throws NullPointerException si map est null
      */
-    public BotPlayer(int startRow, int startCol, State state, GameMap map) {
+    public BotPlayer(int startRow, int startCol, State state, GameMap gameMap) {
         super(startRow, startCol, state);
         
         // Configuration du timing
@@ -50,10 +52,12 @@ public class BotPlayer extends Player {
         this.originalMoveDelay = moveDelay;
         
         // Initialisation du modèle
-        this.gameMap = Objects.requireNonNull(map, "GameMap ne peut pas être null");
+        this.gameMap = Objects.requireNonNull(gameMap, "GameMap ne peut pas être null");
         this.bombAnalyzer = new BombAnalyzer(gameMap);
         this.pathFinder = new PathFinder(gameMap, bombAnalyzer);
         this.movementStrategy = new MovementStrategy(bombAnalyzer, pathFinder);
+
+        this.map = gameMap.getMapData();
     }
 
     /**
@@ -68,12 +72,20 @@ public class BotPlayer extends Player {
     public int[] decideAction(long now, Player enemy) {
         this.enemy = Objects.requireNonNull(enemy, "L'ennemi ne peut pas être null");
 
-        // Calcul du mouvement optimal via la stratégie
-        int[] movement = movementStrategy.calculateOptimalMove(getRow(), getCol(), enemy);
-
         // Décision de pose de bombe
         boolean shouldBomb = movementStrategy.shouldPlaceBomb(
                 getRow(), getCol(), enemy, now, lastBombTime);
+
+
+        char originalCell = bombAnalyzer.getMapData()[getRow()][getCol()];
+        if (shouldBomb)
+            // Simulation temporaire de la bombe
+            bombAnalyzer.getMapData()[getRow()][getCol()] = 'X';
+
+        // Calcul du mouvement optimal via la stratégie
+        int[] movement = movementStrategy.calculateOptimalMove(getRow(), getCol(), enemy);
+        bombAnalyzer.getMapData()[getRow()][getCol()] = originalCell;
+
 
         return new int[]{movement[0], movement[1], shouldBomb ? 1 : 0};
     }
@@ -161,6 +173,15 @@ public class BotPlayer extends Player {
     }
 
 
+    public void setIntelligenceLevel(int level) {
+        this.intelligenceLevel = level;
+    }
+
+    public int getIntelligenceLevel() {
+        return intelligenceLevel;
+    }
+
+
 
     /**
      * Génère des informations de debug complètes pour le développement.
@@ -207,7 +228,7 @@ public class BotPlayer extends Player {
         // === INFORMATIONS BOMBES ===
         debug.append("\n💣 BOMB SYSTEM:\n");
         double bombCooldownSec = (now - lastBombTime) / 1_000_000_000.0;
-        boolean canBomb = bombCooldownSec >= 1.5;
+        boolean canBomb = bombCooldownSec >= getBombDelay();
 
         debug.append(String.format("   • Cooldown: %.2fs %s (%.1f%% ready)\n",
                 bombCooldownSec,
@@ -314,8 +335,8 @@ public class BotPlayer extends Player {
         int bombRow = getRow(), bombCol = getCol();
         int enemyRow = enemy.getRow(), enemyCol = enemy.getCol();
 
-        if ((bombRow == enemyRow && Math.abs(bombCol - enemyCol) <= 3) ||
-                (bombCol == enemyCol && Math.abs(bombRow - enemyRow) <= 3)) {
+        if ((bombRow == enemyRow && Math.abs(bombCol - enemyCol) <= 2) ||
+                (bombCol == enemyCol && Math.abs(bombRow - enemyRow) <= 2)) {
             return !bombAnalyzer.hasWallBetween(bombRow, bombCol, enemyRow, enemyCol);
         }
         return false;

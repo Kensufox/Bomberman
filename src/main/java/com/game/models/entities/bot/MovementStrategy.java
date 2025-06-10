@@ -50,7 +50,7 @@ public class MovementStrategy {
      */
     public int[] calculateOptimalMove(int currentRow, int currentCol, Player enemy) {
         // Priorité 1: Fuir si en danger
-        if (bombAnalyzer.isDangerous(currentRow, currentCol)) {
+        if (bombAnalyzer.isDangerous(currentRow, currentCol) || manhattanDistance(currentRow, currentCol, enemy.getRow(), enemy.getCol()) < 2) {
             return findEscapeMove(currentRow, currentCol, enemy);
         }
 
@@ -112,7 +112,7 @@ public class MovementStrategy {
      * @param lastBombTime Temps de la dernière bombe
      * @return true si une bombe doit être posée
      */
-    public boolean shouldPlaceBomb(int currentRow, int currentCol, Player enemy, 
+    public boolean shouldPlaceBomb(int currentRow, int currentCol, Player enemy,
                                  long currentTime, long lastBombTime) {
         return (currentTime - lastBombTime >= BOMB_COOLDOWN) &&
                isEnemyInBombRange(currentRow, currentCol, enemy) &&

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.game.controllers.MenuController">
+    <children>
+        <VBox alignment="CENTER" spacing="30.0" styleClass="bot-level-pane" stylesheets="@../css/botLevel.css">
+            <children>
+                <Label styleClass="bot-level-title" text="Choisir le niveau du Bot" />
+                <VBox alignment="CENTER" spacing="20.0">
+                    <children>
+                        <Button fx:id="btnEasyBot" mnemonicParsing="false" onAction="#easyBot" styleClass="bot-level-button" text="Facile" />
+                        <Button fx:id="btnMediumBot" mnemonicParsing="false" onAction="#mediumBot" styleClass="bot-level-button" text="Moyen" />
+                        <Button fx:id="btnHardBot" mnemonicParsing="false" onAction="#hardBot" styleClass="bot-level-button" text="Difficile" />
+                    </children>
+                </VBox>
+                <Button fx:id="btnRetourChooseGame" mnemonicParsing="false" onAction="#retourChooseGame" styleClass="return-bot-button" text="Retour" />
+            </children>
+        </VBox>
+    </children>
+</StackPane>

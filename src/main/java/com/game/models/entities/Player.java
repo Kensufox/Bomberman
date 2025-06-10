@@ -26,6 +26,7 @@ public class Player {
     protected long originalMoveDelay;
 
     protected boolean canPlaceBomb = true;
+    protected double bombDelay;
 
     public Player(int startRow, int startCol, State state) {
         this.row = startRow;
@@ -33,6 +34,7 @@ public class Player {
         this.state = state;
         this.moveDelay =  150_000_000/GameData.gameSpeed;
         this.originalMoveDelay = moveDelay;
+        this.bombDelay = Bomb.getCOOLDOWN_SECONDS();
     }
     /**
      * Méthode pour poser la bombe si le joueur est autorisé.
@@ -40,7 +42,7 @@ public class Player {
      *
      * @param row La ligne de la position où poser la bombe.
      * @param col La colonne de la position où poser la bombe.
-     * @param currentTime Temps actuel en nanosecondes.
+     * @param bomb L'Objet Bombe qui va placer la bombe
      */
     public void tryPlaceBomb(int row, int col, Bomb bomb) {
         if (!canPlaceBomb) {
@@ -50,7 +52,7 @@ public class Player {
         canPlaceBomb = false;
 
         // Gérer le cooldown (on utilise un timer ici pour éviter de poser une autre bombe trop rapidement)
-        PauseTransition cooldown = new PauseTransition(Duration.seconds(Bomb.getCOOLDOWN_SECONDS() / GameData.gameSpeed / placementSpeed));
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(bombDelay / GameData.gameSpeed / placementSpeed));
         cooldown.setOnFinished(e -> canPlaceBomb = true);
         cooldown.play();
 
@@ -149,5 +151,13 @@ public class Player {
 
     public int getScore() {
         return score;
+    }
+
+    public void setBombDelay(double delay) {
+        this.bombDelay = delay;
+    }
+
+    public double getBombDelay() {
+        return bombDelay;
     }
 }
