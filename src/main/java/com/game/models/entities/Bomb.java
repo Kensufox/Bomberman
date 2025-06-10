@@ -26,7 +26,7 @@ public class Bomb {
     private final StackPane[][] tiles;
     private final Image emptyImg;
     private int range = 2;
-    private final static int originalRange = 2;
+    private final static int originalRange = 1;
 
     private final List<Player> players;
     private final GameMapController controller;
