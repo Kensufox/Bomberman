@@ -1,10 +1,10 @@
-/* Style pour le conteneur VBox */
+/* VBox container */
 VBox {
     -fx-spacing: 25px;
     -fx-alignment: center;
 }
 
-/* Style pour la grille de menu */
+/* Menu grid style */
 #menuGrid {
     -fx-background-color: rgba(0, 0, 0, 0.4);
     -fx-background-radius: 20px;
@@ -12,15 +12,15 @@ VBox {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 15, 0.6, 3, 3);
 }
 
-/* Style des boutons du menu principal */
+/* Main menu button style */
 .menu-button {
-    /* Taille et espacement */
+    /* Spacing et size */
     -fx-min-width: 300px;
     -fx-min-height: 60px;
     -fx-max-width: 300px;
     -fx-pref-height: 60px;
 
-    /* Police rétro avec icônes */
+    /* Retro font with icons */
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
@@ -28,18 +28,18 @@ VBox {
     -fx-content-display: left;
     -fx-graphic-text-gap: 15px;
 
-    /* Couleur de base - bleu électrique rétro */
+    /* Base color - retro electric blue */
     -fx-background-color:
             linear-gradient(to bottom, #0066ff 0%, #0044cc 50%, #002299 100%),
             linear-gradient(to right, #3388ff, #0066ff);
 
-    /* Bordures pixelisées avec effet néon */
+    /* Pixelated borders with neon effect */
     -fx-border-color: #66aaff, #001166, #001166, #66aaff;
     -fx-border-width: 4px, 2px, 4px, 2px;
     -fx-border-style: solid;
     -fx-border-insets: 0, 4, 4, 4;
 
-    /* Coins légèrement arrondis */
+    /* Border radius */
     -fx-background-radius: 8px;
     -fx-border-radius: 8px;
 
