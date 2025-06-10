@@ -1,5 +1,7 @@
 package com.game.controllers;
 
+import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,16 +15,30 @@ public class GameOverController {
     private Label winnerLabel;
 
     @FXML
-    private Label scoreLabel;
+    private Label scoreJ1;
 
+    @FXML
+    private Label scoreJ2;
+
+    /** 
+     * @param text
+     */
     public void setWinnerText(String text) {
         winnerLabel.setText(text);
     }
 
+    /** 
+     * @param P1Score
+     * @param P2Score
+     */
     public void setPlayersScore(int P1Score, int P2Score) {
-        scoreLabel.setText("Player 1 Score : " + P1Score + "      Player 2 Score : " + P2Score);
+        scoreJ1.setText("Player 1 Score : " + P1Score);
+        scoreJ2.setText("Player 2 Score : " + P2Score);
     }
 
+    /** 
+     * @param event
+     */
     @FXML
     public void retourMenu (ActionEvent event) {
         try {
@@ -33,8 +49,7 @@ public class GameOverController {
             Button sourceButton = (Button) event.getSource();
             sourceButton.getScene().setRoot(root);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 }

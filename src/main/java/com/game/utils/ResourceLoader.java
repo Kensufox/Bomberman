@@ -7,6 +7,11 @@ import javafx.scene.layout.StackPane;
 
 public class ResourceLoader {
 
+    /** 
+     * @param texture
+     * @param tileSize
+     * @return StackPane
+     */
     public static StackPane createTexturedTile(Image texture, double tileSize) {
         Canvas canvas = new Canvas(tileSize, tileSize);
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -18,6 +23,14 @@ public class ResourceLoader {
         return pane;
     }
 
+/** 
+ * @param img
+ * @param width
+ * @param height
+ * @param xOffset
+ * @param yOffset
+ * @return StackPane
+ */
 public static StackPane createPixelatedImageNode(Image img, double width, double height, int xOffset, int yOffset) {
     double canvasWidth = width + Math.abs(xOffset);
     double canvasHeight = height + Math.abs(yOffset);

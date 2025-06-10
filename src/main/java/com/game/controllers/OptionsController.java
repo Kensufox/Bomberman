@@ -1,22 +1,27 @@
 package com.game.controllers;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import com.game.utils.InputHandler;
+import com.game.utils.InputHandler.PlayerControls;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-
-import com.game.utils.InputHandler;
-import com.game.utils.InputHandler.PlayerControls;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class OptionsController implements Initializable {
 
@@ -46,11 +51,32 @@ public class OptionsController implements Initializable {
     private String currentPlayer;
     private String currentAction;
 
+    /** 
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         inputHandler = new InputHandler();
         loadCurrentSettings();
         setupKeyCapture();
+
+        SFXPlayer.setupHoverSound(player1BombButton);
+        SFXPlayer.setupHoverSound(player1UpButton);
+        SFXPlayer.setupHoverSound(player1DownButton);
+        SFXPlayer.setupHoverSound(player1LeftButton);
+        SFXPlayer.setupHoverSound(player1RightButton);
+        
+        SFXPlayer.setupHoverSound(player2BombButton);
+        SFXPlayer.setupHoverSound(player2UpButton);
+        SFXPlayer.setupHoverSound(player2DownButton);
+        SFXPlayer.setupHoverSound(player2LeftButton);
+        SFXPlayer.setupHoverSound(player2RightButton);
+        
+        SFXPlayer.setupHoverSound(resetButton);
+        SFXPlayer.setupHoverSound(applyButton);
+        SFXPlayer.setupHoverSound(cancelButton);
+        SFXPlayer.setupHoverSound(backButton);
     }
 
     private void loadCurrentSettings() {
@@ -70,6 +96,10 @@ public class OptionsController implements Initializable {
         updateKeyButtonText(player2BombButton, j2.bomb);
     }
 
+    /** 
+     * @param button
+     * @param keyCode
+     */
     private void updateKeyButtonText(Button button, KeyCode keyCode) {
         if (keyCode == null) {
             button.setText("NONE");
@@ -90,6 +120,9 @@ public class OptionsController implements Initializable {
         keyCapture.setFocusTraversable(true);
     }
 
+    /** 
+     * @param event
+     */
     private void handleKeyCapture(KeyEvent event) {
         if (currentKeyButton != null) {
             KeyCode newKey = event.getCode();
@@ -105,6 +138,9 @@ public class OptionsController implements Initializable {
         event.consume();
     }
 
+    /** 
+     * @param keyCode
+     */
     private void clearKeyAssignment(KeyCode keyCode) {
         if (inputHandler.getJ1Up() == keyCode) inputHandler.setJ1Up(null);
         else if (inputHandler.getJ1Down() == keyCode) inputHandler.setJ1Down(null);
@@ -118,6 +154,11 @@ public class OptionsController implements Initializable {
         else if (inputHandler.getJ2Bomb() == keyCode) inputHandler.setJ2Bomb(null);
     }
 
+    /** 
+     * @param player
+     * @param action
+     * @param keyCode
+     */
     private void updateKeyBinding(String player, String action, KeyCode keyCode) {
         if ("player1".equals(player)) {
             switch (action) {
@@ -138,6 +179,11 @@ public class OptionsController implements Initializable {
         }
     }
 
+    /** 
+     * @param button
+     * @param player
+     * @param action
+     */
     private void showKeyCapture(Button button, String player, String action) {
         currentKeyButton = button;
         currentPlayer = player;
@@ -151,6 +197,10 @@ public class OptionsController implements Initializable {
         keyCapture.requestFocus();
     }
 
+    /** 
+     * @param action
+     * @return String
+     */
     private String getActionDisplayName(String action) {
         switch (action) {
             case "up": return "Haut";
@@ -169,27 +219,57 @@ public class OptionsController implements Initializable {
         currentAction = null;
     }
 
+    /** 
+     * @param cancelKeyCapture(
+     */
     // Event handlers for buttons:
 
     @FXML
     private void changePlayer1Up() { showKeyCapture(player1UpButton, "player1", "up"); }
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer1Down() { showKeyCapture(player1DownButton, "player1", "down"); }
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer1Left() { showKeyCapture(player1LeftButton, "player1", "left"); }
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer1Right() { showKeyCapture(player1RightButton, "player1", "right"); }
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer1Bomb() { showKeyCapture(player1BombButton, "player1", "bomb"); }
 
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer2Up() { showKeyCapture(player2UpButton, "player2", "up"); }
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer2Down() { showKeyCapture(player2DownButton, "player2", "down"); }
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer2Left() { showKeyCapture(player2LeftButton, "player2", "left"); }
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer2Right() { showKeyCapture(player2RightButton, "player2", "right"); }
+    /** 
+     * @param cancelKeyCapture(
+     */
     @FXML
     private void changePlayer2Bomb() { showKeyCapture(player2BombButton, "player2", "bomb"); }
 

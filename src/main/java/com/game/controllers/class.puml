@@ -1,0 +1,201 @@
+@startuml Controllers
+
+!define FXML_COLOR #E8F4FD
+!define METHOD_COLOR #F0F8FF
+!define FIELD_COLOR #FFF8DC
+
+class GameOverController {
+    {field} -winnerLabel: Label <<@FXML>>
+    {field} -scoreJ1: Label <<@FXML>>
+    {field} -scoreJ2: Label <<@FXML>>
+
+    +setWinnerText(text: String): void
+    +setPlayersScore(P1Score: int, P2Score: int): void
+    +retourMenu(event: ActionEvent): void <<@FXML>>
+}
+
+class MenuController {
+    {field} -jouer: Button <<@FXML>>
+    {field} -options: Button <<@FXML>>
+    {field} -quitter: Button <<@FXML>>
+    {field} -btnClassic: Button <<@FXML>>
+    {field} -btnCaptureTheFlag: Button <<@FXML>>
+    {field} -btnContreLOrdi: Button <<@FXML>>
+
+    +initialize(): void <<@FXML>>
+    +jouer(event: ActionEvent): void <<@FXML>>
+    +optionsMenu(event: ActionEvent): void <<@FXML>>
+    +exit(): void <<@FXML>>
+    +classicGame(event: ActionEvent): void <<@FXML>>
+    +VsComputer(event: ActionEvent): void <<@FXML>>
+    +retourMenu(event: ActionEvent): void <<@FXML>>
+}
+
+class OptionsController implements Initializable {
+    {field} -player1UpButton: Button <<@FXML>>
+    {field} -player1DownButton: Button <<@FXML>>
+    {field} -player1LeftButton: Button <<@FXML>>
+    {field} -player1RightButton: Button <<@FXML>>
+    {field} -player1BombButton: Button <<@FXML>>
+    {field} -player2UpButton: Button <<@FXML>>
+    {field} -player2DownButton: Button <<@FXML>>
+    {field} -player2LeftButton: Button <<@FXML>>
+    {field} -player2RightButton: Button <<@FXML>>
+    {field} -player2BombButton: Button <<@FXML>>
+    {field} -resetButton: Button <<@FXML>>
+    {field} -applyButton: Button <<@FXML>>
+    {field} -cancelButton: Button <<@FXML>>
+    {field} -backButton: Button <<@FXML>>
+    {field} -keyCapture: StackPane <<@FXML>>
+    {field} -keyCaptureLabel: Label <<@FXML>>
+    {field} -inputHandler: InputHandler
+    {field} -currentKeyButton: Button
+    {field} -currentPlayer: String
+    {field} -currentAction: String
+
+    +initialize(location: URL, resources: ResourceBundle): void
+    -loadCurrentSettings(): void
+    -updateKeyButtonText(button: Button, keyCode: KeyCode): void
+    -setupKeyCapture(): void
+    -handleKeyCapture(event: KeyEvent): void
+    -clearKeyAssignment(keyCode: KeyCode): void
+    -updateKeyBinding(player: String, action: String, keyCode: KeyCode): void
+    -showKeyCapture(button: Button, player: String, action: String): void
+    -getActionDisplayName(action: String): String
+    -hideKeyCapture(): void
+    +changePlayer1Up(): void <<@FXML>>
+    +changePlayer1Down(): void <<@FXML>>
+    +changePlayer1Left(): void <<@FXML>>
+    +changePlayer1Right(): void <<@FXML>>
+    +changePlayer1Bomb(): void <<@FXML>>
+    +changePlayer2Up(): void <<@FXML>>
+    +changePlayer2Down(): void <<@FXML>>
+    +changePlayer2Left(): void <<@FXML>>
+    +changePlayer2Right(): void <<@FXML>>
+    +changePlayer2Bomb(): void <<@FXML>>
+    +cancelKeyCapture(): void <<@FXML>>
+    +resetToDefaults(): void <<@FXML>>
+    +applySettings(): void <<@FXML>>
+    +cancelSettings(): void <<@FXML>>
+    +backToMenu(): void <<@FXML>>
+}
+
+class GameMapController {
+    {field} #mapGrid: GridPane <<@FXML>>
+    {field} #backgroundGrid: GridPane <<@FXML>>
+    {field} #inputHandler: InputHandler
+    {field} #powerUp: PowerUp
+    {field} #powerUpCell: StackPane
+    {field} #bomb: Bomb
+    {field} #gameMap: GameMap
+    {field} #pressedKeys: Set<KeyCode>
+    {field} #players: List<PlayerContext>
+    {field} -activePowerUps: List<PowerUp>
+    {field} -activePowerUpCells: List<StackPane>
+
+    +initialize(): void
+    #createPlayers(): Player[]
+    #handleKeyPressed(event: KeyEvent): void
+    #handleKeyReleased(event: KeyEvent): void
+    #startMovementLoop(): void
+    #movePlayerIfPossible(player: Player, cell: StackPane, dRow: int, dCol: int): void
+    #isWalkable(row: int, col: int): boolean
+    +killPlayer(player: Player): void
+    #switchToGameOverScreen(winnerText: String, P1Score: int, P2Score: int): void
+    +spawnPowerUpAt(row: int, col: int): void
+    -checkPowerUpCollision(player: Player): void
+}
+
+class GameMapControllerbot {
+    +GameMapControllerbot()
+    #createPlayers(): Player[]
+    #startMovementLoop(): void
+}
+
+class PlayerContext {
+    {field} +player: Player
+    {field} +cell: StackPane
+    {field} +controls: InputHandler.PlayerControls
+
+    +PlayerContext(player: Player, cell: StackPane, controls: InputHandler.PlayerControls)
+}
+
+class BombAnalyzer {
+    {field} -BOMB_RANGE: int <<static final>>
+    {field} -gameMap: GameMap
+
+    +BombAnalyzer(gameMap: GameMap)
+    +isDangerous(row: int, col: int): boolean
+    +isOnBomb(row: int, col: int): boolean
+    -isInExplosionRange(targetRow: int, targetCol: int, bombRow: int, bombCol: int): boolean
+    +hasWallBetween(fromRow: int, fromCol: int, toRow: int, toCol: int): boolean
+    -checkWallsInRange(fixedCoord: int, start: int, end: int, horizontal: boolean): boolean
+    +isWall(row: int, col: int): boolean
+    +isValidPosition(row: int, col: int): boolean
+    +isTraversable(row: int, col: int): boolean
+    +getMapData(): char[][]
+}
+
+class BotPlayer extends Player {
+    {field} -gameMap: GameMap
+    {field} -bombAnalyzer: BombAnalyzer
+    {field} -pathFinder: PathFinder
+    {field} -movementStrategy: MovementStrategy
+    {field} -enemy: Player
+    {field} -lastBombTime: long
+
+    +BotPlayer(startRow: int, startCol: int, state: State, map: GameMap)
+    +decideAction(now: long, enemy: Player): int[]
+    +decideMove(now: long, enemy: Player): int[]
+    +shouldPlaceBomb(now: long, enemy: Player): boolean
+    +setLastBombTime(lastBombTime: long): void
+    +getLastBombTime(): long
+    +getDebugInfo(): String
+    +getEnemy(): Player
+    +getBombAnalyzer(): BombAnalyzer
+    #getMovementStrategy(): MovementStrategy
+}
+
+class Node {
+    {field} +row: int <<final>>
+    {field} +col: int <<final>>
+    {field} +gCost: int <<final>>
+    {field} +hCost: int <<final>>
+    {field} +parent: Node
+
+    +Node(row: int, col: int, gCost: int, hCost: int)
+    +fCost(): int
+    +getKey(): String
+}
+
+' Relations entre contrôleurs
+MenuController --> GameMapController : "crée via FXMLLoader"
+MenuController --> GameMapControllerbot : "crée via FXMLLoader"
+MenuController --> OptionsController : "navigue vers"
+GameMapController --> GameOverController : "crée via FXMLLoader"
+OptionsController --> MenuController : "retourne vers"
+GameMapControllerbot --|> GameMapController : "hérite"
+GameMapController +-- PlayerContext : "classe interne"
+
+' Relations avec les classes du bot
+GameMapControllerbot --> BotPlayer : "utilise"
+BotPlayer --> BombAnalyzer : "utilise"
+BotPlayer --> PathFinder : "utilise"
+BotPlayer --> MovementStrategy : "utilise"
+BombAnalyzer --> GameMap : "analyse"
+PathFinder --> Node : "utilise"
+
+' Interface
+OptionsController ..|> Initializable : "implémente"
+
+' Notes pour clarifier les rôles
+note right of GameOverController : "Contrôleur pour l'écran\nde fin de partie"
+note right of MenuController : "Contrôleur principal\ndu menu de navigation"
+note right of OptionsController : "Contrôleur pour la\nconfiguration des touches"
+note right of GameMapController : "Contrôleur de base\npour le jeu"
+note right of GameMapControllerbot : "Contrôleur spécialisé\npour le mode contre IA"
+note left of BombAnalyzer : "Analyse les zones\ndangereuses des bombes"
+note left of BotPlayer : "IA du bot avec\nstratégie avancée"
+note bottom of Node : "Nœud pour l'algorithme\nA* de pathfinding"
+
+@enduml

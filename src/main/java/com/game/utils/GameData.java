@@ -1,5 +1,10 @@
 package com.game.utils;
 
 public class GameData {
-    public static int gameSpeed = 1;
+
+    private static final int gameSpeed = 1;
+
+    public static int getGameSpeed() {
+        return gameSpeed;
+    }
 }

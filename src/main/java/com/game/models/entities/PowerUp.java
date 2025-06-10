@@ -19,22 +19,37 @@ public class PowerUp {
         this.isCollected = false;
     }
 
+    /** 
+     * @return long
+     */
     public long getDuration() {
         return duration;
     }
 
+    /** 
+     * @return Power
+     */
     public Power getPower() {
         return power;
     }
 
+    /** 
+     * @return int
+     */
     public int getRow() {
         return row;
     }
 
+    /** 
+     * @return int
+     */
     public int getCol() {
         return col;
     }
 
+    /** 
+     * @return boolean
+     */
     public boolean isCollected() {
         return isCollected;
     }

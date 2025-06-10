@@ -6,9 +6,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import com.game.controllers.GameMapController;
-import com.game.utils.GameData;
-import com.game.utils.ImageLibrary;
-import com.game.utils.ResourceLoader;
+import com.game.utils.*;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -25,8 +23,8 @@ public class Bomb {
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
-    private int range = 2;
     private final static int originalRange = 2;
+    private int range = getOriginalRange();
 
     private final List<Player> players;
     private final GameMapController controller;
@@ -45,6 +43,10 @@ public class Bomb {
     }
 
 
+    /** 
+     * @param row
+     * @param col
+     */
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Bomb)));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
@@ -53,7 +55,7 @@ public class Bomb {
         mapData[row][col] = 'X'; 
         mapGrid.add(bombCell, col, row);
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(2/GameData.gameSpeed));
+        PauseTransition delay = new PauseTransition(Duration.seconds(2/ GameData.getGameSpeed()));
         delay.setOnFinished(e -> {
             mapGrid.getChildren().remove(bombCell);
             mapData[row][col] = '.';
@@ -62,22 +64,39 @@ public class Bomb {
         delay.play();
     }
 
+    /** 
+     * @param range
+     */
     public void setRange(int range){
         this.range = range;
     }
 
+    /** 
+     * @return int
+     */
     public int getRange() {
         return range;
     }
 
+    /** 
+     * @return int
+     */
     public static int getOriginalRange() {
         return originalRange;
     }
 
+    /** 
+     * @return double
+     */
     public static double getCOOLDOWN_SECONDS() {
         return COOLDOWN_SECONDS;
     }
 
+    /** 
+     * @param list
+     * @param target
+     * @return boolean
+     */
     private boolean directionFinished(List<int[]> list, int[] target) {
         for (int[] d : list) {
             if (d[0] == target[0] && d[1] == target[1]) return true;
@@ -85,7 +104,12 @@ public class Bomb {
         return false;
     }
 
+    /** 
+     * @param row
+     * @param col
+     */
     private void explode(int row, int col) {
+        SFXPlayer.play(SFXLibrary.HURT);
         int[][] directions = {
             {0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}
         };
@@ -173,7 +197,7 @@ public class Bomb {
                     tiles[r][c] = explosionPane;
                     mapGrid.add(explosionPane, c, r);
 
-                    PauseTransition clear = new PauseTransition(Duration.seconds(0.4 / GameData.gameSpeed));
+                    PauseTransition clear = new PauseTransition(Duration.seconds(0.4 / GameData.getGameSpeed()));
                     clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
                     clear.play();
                 }

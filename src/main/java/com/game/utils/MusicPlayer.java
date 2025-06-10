@@ -26,6 +26,9 @@ public class MusicPlayer {
     private static Mode currentMode = Mode.NORMAL;
     private static String currentTrack = null;
 
+    /** 
+     * @return List<String>
+     */
     private static List<String> getMusicFiles() {
         URL folderURL = MusicPlayer.class.getResource("/audio/music/");
         if (folderURL == null) {
@@ -41,6 +44,10 @@ public class MusicPlayer {
                 .collect(Collectors.toList());
     }
 
+    /** 
+     * @param filename
+     * @param mode
+     */
     public static void play(String filename, Mode mode) {
         stopImmediate();
         currentMode = mode;
@@ -73,7 +80,7 @@ public class MusicPlayer {
 
         switch (mode) {
             case LOOP -> mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            case NORMAL, RANDOM -> mediaPlayer.setCycleCount(1);
+            case NORMAL, RANDOM -> mediaPlayer.setCycleCount((int) 0.5);
         }
 
         mediaPlayer.setOnReady(() -> {
@@ -97,6 +104,10 @@ public class MusicPlayer {
         fadeIn(mediaPlayer, FADE_IN_SECONDS);
     }
 
+    /** 
+     * @param player
+     * @param durationSeconds
+     */
     private static void fadeIn(MediaPlayer player, int durationSeconds) {
         double targetVolume = 1.0;
         int steps = durationSeconds * 20;
@@ -111,6 +122,10 @@ public class MusicPlayer {
         timeline.play();
     }
 
+    /** 
+     * @param player
+     * @param durationSeconds
+     */
     private static void fadeOut(MediaPlayer player, int durationSeconds) {
         double initialVolume = player.getVolume();
         int steps = durationSeconds * 20;
@@ -147,12 +162,18 @@ public class MusicPlayer {
         }
     }
 
+    /** 
+     * @param volume
+     */
     public static void setVolume(double volume) {
         if (mediaPlayer != null) {
             mediaPlayer.setVolume(volume);
         }
     }
 
+    /** 
+     * @return boolean
+     */
     public static boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING;
     }

@@ -4,19 +4,44 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.geometry.Pos?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <StackPane xmlns="http://javafx.com/javafx/8.0.171"
            xmlns:fx="http://javafx.com/fxml/1"
            prefWidth="600" prefHeight="520"
            fx:controller="com.game.controllers.GameOverController"
-           alignment="CENTER">
+           alignment="CENTER"
+           stylesheets="/css/gameOver.css"
+           styleClass="options-pane">
+
+    <!-- VBox for all elements -->
     <VBox spacing="20" alignment="CENTER">
-        <Label fx:id="winnerLabel" text="Winner!" style="-fx-font-size: 36px; -fx-text-fill: red;" />
+        <!-- Title winner -->
+        <Label fx:id="winnerLabel" text="Winner!" style="-fx-font-size: 36px;" styleClass="winnerLabel"/>
+
+        <!-- HBox Player 1 icon and score -->
         <HBox spacing="20" alignment="CENTER">
-            <Label fx:id="scoreLabel" text="score" style="-fx-font-size: 36px; -fx-text-fill: red;" />
+            <ImageView fitWidth="30" fitHeight="45">
+                <!-- Player 1 image -->
+                <Image url="/images/player1.png"/>
+            </ImageView>
+            <!-- Label P1 score -->
+            <Label fx:id="scoreJ1" text="score" style="-fx-font-size: 36px;" styleClass="scorePlayers"/>
         </HBox>
-        <Button fx:id="btnRetourMenu" text="Retour" onAction="#retourMenu" styleClass="choose-game-button"/>
+
+        <!-- HBox Player 2 icon and score -->
+        <HBox spacing="20" alignment="CENTER">
+            <ImageView fitWidth="30" fitHeight="45">
+                <!-- Player 2 image -->
+                <Image url="/images/player2.png"/>
+            </ImageView>
+            <!-- Label  P2 score -->
+            <Label fx:id="scoreJ2" text="score" style="-fx-font-size: 36px;" styleClass="scorePlayers"/>
+        </HBox>
+
+        <!-- Button to return to the main menu -->
+        <Button fx:id="btnRetourMenu" text="Retour" onAction="#retourMenu" styleClass="return-menu-button"/>
     </VBox>
 </StackPane>

@@ -1,0 +1,35 @@
+
+.options-pane {
+    -fx-background-color: #1a1a1a; /* sombre, presque noir */
+    -fx-padding: 20;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 14px;
+}
+
+.return-menu-button {
+    -fx-background-color: #222;
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-border-color: #ffcc00;
+    -fx-border-width: 2;
+    -fx-border-radius: 6;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow( one-pass-box , #ffcc00 , 3 , 0 , 0 , 0);
+    -fx-min-width: 100px;
+}
+
+.return-menu-button:hover {
+    -fx-background-color: #ffcc00;
+    -fx-text-fill: #1a1a1a;
+}
+
+.scorePlayers {
+    -fx-text-fill: white;
+}
+
+.winnerLabel {
+    -fx-text-fill: white;
+}
