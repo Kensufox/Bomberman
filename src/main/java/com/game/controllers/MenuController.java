@@ -1,5 +1,7 @@
 package com.game.controllers;
 
+import java.io.IOException;
+
 import com.game.utils.SFXLibrary;
 import com.game.utils.SFXPlayer;
 
@@ -46,8 +48,7 @@ public class MenuController {
             Button sourceButton = (Button) event.getSource();
             sourceButton.getScene().setRoot(root);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -65,8 +66,7 @@ public class MenuController {
             Button sourceButton = (Button) event.getSource();
             sourceButton.getScene().setRoot(root);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -91,8 +91,23 @@ public class MenuController {
             Button sourceButton = (Button) event.getSource();
             sourceButton.getScene().setRoot(root);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+        }
+    }
+    
+    @FXML
+    public void CptFlag (ActionEvent event) {
+        try {
+            SFXPlayer.play(SFXLibrary.FINISH);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_map.fxml"));
+            loader.setController(new GameMapController());
+            StackPane root = loader.load();
+
+            // Retrieves the current scene from one of the buttons
+            Button sourceButton = (Button) event.getSource();
+            sourceButton.getScene().setRoot(root);
+
+        } catch (IOException e) {
         }
     }
 
@@ -111,8 +126,7 @@ public class MenuController {
             Button sourceButton = (Button) event.getSource();
             sourceButton.getScene().setRoot(root);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 
@@ -130,8 +144,7 @@ public class MenuController {
             Button sourceButton = (Button) event.getSource();
             sourceButton.getScene().setRoot(root);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 

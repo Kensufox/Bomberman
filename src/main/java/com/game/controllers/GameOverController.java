@@ -1,5 +1,7 @@
 package com.game.controllers;
 
+import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,8 +49,7 @@ public class GameOverController {
             Button sourceButton = (Button) event.getSource();
             sourceButton.getScene().setRoot(root);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
         }
     }
 }

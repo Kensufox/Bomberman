@@ -139,7 +139,6 @@ public class GameMap {
                 writer.println();
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -180,7 +179,6 @@ public class GameMap {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
