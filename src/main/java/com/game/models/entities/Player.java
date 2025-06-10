@@ -5,9 +5,14 @@ import com.game.utils.GameData;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 
-
-
+/**
+ * Represents a player in the game, with position, power-ups, state, movement timing,
+ * and the ability to place bombs.
+ */
 public class Player {
+    /**
+     * Enum representing the possible states of a player.
+     */
     public enum State {
         ALIVE, DEAD, GHOST
     }
@@ -28,21 +33,28 @@ public class Player {
     protected boolean canPlaceBomb = true;
     protected double bombDelay;
 
+    /**
+     * Constructs a player with a starting position and initial state.
+     *
+     * @param startRow Starting row on the game grid.
+     * @param startCol Starting column on the game grid.
+     * @param state    Initial state of the player (ALIVE, DEAD, or GHOST).
+     */
     public Player(int startRow, int startCol, State state) {
         this.row = startRow;
         this.col = startCol;
         this.state = state;
-        this.moveDelay =  150_000_000/GameData.gameSpeed;
+        this.moveDelay =  150_000_000/GameData.getGameSpeed();
         this.originalMoveDelay = moveDelay;
         this.bombDelay = Bomb.getCOOLDOWN_SECONDS();
     }
+
     /**
-     * Méthode pour poser la bombe si le joueur est autorisé.
-     * Elle met à jour l'heure de la dernière bombe posée et lance le cooldown.
+     * Attempts to place a bomb if the cooldown allows.
      *
-     * @param row La ligne de la position où poser la bombe.
-     * @param col La colonne de la position où poser la bombe.
-     * @param bomb L'Objet Bombe qui va placer la bombe
+     * @param row         The row at which to place the bomb.
+     * @param col         The column at which to place the bomb.
+     * @param bomb        The bomb to be placed.
      */
     public void tryPlaceBomb(int row, int col, Bomb bomb) {
         if (!canPlaceBomb) {
@@ -52,7 +64,7 @@ public class Player {
         canPlaceBomb = false;
 
         // Gérer le cooldown (on utilise un timer ici pour éviter de poser une autre bombe trop rapidement)
-        PauseTransition cooldown = new PauseTransition(Duration.seconds(bombDelay / GameData.gameSpeed / placementSpeed));
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(bombDelay / GameData.getGameSpeed() / placementSpeed));
         cooldown.setOnFinished(e -> canPlaceBomb = true);
         cooldown.play();
 
@@ -60,14 +72,28 @@ public class Player {
         bomb.place(row, col);
     }
 
+    /**
+     * @return The current row of the player.
+     */
     public int getRow() {
         return row;
     }
 
+    /**
+     * @return The current column of the player.
+     */
     public int getCol() {
         return col;
     }
 
+    /**
+     * Assigns a power-up to the player for a certain duration.
+     *
+     * @param power    The power-up to apply.
+     * @param now      Current time in nanoseconds.
+     * @param duration Duration of the power-up effect.
+     * @param bomb     The bomb object affected by some power-ups.
+     */
     public void setPower(PowerUp.Power power, long now, long duration, Bomb bomb) {
         if (this.power != power){
             this.power = power;
@@ -76,10 +102,18 @@ public class Player {
         this.powerEndTime = now + duration;
     }
 
+    /**
+     * @return The player's current power-up.
+     */
     public PowerUp.Power getPower() {
         return power;
     }
 
+    /**
+     * Removes the player's current power-up and resets all related attributes.
+     *
+     * @param bomb The bomb object to reset range if applicable.
+     */
     public void removePower(Bomb bomb) {
         this.power = null;
         setMoveDelay(originalMoveDelay); // réinitialise par défaut
@@ -88,48 +122,99 @@ public class Player {
     
     }
 
+    /**
+     * @return The time (in nanoseconds) at which the current power expires.
+     */
     public long getPowerEndTime() {
         return powerEndTime;
     }
 
-
+    /**
+     * Moves the player by the specified delta.
+     *
+     * @param dRow Change in row.
+     * @param dCol Change in column.
+     */
     public void move(int dRow, int dCol) {
         this.row += dRow;
         this.col += dCol;
     }
 
+
+    /**
+     * Checks if the player can move based on the current time and movement delay.
+     *
+     * @param now Current time in nanoseconds.
+     * @return true if the player can move, false otherwise.
+     */
     public boolean canMove(long now) {
         return now - lastMoveTime >= moveDelay;
     }
 
+    /**
+     * Updates the time when the player last moved.
+     *
+     * @param now Current time in nanoseconds.
+     */
     public void updateLastMoveTime(long now) {
         lastMoveTime = now;
     }
 
+    /**
+     * Sets the player's movement delay based on the game speed.
+     *
+     * @param delay The delay between moves in nanoseconds.
+     */
     public void setMoveDelay(long delay) {
-        this.moveDelay = delay/GameData.gameSpeed;
+        this.moveDelay = delay/GameData.getGameSpeed();
     }
 
+
+    /**
+     * @return The current delay between player movements.
+     */
     public long getMoveDelay() {
         return moveDelay;
     }
 
+    /**
+     * Sets the player's state (e.g. ALIVE, DEAD, GHOST).
+     *
+     * @param state The new state to assign.
+     */
     public void setState(State state) {
         this.state = state;
     }
 
+
+    /**
+     * @return The current state of the player.
+     */
     public State getState() {
         return state;
     }
 
+    /**
+     * Sets the bomb placement speed modifier.
+     *
+     * @param placementSpeed The new placement speed factor.
+     */
     public void setPlacementSpeed(float placementSpeed) {
         this.placementSpeed = placementSpeed;
     }
 
+    /**
+     * @return The current bomb placement speed modifier.
+     */
     public float getPlacementSpeed() {
         return placementSpeed;
     }
 
+    /**
+     * Applies the player's current power-up effects.
+     *
+     * @param bomb The bomb object affected by power-ups.
+     */
     public void appliPower(Bomb bomb) {
         switch (power) {
             case SPEED -> setMoveDelay(moveDelay/3);
@@ -145,10 +230,18 @@ public class Player {
         }
     }
 
+    /**
+     * Sets the player's score.
+     *
+     * @param score The new score value.
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * @return The current score of the player.
+     */
     public int getScore() {
         return score;
     }

@@ -8,7 +8,6 @@ open module tp.intro.javafx {
 
     exports com.game;
     exports com.game.controllers;
-    exports com.game.models;
     exports com.game.models.entities;
     exports com.game.models.entities.bot;
     exports com.game.models.map;

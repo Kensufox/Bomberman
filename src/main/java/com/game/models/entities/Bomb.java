@@ -10,6 +10,8 @@ import com.game.models.entities.bot.PlacedBomb;
 import com.game.utils.GameData;
 import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -17,6 +19,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+/**
+ * Represents a bomb entity in the game. Handles the placement, explosion,
+ * and visual effects of the bomb, as well as player damage and potential
+ * power-up generation after destroying breakable tiles.
+ */
 public class Bomb {
 
     private static final int TILE_SIZE = 40;
@@ -26,8 +33,8 @@ public class Bomb {
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
-    private int range = 2;
     private final static int originalRange = 2;
+    private int range = getOriginalRange();
 
     private final List<Player> players;
     private final GameMapController controller;
@@ -40,6 +47,16 @@ public class Bomb {
     private final List<PlacedBomb> activeBombs = new ArrayList<>();
 
     // New constructor with a list of players
+    /**
+     * Constructs a Bomb object with necessary map data and game references.
+     *
+     * @param mapGrid    The GridPane representing the game map.
+     * @param mapData    A 2D char array representing tile types on the map.
+     * @param tiles      A 2D array of StackPanes representing each map tile.
+     * @param emptyImg   The image used for empty (cleared) tiles.
+     * @param players    A list of players in the game.
+     * @param controller Reference to the GameMapController for interaction.
+     */
     public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg, List<Player> players, GameMapController controller) {
         this.mapGrid = mapGrid;
         this.mapData = mapData;
@@ -49,19 +66,24 @@ public class Bomb {
         this.controller = controller;
     }
 
-
+    /**
+     * Places a bomb at the specified grid location and schedules its explosion.
+     *
+     * @param row The row index on the map.
+     * @param col The column index on the map.
+     */
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Bomb)));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
-        PlacedBomb bomb = new PlacedBomb(row, col, System.currentTimeMillis() + 2/GameData.gameSpeed, range);
+        PlacedBomb bomb = new PlacedBomb(row, col, System.currentTimeMillis() + 2/GameData.getGameSpeed(), range);
         activeBombs.add(bomb);
 
         if (mapData[row][col] == 'X') return;
         mapData[row][col] = 'X'; 
         mapGrid.add(bombCell, col, row);
 
-        PauseTransition delay = new PauseTransition(Duration.seconds(2/GameData.gameSpeed));
+        PauseTransition delay = new PauseTransition(Duration.seconds(2/ GameData.getGameSpeed()));
         delay.setOnFinished(e -> {
 
             mapGrid.getChildren().remove(bombCell);
@@ -72,18 +94,38 @@ public class Bomb {
         delay.play();
     }
 
+    /**
+     * Sets the explosion range of the bomb.
+     *
+     * @param range The number of tiles the explosion will extend.
+     */
     public void setRange(int range){
         this.range = range;
     }
 
+    /**
+     * Gets the current explosion range of the bomb.
+     *
+     * @return The number of tiles the explosion will extend.
+     */
     public int getRange() {
         return range;
     }
 
+    /**
+     * Gets the default explosion range.
+     *
+     * @return The default explosion range.
+     */
     public static int getOriginalRange() {
         return originalRange;
     }
 
+    /**
+     * Gets the cooldown period (in seconds) for placing another bomb.
+     *
+     * @return Cooldown time in seconds.
+     */
     public static double getCOOLDOWN_SECONDS() {
         return COOLDOWN_SECONDS;
     }
@@ -92,6 +134,13 @@ public class Bomb {
         return new ArrayList<>(activeBombs);
     }
 
+    /**
+     * Determines whether a direction has already been blocked or completed.
+     *
+     * @param list   List of already finished directions.
+     * @param target The direction to check.
+     * @return true if the direction is already finished; false otherwise.
+     */
     private boolean directionFinished(List<int[]> list, int[] target) {
         for (int[] d : list) {
             if (d[0] == target[0] && d[1] == target[1]) return true;
@@ -99,7 +148,15 @@ public class Bomb {
         return false;
     }
 
+    /**
+     * Triggers the explosion logic from the bomb's position,
+     * updating the map and affecting players and tiles.
+     *
+     * @param row The row index where the bomb exploded.
+     * @param col The column index where the bomb exploded.
+     */
     private void explode(int row, int col) {
+        SFXPlayer.play(SFXLibrary.HURT);
         int[][] directions = {
             {0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}
         };
@@ -187,7 +244,7 @@ public class Bomb {
                     tiles[r][c] = explosionPane;
                     mapGrid.add(explosionPane, c, r);
 
-                    PauseTransition clear = new PauseTransition(Duration.seconds(0.4 / GameData.gameSpeed));
+                    PauseTransition clear = new PauseTransition(Duration.seconds(0.4 / GameData.getGameSpeed()));
                     clear.setOnFinished(e -> mapGrid.getChildren().remove(explosionPane));
                     clear.play();
                 }

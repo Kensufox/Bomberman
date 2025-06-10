@@ -49,7 +49,7 @@ public class BotPlayer extends Player {
         super(startRow, startCol, state);
         
         // Configuration du timing
-        moveDelay = 350_000_000 / GameData.gameSpeed;
+        moveDelay = 350_000_000 / GameData.getGameSpeed();
         this.originalMoveDelay = moveDelay;
         
         // Initialisation du modèle
@@ -280,7 +280,7 @@ public class BotPlayer extends Player {
         // === PERFORMANCE ===
         debug.append("\n⚡ PERFORMANCE:\n");
         debug.append(String.format("   • Move Delay: %dms\n", moveDelay / 1_000_000));
-        debug.append(String.format("   • Game Speed: %dx\n", com.game.utils.GameData.gameSpeed));
+        debug.append(String.format("   • Game Speed: %dx\n", com.game.utils.GameData.getGameSpeed()));
         debug.append(String.format("   • Uptime: %.1fs\n",
                 (now - (lastBombTime > 0 ? lastBombTime - (long)(1.5 * 1_000_000_000) : now)) / 1_000_000_000.0));
 
