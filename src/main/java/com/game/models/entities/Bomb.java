@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import com.game.controllers.GameMapController;
+import com.game.models.entities.bot.PlacedBomb;
 import com.game.utils.GameData;
 import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
@@ -34,6 +35,10 @@ public class Bomb {
     private final Random random = new Random();
     private static final double POWER_UP_SPAWN_CHANCE = 0.3;
 
+
+
+    private final List<PlacedBomb> activeBombs = new ArrayList<>();
+
     // New constructor with a list of players
     public Bomb(GridPane mapGrid, char[][] mapData, StackPane[][] tiles, Image emptyImg, List<Player> players, GameMapController controller) {
         this.mapGrid = mapGrid;
@@ -49,15 +54,20 @@ public class Bomb {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Bomb)));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
+        PlacedBomb bomb = new PlacedBomb(row, col, System.currentTimeMillis() + 2/GameData.gameSpeed, range);
+        activeBombs.add(bomb);
+
         if (mapData[row][col] == 'X') return;
         mapData[row][col] = 'X'; 
         mapGrid.add(bombCell, col, row);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(2/GameData.gameSpeed));
         delay.setOnFinished(e -> {
+
             mapGrid.getChildren().remove(bombCell);
             mapData[row][col] = '.';
             explode(row, col);
+            activeBombs.remove(bomb);
         });
         delay.play();
     }
@@ -76,6 +86,10 @@ public class Bomb {
 
     public static double getCOOLDOWN_SECONDS() {
         return COOLDOWN_SECONDS;
+    }
+
+    public List<PlacedBomb> getActiveBombs() {
+        return new ArrayList<>(activeBombs);
     }
 
     private boolean directionFinished(List<int[]> list, int[] target) {

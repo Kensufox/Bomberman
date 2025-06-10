@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
+import com.game.models.entities.bot.BotPlayer;
 import com.game.models.map.GameMap;
 import com.game.utils.GameData;
 import com.game.utils.ImageLibrary;
@@ -95,6 +96,10 @@ public class GameMapController {
         // Initialize bomb
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg(), 
             players.stream().map(pc -> pc.player).collect(Collectors.toList()), this);
+
+        if(players.get(1).player instanceof BotPlayer){
+            ((BotPlayer) players.get(1).player).setBomb(bomb);
+        }
 
         mapGrid.setFocusTraversable(true);
         mapGrid.setOnKeyPressed(this::handleKeyPressed);

@@ -1,5 +1,6 @@
 package com.game.models.entities.bot;
 
+import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.map.GameMap;
 import com.game.utils.GameData;
@@ -58,6 +59,10 @@ public class BotPlayer extends Player {
         this.movementStrategy = new MovementStrategy(bombAnalyzer, pathFinder);
 
         this.map = gameMap.getMapData();
+    }
+
+    public void setBomb(Bomb bomb) {
+        bombAnalyzer.setBomb(bomb);
     }
 
     /**
