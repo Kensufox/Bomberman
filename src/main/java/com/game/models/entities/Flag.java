@@ -1,7 +1,8 @@
 package com.game.models.entities;
 
 /**
- * Represents a flag in Capture the Flag game mode
+ * Represents a flag in Capture the Flag game mode.
+ * A flag has a fixed home position and can be picked up, carried, dropped, or returned.
  */
 public class Flag {
     private int row;
@@ -13,11 +14,13 @@ public class Flag {
     private Player carrier;
     private final int teamId;
 
+
     /**
-     * Creates a new flag at the specified home position
-     * @param homeRow The home row position
-     * @param homeCol The home column position
-     * @param teamId The team ID this flag belongs to (0 for player 1, 1 for player 2)
+     * Constructs a Flag object with a specified home location and team.
+     *
+     * @param homeRow The row where the flag's base is located.
+     * @param homeCol The column where the flag's base is located.
+     * @param teamId  The ID of the team the flag belongs to (e.g., 0 or 1).
      */
     public Flag(int homeRow, int homeCol, int teamId) {
         this.homeRow = homeRow;
@@ -30,67 +33,83 @@ public class Flag {
         this.teamId = teamId;
     }
 
-    /** 
-     * @return int
+    /**
+     * Gets the current row position of the flag.
+     *
+     * @return The row index.
      */
-    // Getters
     public int getRow() { 
         return row; 
     }
 
-    /** 
-     * @return int
+    /**
+     * Gets the current column position of the flag.
+     *
+     * @return The column index.
      */
     public int getCol() { 
         return col; 
     }
 
-    /** 
-     * @return int
+    /**
+     * Gets the home row position of the flag.
+     *
+     * @return The flag's home row.
      */
     public int getHomeRow() { 
         return homeRow; 
     }
 
-    /** 
-     * @return int
+    /**
+     * Gets the home column position of the flag.
+     *
+     * @return The flag's home column.
      */
     public int getHomeCol() { 
         return homeCol; 
     }
 
-    /** 
-     * @return boolean
+    /**
+     * Checks if the flag is currently at its home position.
+     *
+     * @return true if the flag is at home; false otherwise.
      */
     public boolean isAtHome() { 
         return isAtHome; 
     }
 
-    /** 
-     * @return boolean
+    /**
+     * Checks if the flag is currently being carried by a player.
+     *
+     * @return true if the flag is carried; false otherwise.
      */
     public boolean isCarried() { 
         return isCarried; 
     }
 
-    /** 
-     * @return Player
+    /**
+     * Gets the player currently carrying the flag.
+     *
+     * @return The player carrying the flag, or null if not carried.
      */
     public Player getCarrier() { 
         return carrier; 
     }
 
-    /** 
-     * @return int
+    /**
+     * Gets the team ID of the flag.
+     *
+     * @return The team ID (e.g., 0 or 1).
      */
     public int getTeamId() { 
         return teamId; 
     }
 
     /**
-     * Sets the flag position and updates home status
-     * @param row New row position
-     * @param col New column position
+     * Updates the flag's position and its home status.
+     *
+     * @param row The new row position.
+     * @param col The new column position.
      */
     public void setPosition(int row, int col) {
         this.row = row;
@@ -99,9 +118,10 @@ public class Flag {
     }
 
     /**
-     * Makes a player pick up this flag
-     * @param player The player picking up the flag
-     * @return true if the flag was successfully picked up, false if already carried
+     * Attempts to pick up the flag with the specified player.
+     *
+     * @param player The player trying to pick up the flag.
+     * @return true if the flag was picked up; false if already carried.
      */
     public boolean pickUp(Player player) {
         if (isCarried) {
@@ -115,9 +135,10 @@ public class Flag {
     }
 
     /**
-     * Drops the flag at the specified position
-     * @param row Row to drop the flag at
-     * @param col Column to drop the flag at
+     * Drops the flag at the specified position.
+     *
+     * @param row The row where the flag is dropped.
+     * @param col The column where the flag is dropped.
      */
     public void drop(int row, int col) {
         this.isCarried = false;
@@ -126,7 +147,7 @@ public class Flag {
     }
 
     /**
-     * Returns the flag to its home position
+     * Returns the flag to its home position, resetting its state.
      */
     public void returnHome() {
         this.isCarried = false;
@@ -135,8 +156,8 @@ public class Flag {
     }
 
     /**
-     * Updates the flag position to match its carrier's position
-     * Should be called when the carrier moves
+     * Updates the flag's position to match its carrier.
+     * Should be called after the carrier moves.
      */
     public void updateCarrierPosition() {
         if (isCarried && carrier != null) {
@@ -145,9 +166,10 @@ public class Flag {
     }
 
     /**
-     * Checks if this flag can be picked up by the specified player
-     * @param player The player attempting to pick up the flag
-     * @return true if the player can pick up this flag
+     * Checks if a player can pick up this flag.
+     *
+     * @param player The player attempting pickup.
+     * @return true if pickup is possible (same position and not already carried).
      */
     public boolean canBePickedUpBy(Player player) {
         // A flag can be picked up if:
@@ -160,18 +182,20 @@ public class Flag {
     }
 
     /**
-     * Checks if the flag is at the specified position
-     * @param row Row to check
-     * @param col Column to check
-     * @return true if the flag is at the specified position
+     * Checks if the flag is located at a specific position.
+     *
+     * @param row The row to check.
+     * @param col The column to check.
+     * @return true if the flag is at the specified coordinates.
      */
     public boolean isAtPosition(int row, int col) {
         return this.row == row && this.col == col;
     }
 
     /**
-     * Gets a string representation of the flag's current state
-     * @return String describing the flag's state
+     * Returns a string representation of the flag's current state.
+     *
+     * @return A formatted string describing the flag.
      */
     @Override
     public String toString() {
