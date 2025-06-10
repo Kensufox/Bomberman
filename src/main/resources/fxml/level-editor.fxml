@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.game.controllers.LevelEditorController">
+    <top>
+        <HBox spacing="10">
+            <TextField fx:id="mapNameField" promptText="Enter map name..." />
+            <Button text="Save" fx:id="saveButton" onAction="#saveMap" />
+            <Button text="Return" fx:id="returnButton" onAction="#returnToMenu" />
+        </HBox>
+    </top>
+    <center>
+        <GridPane fx:id="gridPane" hgap="0" vgap="0"/>
+    </center>
+</BorderPane>

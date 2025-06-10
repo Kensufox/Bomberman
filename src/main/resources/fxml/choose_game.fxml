@@ -13,6 +13,7 @@
         <Button fx:id="btnClassic" text="Classic"  onAction="#classicGame" styleClass="choose-game-button"/>
         <Button fx:id="btnCaptureTheFlag" text="Capture the Flag" onAction="#CptFlag" styleClass="choose-game-button"/>
         <Button fx:id="btnContreLOrdi" text="Contre l'ordinateur" onAction="#VsComputer" styleClass="choose-game-button"/>
+        <Button fx:id="BtnLevelEditor" text="Level Editor" onAction="#LevelEditor" styleClass="choose-game-button"/>
         <Button fx:id="btnRetourMenu" text="Retour" onAction="#retourMenu" styleClass="return-choose-button"/>
 
     </VBox>

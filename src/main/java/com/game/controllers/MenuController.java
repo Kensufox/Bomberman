@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -45,6 +46,7 @@ public class MenuController {
     @FXML private Button btnClassic;
     @FXML private Button btnCaptureTheFlag;
     @FXML private Button btnContreLOrdi;
+    @FXML private Button btnLevelEditor;
 
     /**
      * Handles the action event triggered when the "Play" button is clicked.
@@ -64,6 +66,7 @@ public class MenuController {
             sourceButton.getScene().setRoot(root);
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -85,6 +88,7 @@ public class MenuController {
             sourceButton.getScene().setRoot(root);
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -116,6 +120,7 @@ public class MenuController {
             sourceButton.getScene().setRoot(root);
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     
@@ -138,6 +143,7 @@ public class MenuController {
             sourceButton.getScene().setRoot(root);
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -160,6 +166,30 @@ public class MenuController {
             sourceButton.getScene().setRoot(root);
 
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handles the action event triggered when the "Level Editor" button is clicked.
+     * Launches the level editor to create custom map
+     *
+     * @param event The action event triggered by the "Level Editor" button.
+     */
+    @FXML
+    public void LevelEditor (ActionEvent event) {
+        try {
+            SFXPlayer.play(SFXLibrary.FINISH);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/level-editor.fxml"));
+            //loader.setController(new LevelEditorController());
+            BorderPane root = loader.load();
+
+            // Retrieves the current scene from one of the buttons
+            Button sourceButton = (Button) event.getSource();
+            sourceButton.getScene().setRoot(root);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -181,6 +211,7 @@ public class MenuController {
             sourceButton.getScene().setRoot(root);
 
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
