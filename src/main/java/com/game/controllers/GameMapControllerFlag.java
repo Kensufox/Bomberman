@@ -52,16 +52,82 @@ public class GameMapControllerFlag extends GameMapController {
     private final List<PowerUp> activePowerUps = new ArrayList<>();
     private final List<StackPane> activePowerUpCells = new ArrayList<>();
 
+    // Capture the Flag specific variables
+    private Flag player1Flag;
+    private Flag player2Flag;
+    private StackPane player1FlagCell;
+    private StackPane player2FlagCell;
+
     // Inner class to store info per player
     protected static class PlayerContext {
         final Player player;
         final StackPane cell;
         final InputHandler.PlayerControls controls;
+        final int spawnRow;
+        final int spawnCol;
+        boolean hasOpponentFlag;
 
-        PlayerContext(Player player, StackPane cell, InputHandler.PlayerControls controls) {
+        PlayerContext(Player player, StackPane cell, InputHandler.PlayerControls controls, int spawnRow, int spawnCol) {
             this.player = player;
             this.cell = cell;
             this.controls = controls;
+            this.spawnRow = spawnRow;
+            this.spawnCol = spawnCol;
+            this.hasOpponentFlag = false;
+        }
+    }
+
+    // Inner class to represent a flag
+    protected static class Flag {
+        private int row;
+        private int col;
+        private final int homeRow;
+        private final int homeCol;
+        private boolean isAtHome;
+        private boolean isCarried;
+        private Player carrier;
+
+        Flag(int homeRow, int homeCol) {
+            this.homeRow = homeRow;
+            this.homeCol = homeCol;
+            this.row = homeRow;
+            this.col = homeCol;
+            this.isAtHome = true;
+            this.isCarried = false;
+            this.carrier = null;
+        }
+
+        // Getters and setters
+        public int getRow() { return row; }
+        public int getCol() { return col; }
+        public int getHomeRow() { return homeRow; }
+        public int getHomeCol() { return homeCol; }
+        public boolean isAtHome() { return isAtHome; }
+        public boolean isCarried() { return isCarried; }
+        public Player getCarrier() { return carrier; }
+
+        public void setPosition(int row, int col) {
+            this.row = row;
+            this.col = col;
+            this.isAtHome = (row == homeRow && col == homeCol);
+        }
+
+        public void pickUp(Player player) {
+            this.isCarried = true;
+            this.carrier = player;
+            this.isAtHome = false;
+        }
+
+        public void drop(int row, int col) {
+            this.isCarried = false;
+            this.carrier = null;
+            setPosition(row, col);
+        }
+
+        public void returnHome() {
+            this.isCarried = false;
+            this.carrier = null;
+            setPosition(homeRow, homeCol);
         }
     }
 
@@ -80,20 +146,22 @@ public class GameMapControllerFlag extends GameMapController {
         Player player1 = players_temps[0];
         Player player2 = players_temps[1];
 
-
         // Create graphical nodes
         StackPane player1Cell = ResourceLoader.createPixelatedImageNode(player1Img, gameMap.getTileSize(), gameMap.getTileSize() * 1.75, 0, 15);
         StackPane player2Cell = ResourceLoader.createPixelatedImageNode(player2Img, gameMap.getTileSize(), gameMap.getTileSize() * 1.75, 0, 15);
 
-        // Add players to the list with their controls
-        players.add(new PlayerContext(player1, player1Cell, inputHandler.getJ1Controls()));
-        players.add(new PlayerContext(player2, player2Cell, inputHandler.getJ2Controls()));
+        // Add players to the list with their controls and spawn points
+        players.add(new PlayerContext(player1, player1Cell, inputHandler.getJ1Controls(), 1, 1));
+        players.add(new PlayerContext(player2, player2Cell, inputHandler.getJ2Controls(), 11, 13));
 
         // Add players to the grid
         for (PlayerContext ctx : players) {
             mapGrid.add(ctx.cell, ctx.player.getCol(), ctx.player.getRow());
             ctx.cell.toFront();
         }
+
+        // Initialize flags at player spawn points
+        setupFlags();
 
         // Initialize bomb
         this.bomb = new Bomb(mapGrid, gameMap.getMapData(), gameMap.getTiles(), gameMap.getEmptyImg(), 
@@ -104,6 +172,24 @@ public class GameMapControllerFlag extends GameMapController {
         mapGrid.setOnKeyReleased(this::handleKeyReleased);
 
         startMovementLoop();
+    }
+
+    private void setupFlags() {
+        // Create flags at each player's spawn point
+        player1Flag = new Flag(1, 1); // Player 1's spawn
+        player2Flag = new Flag(11, 13); // Player 2's spawn
+
+        // Create flag images (you might want to use different images for each team)
+        Image flag1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Power))); // Replace with actual flag image
+        Image flag2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Power))); // Replace with actual flag image
+
+        // Create flag visual nodes
+        player1FlagCell = ResourceLoader.createPixelatedImageNode(flag1Img, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
+        player2FlagCell = ResourceLoader.createPixelatedImageNode(flag2Img, gameMap.getTileSize(), gameMap.getTileSize(), 0, 0);
+
+        // Add flags to the grid
+        mapGrid.add(player1FlagCell, player1Flag.getCol(), player1Flag.getRow());
+        mapGrid.add(player2FlagCell, player2Flag.getCol(), player2Flag.getRow());
     }
 
     /** 
@@ -165,10 +251,31 @@ public class GameMapControllerFlag extends GameMapController {
 
                     ctx.cell.toFront();
                 }
+
+                // Update flag positions for carried flags
+                updateCarriedFlags();
             }
         };
 
         movementLoop.start();
+    }
+
+    private void updateCarriedFlags() {
+        // Update player 1 flag position if carried
+        if (player1Flag.isCarried() && player1Flag.getCarrier() != null) {
+            Player carrier = player1Flag.getCarrier();
+            GridPane.setRowIndex(player1FlagCell, carrier.getRow());
+            GridPane.setColumnIndex(player1FlagCell, carrier.getCol());
+            player1Flag.setPosition(carrier.getRow(), carrier.getCol());
+        }
+
+        // Update player 2 flag position if carried
+        if (player2Flag.isCarried() && player2Flag.getCarrier() != null) {
+            Player carrier = player2Flag.getCarrier();
+            GridPane.setRowIndex(player2FlagCell, carrier.getRow());
+            GridPane.setColumnIndex(player2FlagCell, carrier.getCol());
+            player2Flag.setPosition(carrier.getRow(), carrier.getCol());
+        }
     }
 
     /** 
@@ -189,9 +296,72 @@ public class GameMapControllerFlag extends GameMapController {
             GridPane.setRowIndex(cell, player.getRow());
             GridPane.setColumnIndex(cell, player.getCol());
             SFXPlayer.play(SFXLibrary.STEP);
+            
+            // Check for flag interactions
+            checkFlagInteraction(player);
+            
+            // Check for power-up collisions
             checkPowerUpCollision(player);
         }
         cell.toFront();
+    }
+
+    private void checkFlagInteraction(Player player) {
+        PlayerContext playerCtx = players.stream()
+            .filter(p -> p.player == player)
+            .findFirst()
+            .orElse(null);
+            
+        if (playerCtx == null) return;
+
+        int playerIndex = players.indexOf(playerCtx);
+        
+        // Player 1 (index 0) can steal Player 2's flag
+        if (playerIndex == 0) {
+            // Check if player 1 is at player 2's flag position and flag is not carried
+            if (player.getRow() == player2Flag.getRow() && 
+                player.getCol() == player2Flag.getCol() && 
+                !player2Flag.isCarried()) {
+                
+                // Pick up the opponent's flag
+                player2Flag.pickUp(player);
+                playerCtx.hasOpponentFlag = true;
+                SFXPlayer.play(SFXLibrary.POWER_UP); // Play pickup sound
+            }
+            // Check if player 1 is at their spawn with opponent's flag (win condition)
+            else if (player.getRow() == playerCtx.spawnRow && 
+                     player.getCol() == playerCtx.spawnCol && 
+                     playerCtx.hasOpponentFlag) {
+                
+                // Player 1 wins!
+                ScoreManager.incrementP1Score();
+                switchToGameOverScreen("Player 1 Captures the Flag!", 
+                    ScoreManager.getP1Score(), ScoreManager.getP2Score());
+            }
+        }
+        // Player 2 (index 1) can steal Player 1's flag
+        else if (playerIndex == 1) {
+            // Check if player 2 is at player 1's flag position and flag is not carried
+            if (player.getRow() == player1Flag.getRow() && 
+                player.getCol() == player1Flag.getCol() && 
+                !player1Flag.isCarried()) {
+                
+                // Pick up the opponent's flag
+                player1Flag.pickUp(player);
+                playerCtx.hasOpponentFlag = true;
+                SFXPlayer.play(SFXLibrary.POWER_UP); // Play pickup sound
+            }
+            // Check if player 2 is at their spawn with opponent's flag (win condition)
+            else if (player.getRow() == playerCtx.spawnRow && 
+                     player.getCol() == playerCtx.spawnCol && 
+                     playerCtx.hasOpponentFlag) {
+                
+                // Player 2 wins!
+                ScoreManager.incrementP2Score();
+                switchToGameOverScreen("Player 2 Captures the Flag!", 
+                    ScoreManager.getP1Score(), ScoreManager.getP2Score());
+            }
+        }
     }
 
     /** 
@@ -217,6 +387,25 @@ public class GameMapControllerFlag extends GameMapController {
         PlayerContext deadCtx = players.stream().filter(p -> p.player == player).findFirst().orElse(null);
         if (deadCtx != null) {
             mapGrid.getChildren().remove(deadCtx.cell);
+            
+            // If the dead player was carrying a flag, drop it and return it home
+            if (deadCtx.hasOpponentFlag) {
+                deadCtx.hasOpponentFlag = false;
+                
+                // Determine which flag to return based on player index
+                int playerIndex = players.indexOf(deadCtx);
+                if (playerIndex == 0 && player2Flag.isCarried()) {
+                    // Player 1 died while carrying player 2's flag
+                    player2Flag.returnHome();
+                    GridPane.setRowIndex(player2FlagCell, player2Flag.getRow());
+                    GridPane.setColumnIndex(player2FlagCell, player2Flag.getCol());
+                } else if (playerIndex == 1 && player1Flag.isCarried()) {
+                    // Player 2 died while carrying player 1's flag
+                    player1Flag.returnHome();
+                    GridPane.setRowIndex(player1FlagCell, player1Flag.getRow());
+                    GridPane.setColumnIndex(player1FlagCell, player1Flag.getCol());
+                }
+            }
         }
 
         // Check if there is only one player alive to declare the winner
@@ -225,7 +414,7 @@ public class GameMapControllerFlag extends GameMapController {
                 .collect(Collectors.toList());
 
         if (alivePlayers.size() == 1) {
-            // Déterminer quel joueur a gagné et incrémenter le bon score
+            // In CTF mode, surviving is also a way to win
             int winnerIndex = players.indexOf(alivePlayers.get(0));
             if (winnerIndex == 0) {
                 ScoreManager.incrementP1Score();
@@ -233,7 +422,7 @@ public class GameMapControllerFlag extends GameMapController {
                 ScoreManager.incrementP2Score();
             }
 
-            String winnerText = "Player " + (winnerIndex + 1) + " Wins!";
+            String winnerText = "Player " + (winnerIndex + 1) + " Wins by Elimination!";
             switchToGameOverScreen(winnerText, ScoreManager.getP1Score(), ScoreManager.getP2Score());
         }
     }
