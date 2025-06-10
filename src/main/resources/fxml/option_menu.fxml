@@ -79,11 +79,11 @@
     </HBox>
 
     <!-- Boutons en bas -->
-    <HBox spacing="15" alignment="CENTER" layoutX="70" layoutY="430">
+    <HBox spacing="15" alignment="CENTER" layoutX="30" layoutY="430">
         <Button fx:id="resetButton" text="Par défaut" onAction="#resetToDefaults" styleClass="control-button"/>
-        <Button fx:id="applyButton" text="Appliquer" onAction="#applySettings" styleClass="control-button apply-button"/>
+        <Button fx:id="applyButton" text="Appliquer" onAction="#applySettings" styleClass="control-button"/>
         <Button fx:id="cancelButton" text="Annuler" onAction="#cancelSettings" styleClass="control-button "/>
-        <Button fx:id="backButton" text="Retour" onAction="#backToMenu" styleClass="control-button back-button"/>
+        <Button fx:id="backButton" text="Retour" onAction="#backToMenu" styleClass="control-button"/>
     </HBox>
 
     <!-- Dialog pour capturer les touches -->
