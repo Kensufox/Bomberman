@@ -80,7 +80,7 @@ public class MusicPlayer {
 
         switch (mode) {
             case LOOP -> mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            case NORMAL, RANDOM -> mediaPlayer.setCycleCount(1);
+            case NORMAL, RANDOM -> mediaPlayer.setCycleCount((int) 0.5);
         }
 
         mediaPlayer.setOnReady(() -> {

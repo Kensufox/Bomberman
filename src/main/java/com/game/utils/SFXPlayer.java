@@ -8,30 +8,7 @@ import javafx.scene.media.AudioClip;
 
 public class SFXPlayer {
     private static final HashMap<String, AudioClip> sfxMap = new HashMap<>();
-    private static double globalVolume = 0.5; // Valeur par défaut (entre 0.0 et 1.0)
-/*
-    public static void preload(String filename) {
-        if (!sfxMap.containsKey(filename)) {
-            URL resource = SFXPlayer.class.getResource("/audio/SFX/" + filename);
-            if (resource != null) {
-                AudioClip clip = new AudioClip(resource.toString());
-
-                // Lecture muette pour forcer le chargement du clip en mémoire
-                clip.setVolume(0.0);
-                clip.play();
-
-                // Attendre brièvement pour s'assurer qu'il est chargé
-                new Thread(() -> {
-                    try {
-                        Thread.sleep(100); // 100ms suffit généralement
-                    } catch (InterruptedException ignored) {}
-                    clip.setVolume(globalVolume);
-                }).start();
-
-                sfxMap.put(filename, clip);
-            }
-        }
-    }*/
+    private static double globalVolume = 1; // Valeur par défaut (entre 0.0 et 1.0)
 
     /** 
      * @param filename

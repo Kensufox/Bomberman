@@ -12,7 +12,12 @@ import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.map.GameMap;
-import com.game.utils.*;
+import com.game.utils.GameData;
+import com.game.utils.ImageLibrary;
+import com.game.utils.InputHandler;
+import com.game.utils.ResourceLoader;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -182,6 +187,7 @@ public class GameMapController {
 
             GridPane.setRowIndex(cell, player.getRow());
             GridPane.setColumnIndex(cell, player.getCol());
+            SFXPlayer.play(SFXLibrary.STEP);
             checkPowerUpCollision(player);
         }
         cell.toFront();
@@ -200,13 +206,14 @@ public class GameMapController {
         return cell == '.' || cell == 'P';
     }
 
-    /**
+    /** 
      * @param player
      */
     public void killPlayer(Player player) {
         if (player.getState() == Player.State.DEAD) return;
 
         player.setState(Player.State.DEAD);
+        SFXPlayer.play(SFXLibrary.HURT);
         PlayerContext deadCtx = players.stream().filter(p -> p.player == player).findFirst().orElse(null);
         if (deadCtx != null) {
             mapGrid.getChildren().remove(deadCtx.cell);
@@ -218,16 +225,13 @@ public class GameMapController {
                 .collect(Collectors.toList());
 
         if (alivePlayers.size() == 1) {
-            // Déterminer quel joueur a gagné et incrémenter le bon score
-            int winnerIndex = players.indexOf(alivePlayers.get(0));
-            if (winnerIndex == 0) {
-                ScoreManager.incrementP1Score();
-            } else if (winnerIndex == 1) {
-                ScoreManager.incrementP2Score();
-            }
+            Player winner = alivePlayers.get(0).player;
+            winner.setScore(winner.getScore() + 1);
 
-            String winnerText = "Player " + (winnerIndex + 1) + " Wins!";
-            switchToGameOverScreen(winnerText, ScoreManager.getP1Score(), ScoreManager.getP2Score());
+            String winnerText = "Player " + (players.indexOf(alivePlayers.get(0)) + 1) + " Wins!";
+            switchToGameOverScreen(winnerText,
+                    players.get(0).player.getScore(),
+                    players.get(1).player.getScore()); // Adjust according to your number of players
         }
     }
 
@@ -295,6 +299,7 @@ public class GameMapController {
             PowerUp powerUp = activePowerUps.get(i);
             if (player.getRow() == powerUp.getRow() && player.getCol() == powerUp.getCol()) {
                 // Remove power-up from the grid and lists
+                SFXPlayer.play(SFXLibrary.POWER_UP);
                 mapGrid.getChildren().remove(activePowerUpCells.get(i));
                 activePowerUps.remove(i);
                 activePowerUpCells.remove(i);
