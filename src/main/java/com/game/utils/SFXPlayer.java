@@ -8,6 +8,9 @@ import javafx.scene.media.AudioClip;
 public class SFXPlayer {
     private static final HashMap<String, AudioClip> sfxMap = new HashMap<>();
 
+    /** 
+     * @param filename
+     */
     public static void play(String filename) {
         AudioClip clip = sfxMap.get(filename);
         if (clip == null) {
@@ -22,6 +25,9 @@ public class SFXPlayer {
         clip.play();
     }
 
+    /** 
+     * @param volume
+     */
     public static void setVolume(double volume) {
         for (AudioClip clip : sfxMap.values()) {
             clip.setVolume(volume); // Volume between 0.0 and 10.0

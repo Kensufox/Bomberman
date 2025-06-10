@@ -103,12 +103,18 @@ public class GameMapController {
         startMovementLoop();
     }
 
+    /** 
+     * @return Player[]
+     */
     protected Player[] createPlayers() {
         Player player1 = new Player(1, 1, Player.State.ALIVE);
         Player player2 = new Player(11, 13, Player.State.ALIVE);
         return new Player[] { player1, player2 };
     }
 
+    /** 
+     * @param event
+     */
     protected void handleKeyPressed(KeyEvent event) {
         KeyCode code = event.getCode();
         if (!pressedKeys.contains(code)) {
@@ -122,6 +128,9 @@ public class GameMapController {
         }
     }
 
+    /** 
+     * @param event
+     */
     protected void handleKeyReleased(KeyEvent event) {
         pressedKeys.remove(event.getCode());
     }
@@ -159,6 +168,12 @@ public class GameMapController {
         movementLoop.start();
     }
 
+    /** 
+     * @param player
+     * @param cell
+     * @param dRow
+     * @param dCol
+     */
     protected void movePlayerIfPossible(Player player, StackPane cell, int dRow, int dCol) {
         int oldRow = player.getRow();
         int oldCol = player.getCol();
@@ -175,6 +190,11 @@ public class GameMapController {
         cell.toFront();
     }
 
+    /** 
+     * @param row
+     * @param col
+     * @return boolean
+     */
     protected boolean isWalkable(int row, int col) {
         if (row < 0 || col < 0 || row >= gameMap.getMapData().length || col >= gameMap.getMapData()[0].length) {
             return false; // safety out of bounds
@@ -183,6 +203,9 @@ public class GameMapController {
         return cell == '.' || cell == 'P';
     }
 
+    /** 
+     * @param player
+     */
     public void killPlayer(Player player) {
         if (player.getState() == Player.State.DEAD) return;
 
@@ -208,6 +231,11 @@ public class GameMapController {
         }
     }
 
+    /** 
+     * @param winnerText
+     * @param P1Score
+     * @param P2Score
+     */
     protected void switchToGameOverScreen(String winnerText, int P1Score, int P2Score) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game-over.fxml"));
@@ -224,6 +252,10 @@ public class GameMapController {
         }
     }
 
+    /** 
+     * @param row
+     * @param col
+     */
     public void spawnPowerUpAt(int row, int col) {
         // Decide type randomly or fixed for now
         PowerUp.Power[] possiblePowers = PowerUp.Power.values();
@@ -253,6 +285,9 @@ public class GameMapController {
         mapGrid.add(powerUpNode, newPowerUp.getCol(), newPowerUp.getRow());
     }
 
+    /** 
+     * @param player
+     */
     private void checkPowerUpCollision(Player player) {
         if (activePowerUps.isEmpty()) return;
 

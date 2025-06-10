@@ -58,14 +58,26 @@ public class Player {
         bomb.place(row, col);
     }
 
+    /** 
+     * @return int
+     */
     public int getRow() {
         return row;
     }
 
+    /** 
+     * @return int
+     */
     public int getCol() {
         return col;
     }
 
+    /** 
+     * @param power
+     * @param now
+     * @param duration
+     * @param bomb
+     */
     public void setPower(PowerUp.Power power, long now, long duration, Bomb bomb) {
         if (this.power != power){
             this.power = power;
@@ -74,10 +86,16 @@ public class Player {
         this.powerEndTime = now + duration;
     }
 
+    /** 
+     * @return Power
+     */
     public PowerUp.Power getPower() {
         return power;
     }
 
+    /** 
+     * @param bomb
+     */
     public void removePower(Bomb bomb) {
         this.power = null;
         setMoveDelay(originalMoveDelay); // réinitialise par défaut
@@ -86,48 +104,83 @@ public class Player {
     
     }
 
+    /** 
+     * @return long
+     */
     public long getPowerEndTime() {
         return powerEndTime;
     }
 
 
+    /** 
+     * @param dRow
+     * @param dCol
+     */
     public void move(int dRow, int dCol) {
         this.row += dRow;
         this.col += dCol;
     }
 
+    /** 
+     * @param now
+     * @return boolean
+     */
     public boolean canMove(long now) {
         return now - lastMoveTime >= moveDelay;
     }
 
+    /** 
+     * @param now
+     */
     public void updateLastMoveTime(long now) {
         lastMoveTime = now;
     }
 
+    /** 
+     * @param delay
+     */
     public void setMoveDelay(long delay) {
         this.moveDelay = delay/GameData.gameSpeed;
     }
 
+    /** 
+     * @return long
+     */
     public long getMoveDelay() {
         return moveDelay;
     }
 
+    /** 
+     * @param state
+     */
     public void setState(State state) {
         this.state = state;
     }
 
+    /** 
+     * @return State
+     */
     public State getState() {
         return state;
     }
 
+    /** 
+     * @param placementSpeed
+     */
     public void setPlacementSpeed(float placementSpeed) {
         this.placementSpeed = placementSpeed;
     }
 
+    /** 
+     * @return float
+     */
     public float getPlacementSpeed() {
         return placementSpeed;
     }
 
+    /** 
+     * @param bomb
+     */
     public void appliPower(Bomb bomb) {
         switch (power) {
             case SPEED -> setMoveDelay(moveDelay/3);
@@ -143,10 +196,16 @@ public class Player {
         }
     }
 
+    /** 
+     * @param score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /** 
+     * @return int
+     */
     public int getScore() {
         return score;
     }

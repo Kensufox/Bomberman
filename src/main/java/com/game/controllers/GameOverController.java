@@ -18,15 +18,25 @@ public class GameOverController {
     @FXML
     private Label scoreJ2;
 
+    /** 
+     * @param text
+     */
     public void setWinnerText(String text) {
         winnerLabel.setText(text);
     }
 
+    /** 
+     * @param P1Score
+     * @param P2Score
+     */
     public void setPlayersScore(int P1Score, int P2Score) {
         scoreJ1.setText("Player 1 Score : " + P1Score);
         scoreJ2.setText("Player 2 Score : " + P2Score);
     }
 
+    /** 
+     * @param event
+     */
     @FXML
     public void retourMenu (ActionEvent event) {
         try {

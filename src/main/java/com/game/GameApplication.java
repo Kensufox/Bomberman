@@ -11,6 +11,10 @@ import javafx.stage.Stage;
 
 public class GameApplication extends Application {
 
+    /** 
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_menu.fxml"));
@@ -23,6 +27,9 @@ public class GameApplication extends Application {
         primaryStage.show();
     }
 
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
 
         launch(args);
