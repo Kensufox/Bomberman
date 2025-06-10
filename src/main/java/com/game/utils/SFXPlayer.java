@@ -44,14 +44,23 @@ public class SFXPlayer {
         }
     }
 
+    /** 
+     * @return double
+     */
     public static double getGlobalVolume() {
         return globalVolume;
     }
 
+    /** 
+     * @param globalVolume
+     */
     public static void setGlobalVolume(double globalVolume) {
         SFXPlayer.globalVolume = globalVolume;
     }
 
+    /** 
+     * @param button
+     */
     public static void setupHoverSound(Button button) {
         if (button != null) {
             button.setOnMouseEntered(e -> play(SFXLibrary.SELECT));
