@@ -19,6 +19,9 @@ public class MenuController {
     @FXML private Button btnCaptureTheFlag;
     @FXML private Button btnContreLOrdi;
 
+    /** 
+     * @param event
+     */
     @FXML
     public void jouer(ActionEvent event) {
         try {
@@ -34,6 +37,9 @@ public class MenuController {
         }
     }
 
+    /** 
+     * @param event
+     */
     @FXML
     public void optionsMenu (ActionEvent event) {
         try {
@@ -54,6 +60,9 @@ public class MenuController {
         System.exit(0);
     }
 
+    /** 
+     * @param event
+     */
     // MENU JOUER
     @FXML
     public void classicGame (ActionEvent event) {
@@ -71,6 +80,9 @@ public class MenuController {
         }
     }
 
+    /** 
+     * @param event
+     */
     @FXML
     public void VsComputer (ActionEvent event) {
         try {
@@ -87,6 +99,9 @@ public class MenuController {
         }
     }
 
+    /** 
+     * @param event
+     */
     @FXML
     public void retourMenu (ActionEvent event) {
         try {

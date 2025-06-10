@@ -45,6 +45,10 @@ public class Bomb {
     }
 
 
+    /** 
+     * @param row
+     * @param col
+     */
     public void place(int row, int col) {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Bomb)));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
@@ -62,22 +66,39 @@ public class Bomb {
         delay.play();
     }
 
+    /** 
+     * @param range
+     */
     public void setRange(int range){
         this.range = range;
     }
 
+    /** 
+     * @return int
+     */
     public int getRange() {
         return range;
     }
 
+    /** 
+     * @return int
+     */
     public static int getOriginalRange() {
         return originalRange;
     }
 
+    /** 
+     * @return double
+     */
     public static double getCOOLDOWN_SECONDS() {
         return COOLDOWN_SECONDS;
     }
 
+    /** 
+     * @param list
+     * @param target
+     * @return boolean
+     */
     private boolean directionFinished(List<int[]> list, int[] target) {
         for (int[] d : list) {
             if (d[0] == target[0] && d[1] == target[1]) return true;
@@ -85,6 +106,10 @@ public class Bomb {
         return false;
     }
 
+    /** 
+     * @param row
+     * @param col
+     */
     private void explode(int row, int col) {
         int[][] directions = {
             {0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}

@@ -1,6 +1,10 @@
 package com.game.utils;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 import javafx.scene.input.KeyCode;
@@ -76,6 +80,10 @@ public class InputHandler {
         if (j2Bomb == null) j2Bomb = KeyCode.CONTROL;
     }
 
+    /** 
+     * @param keyString
+     * @return KeyCode
+     */
     public KeyCode stringToKeyCode(String keyString) {
         if (keyString == null || keyString.isEmpty()) return null;
         try {
@@ -95,6 +103,10 @@ public class InputHandler {
         }
     }
 
+    /** 
+     * @param key
+     * @return String
+     */
     private String keyCodeToString(KeyCode key) {
         if (key == null) return "";
         switch (key) {
@@ -120,15 +132,24 @@ public class InputHandler {
         }
     }
 
+    /** 
+     * @return PlayerControls
+     */
     // Getters groupés
     public PlayerControls getJ1Controls() {
         return new PlayerControls(j1Up, j1Down, j1Left, j1Right, j1Bomb);
     }
 
+    /** 
+     * @return PlayerControls
+     */
     public PlayerControls getJ2Controls() {
         return new PlayerControls(j2Up, j2Down, j2Left, j2Right, j2Bomb);
     }
 
+    /** 
+     * @param resetToDefaults(
+     */
     // Setters individuels
     public void setJ1Up(KeyCode key) { this.j1Up = key; }
     public void setJ1Down(KeyCode key) { this.j1Down = key; }
@@ -142,6 +163,10 @@ public class InputHandler {
     public void setJ2Right(KeyCode key) { this.j2Right = key; }
     public void setJ2Bomb(KeyCode key) { this.j2Bomb = key; }
 
+    /** 
+     * @param resetToDefaults(
+     * @return KeyCode
+     */
     // Getters individuels
     public KeyCode getJ1Up() { return j1Up; }
     public KeyCode getJ1Down() { return j1Down; }

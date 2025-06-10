@@ -32,6 +32,9 @@ public class GameMap {
         emptyImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Empty)));
     }
 
+    /** 
+     * @param mapGrid
+     */
     public void setupMap(GridPane mapGrid) {
         setupGrid(mapGrid);
         //generateMap(mapGrid);
@@ -39,6 +42,9 @@ public class GameMap {
         //saveMapToFile("src/main/resources/map/saved-map.txt");
     }
 
+    /** 
+     * @param mapGrid
+     */
     private void setupGrid(GridPane mapGrid) {
         mapGrid.setHgap(0);
         mapGrid.setVgap(0);
@@ -56,6 +62,9 @@ public class GameMap {
         }
     }
 
+    /** 
+     * @param mapGrid
+     */
     private void generateMap(GridPane mapGrid) {
         Random random = new Random();
         mapGrid.getChildren().clear();
@@ -82,6 +91,10 @@ public class GameMap {
         }
     }
 
+    /** 
+     * @param gameMap
+     * @param backgroundGrid
+     */
     public void setupBackground(GameMap gameMap, GridPane backgroundGrid) {
         int rows = gameMap.getMapData().length;
         int cols = gameMap.getMapData()[0].length;
@@ -112,6 +125,9 @@ public class GameMap {
         }
     }
 
+    /** 
+     * @param filename
+     */
     public void saveMapToFile(String filename) {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(filename)) {
             for (int row = 0; row < ROWS; row++) {
@@ -127,6 +143,10 @@ public class GameMap {
         }
     }
 
+    /** 
+     * @param filename
+     * @param mapGrid
+     */
     public void loadMapFromFile(String filename, GridPane mapGrid) {
         try (java.util.Scanner scanner = new java.util.Scanner(new java.io.File(filename))) {
             for (int row = 0; row < ROWS; row++) {
@@ -164,18 +184,30 @@ public class GameMap {
         }
     }
 
+    /** 
+     * @return char[][]
+     */
     public char[][] getMapData() {
         return mapData;
     }
 
+    /** 
+     * @return StackPane[][]
+     */
     public StackPane[][] getTiles() {
         return tiles;
     }
 
+    /** 
+     * @return int
+     */
     public int getTileSize() {
         return TILE_SIZE;
     }
 
+    /** 
+     * @return Image
+     */
     public Image getEmptyImg() {
         return emptyImg;
     }
