@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 
 import com.game.utils.InputHandler;
 import com.game.utils.InputHandler.PlayerControls;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -58,6 +60,23 @@ public class OptionsController implements Initializable {
         inputHandler = new InputHandler();
         loadCurrentSettings();
         setupKeyCapture();
+
+        SFXPlayer.setupHoverSound(player1BombButton);
+        SFXPlayer.setupHoverSound(player1UpButton);
+        SFXPlayer.setupHoverSound(player1DownButton);
+        SFXPlayer.setupHoverSound(player1LeftButton);
+        SFXPlayer.setupHoverSound(player1RightButton);
+        
+        SFXPlayer.setupHoverSound(player2BombButton);
+        SFXPlayer.setupHoverSound(player2UpButton);
+        SFXPlayer.setupHoverSound(player2DownButton);
+        SFXPlayer.setupHoverSound(player2LeftButton);
+        SFXPlayer.setupHoverSound(player2RightButton);
+        
+        SFXPlayer.setupHoverSound(resetButton);
+        SFXPlayer.setupHoverSound(applyButton);
+        SFXPlayer.setupHoverSound(cancelButton);
+        SFXPlayer.setupHoverSound(backButton);
     }
 
     private void loadCurrentSettings() {
