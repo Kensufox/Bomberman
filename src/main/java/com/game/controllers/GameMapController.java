@@ -16,6 +16,8 @@ import com.game.utils.GameData;
 import com.game.utils.ImageLibrary;
 import com.game.utils.InputHandler;
 import com.game.utils.ResourceLoader;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -185,6 +187,7 @@ public class GameMapController {
 
             GridPane.setRowIndex(cell, player.getRow());
             GridPane.setColumnIndex(cell, player.getCol());
+            SFXPlayer.play(SFXLibrary.STEP);
             checkPowerUpCollision(player);
         }
         cell.toFront();
@@ -210,6 +213,7 @@ public class GameMapController {
         if (player.getState() == Player.State.DEAD) return;
 
         player.setState(Player.State.DEAD);
+        SFXPlayer.play(SFXLibrary.HURT);
         PlayerContext deadCtx = players.stream().filter(p -> p.player == player).findFirst().orElse(null);
         if (deadCtx != null) {
             mapGrid.getChildren().remove(deadCtx.cell);

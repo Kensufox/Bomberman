@@ -9,6 +9,8 @@ import com.game.controllers.GameMapController;
 import com.game.utils.GameData;
 import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -25,8 +27,8 @@ public class Bomb {
     private final char[][] mapData;
     private final StackPane[][] tiles;
     private final Image emptyImg;
-    private int range = 2;
     private final static int originalRange = 1;
+    private int range = getOriginalRange();
 
     private final List<Player> players;
     private final GameMapController controller;
@@ -111,6 +113,7 @@ public class Bomb {
      * @param col
      */
     private void explode(int row, int col) {
+        SFXPlayer.play(SFXLibrary.HURT);
         int[][] directions = {
             {0, 0}, {-1, 0}, {1, 0}, {0, -1}, {0, 1}
         };
