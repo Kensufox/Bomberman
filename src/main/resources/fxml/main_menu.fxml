@@ -16,6 +16,7 @@
         </image>
     </ImageView>
 
+    <Label layoutX="515" style="-fx-text-fill: black;">*Jeu avec son</Label>
     <!-- Buttons Grid -->
     <GridPane fx:id="menuGrid"
               layoutX="235"
