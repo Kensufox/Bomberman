@@ -64,9 +64,9 @@
         <!-- Buttons -->
         <HBox spacing="30" alignment="CENTER" prefWidth="280">
             <Button fx:id="btnCreer" onAction="#creerProfil" text="Créer"
-                    style="-fx-background-color: #222; -fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 18px; -fx-font-weight: bold; -fx-border-color: #00cccc; -fx-border-width: 3; -fx-border-radius: 14; -fx-padding: 10 30; -fx-cursor: hand; -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0); -fx-min-width: 120px;"/>
+                    style="-fx-background-color: #222; -fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 18px; -fx-font-weight: bold; -fx-border-color: #00cccc; -fx-border-width: 3; -fx-border-radius: 14; -fx-padding: 10 30; -fx-cursor: hand; -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0); -fx-max-width: 200px;"/>
             <Button fx:id="btnAnnuler" onAction="#annuler" text="Annuler"
-                    style="-fx-background-color: #222; -fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 18px; -fx-font-weight: bold; -fx-border-color: #00cccc; -fx-border-width: 3; -fx-border-radius: 14; -fx-padding: 10 30; -fx-cursor: hand; -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0); -fx-min-width: 120px;"/>
+                    style="-fx-background-color: #222; -fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 18px; -fx-font-weight: bold; -fx-border-color: #00cccc; -fx-border-width: 3; -fx-border-radius: 14; -fx-padding: 10 30; -fx-cursor: hand; -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0); -fx-max-width: 200px;"/>
         </HBox>
 
     </VBox>

@@ -11,7 +11,7 @@
 
     <!-- Titre -->
     <Label text="Gestion des Profils"
-           layoutX="200" layoutY="30"
+           layoutX="160" layoutY="30"
            styleClass="title-label"/>
 
     <!-- Liste des profils + détails dans la même VBox -->
