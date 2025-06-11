@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.game.controllers.NouveauProfilController"
+            prefWidth="600" prefHeight="520"
+            style="-fx-background-color: #1a1a1a;">
+
+    <!-- Title -->
+    <Label text="Nouveau Profil"
+           layoutY="40"
+           AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+           alignment="CENTER"
+           style="-fx-text-fill: #ffcc00; -fx-font-family: 'Courier New', monospace; -fx-font-size: 32px; -fx-font-weight: bold;" />
+
+    <!-- Form container -->
+    <VBox layoutY="100" spacing="25" alignment="CENTER"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          maxWidth="300" style="-fx-padding: 0 20;">
+
+        <!-- Nom -->
+        <VBox spacing="8" alignment="CENTER_LEFT" prefWidth="280">
+            <Label text="Nom:"
+                   style="-fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <TextField fx:id="champNom" prefWidth="280" promptText="Entrez votre nom"
+                       style="-fx-background-color: #222; -fx-text-fill: #ffcc00; -fx-font-family: 'Courier New', monospace; -fx-font-size: 16px; -fx-border-color: #00cccc; -fx-border-radius: 8; -fx-border-width: 2; -fx-padding: 8 12; -fx-prompt-text-fill: #666666;"/>
+        </VBox>
+
+        <!-- Prénom -->
+        <VBox spacing="8" alignment="CENTER_LEFT" prefWidth="280">
+            <Label text="Prénom:"
+                   style="-fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <TextField fx:id="champPrenom" prefWidth="280" promptText="Entrez votre prénom"
+                       style="-fx-background-color: #222; -fx-text-fill: #ffcc00; -fx-font-family: 'Courier New', monospace; -fx-font-size: 16px; -fx-border-color: #00cccc; -fx-border-radius: 8; -fx-border-width: 2; -fx-padding: 8 12; -fx-prompt-text-fill: #666666;"/>
+        </VBox>
+
+        <!-- Avatar -->
+        <VBox spacing="8" alignment="CENTER_LEFT" prefWidth="280">
+            <Label text="Avatar:"
+                   style="-fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <ComboBox fx:id="choixAvatar" prefWidth="280" promptText="Choisissez un avatar"
+                      style="-fx-background-color: #222; -fx-text-fill: #ffcc00; -fx-font-family: 'Courier New', monospace; -fx-font-size: 16px; -fx-border-color: #00cccc; -fx-border-radius: 8; -fx-border-width: 2;">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Bomberman Bleu"/>
+                        <String fx:value="Bomberman Rouge"/>
+                        <String fx:value="Bomberman Vert"/>
+                        <String fx:value="Bomberman Jaune"/>
+                        <String fx:value="Bomberman Violet"/>
+                        <String fx:value="Bomberman Orange"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </VBox>
+
+        <!-- Message d'erreur -->
+        <Label fx:id="messageErreur" visible="false" wrapText="true" maxWidth="280"
+               style="-fx-text-fill: #ff3300; -fx-font-family: 'Courier New', monospace; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 6 0 0 0;"/>
+
+        <!-- Buttons -->
+        <HBox spacing="30" alignment="CENTER" prefWidth="280">
+            <Button fx:id="btnCreer" onAction="#creerProfil" text="Créer"
+                    style="-fx-background-color: #222; -fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 18px; -fx-font-weight: bold; -fx-border-color: #00cccc; -fx-border-width: 3; -fx-border-radius: 14; -fx-padding: 10 30; -fx-cursor: hand; -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0); -fx-min-width: 120px;"/>
+            <Button fx:id="btnAnnuler" onAction="#annuler" text="Annuler"
+                    style="-fx-background-color: #222; -fx-text-fill: #00cccc; -fx-font-family: 'Courier New', monospace; -fx-font-size: 18px; -fx-font-weight: bold; -fx-border-color: #00cccc; -fx-border-width: 3; -fx-border-radius: 14; -fx-padding: 10 30; -fx-cursor: hand; -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0); -fx-min-width: 120px;"/>
+        </HBox>
+
+    </VBox>
+
+</AnchorPane>

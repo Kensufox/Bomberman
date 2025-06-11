@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.game.controllers.ProfilsController"
+            prefWidth="600" prefHeight="520"
+            stylesheets="/css/profils_menu.css"
+            styleClass="root-pane">
+
+    <!-- Titre -->
+    <Label text="Gestion des Profils"
+           layoutX="200" layoutY="30"
+           styleClass="title-label"/>
+
+    <!-- Liste des profils + détails dans la même VBox -->
+    <VBox layoutX="30" layoutY="80" spacing="10" prefWidth="540">
+
+        <!-- Label profils -->
+        <Label text="Profils joueurs:" styleClass="section-label"/>
+
+        <!-- Liste -->
+        <ListView fx:id="listeProfils" prefWidth="540" prefHeight="160"
+                  styleClass="list-view"/>
+
+        <!-- Détails du profil -->
+        <GridPane hgap="15" vgap="8" style="-fx-padding: 10 0 0 10;">
+
+            <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="detail-label"/>
+            <Label fx:id="nomJoueur" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="detail-value"/>
+
+            <Label text="Prénom:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="detail-label"/>
+            <Label fx:id="prenomJoueur" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="detail-value"/>
+
+            <Label text="Parties jouées:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="detail-label"/>
+            <Label fx:id="partiesJouees" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="detail-value"/>
+
+            <Label text="Parties gagnées:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="detail-label"/>
+            <Label fx:id="partiesGagnees" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="detail-value"/>
+
+            <Label text="Ratio victoires:" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="detail-label"/>
+            <Label fx:id="ratioVictoires" GridPane.columnIndex="1" GridPane.rowIndex="4" styleClass="detail-value"/>
+
+        </GridPane>
+
+        <!-- Boutons gestion profils -->
+        <HBox spacing="10" style="-fx-padding: 15 0 0 0;" alignment="CENTER_LEFT">
+            <Button fx:id="btnNouveauProfil" onAction="#nouveauProfil" text="Nouveau" styleClass="small-button"/>
+            <Button fx:id="btnSelectionner" onAction="#selectionnerProfil" text="Sélectionner" styleClass="small-button"/>
+            <Button fx:id="btnSupprimer" onAction="#supprimerProfil" text="Supprimer" styleClass="small-button"/>
+        </HBox>
+    </VBox>
+
+    <!-- Bouton retour -->
+    <Button fx:id="btnRetourMenu" onAction="#retourMenu"
+            text="◀ Retour Menu"
+            layoutX="420" layoutY="460"
+            styleClass="menu-button"/>
+
+</AnchorPane>

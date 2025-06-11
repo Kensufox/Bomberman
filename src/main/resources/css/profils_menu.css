@@ -1,0 +1,81 @@
+/* Fond général */
+.root-pane {
+    -fx-background-color: #1a1a1a;
+}
+
+/* Titre principal */
+.title-label {
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+/* Sous-titres */
+.section-label {
+    -fx-text-fill: #00cccc;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Liste des profils */
+.list-view {
+    -fx-background-color: #222;
+    -fx-control-inner-background: #222;
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 14px;
+}
+
+/* Boutons génériques */
+.small-button {
+    -fx-background-color: #222;
+    -fx-text-fill: #00cccc;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-border-color: #00cccc;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-padding: 4 12;
+    -fx-cursor: hand;
+}
+
+.small-button:hover {
+    -fx-background-color: #00cccc;
+    -fx-text-fill: #1a1a1a;
+}
+
+/* Détails joueur */
+.detail-label {
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.detail-value {
+    -fx-text-fill: #00cccc;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 14px;
+}
+
+/* Bouton retour */
+.menu-button {
+    -fx-background-color: #222;
+    -fx-text-fill: #00cccc;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-border-color: #00cccc;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-padding: 6 20;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: #00cccc;
+    -fx-text-fill: #1a1a1a;
+}

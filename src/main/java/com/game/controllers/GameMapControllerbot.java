@@ -122,6 +122,8 @@ public class GameMapControllerbot extends GameMapController {
                         if (bot.canMove(now)) {
                             Player enemy = players.get(0).player; // Le joueur humain
 
+                            if (enemy.getState() == Player.State.DEAD) continue;
+
                             // Debug des informations du bot (optionnel)
                             if(bot.getState() == Player.State.ALIVE && enemy.getState() == Player.State.ALIVE) {
                                 // System.out.println("Bot Difficulty: " + botDifficulty);

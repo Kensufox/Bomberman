@@ -1,0 +1,82 @@
+/* main.css */
+
+/* Fond global géré par l'ImageView dans le FXML, pas besoin de background ici */
+
+/* Titre */
+.title-label {
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(one-pass-box, #cc9900, 4, 0, 2, 2);
+}
+
+/* Labels des formulaires */
+.form-label {
+    -fx-text-fill: #00cccc;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Champs texte */
+.text-field, .combo-box {
+    -fx-background-color: #222;
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 16px;
+    -fx-border-color: #00cccc;
+    -fx-border-radius: 8;
+    -fx-border-width: 2;
+    -fx-padding: 8 12;
+    -fx-prompt-text-fill: #666666;
+}
+
+/* Couleur du texte dans le ComboBox */
+.combo-box .list-cell {
+    -fx-background-color: #222;
+    -fx-text-fill: #ffcc00;
+}
+
+/* Survol des options du ComboBox */
+.combo-box .list-cell:hover {
+    -fx-background-color: #00cccc;
+    -fx-text-fill: black;
+}
+
+/* Message d'erreur */
+.error-label {
+    -fx-text-fill: #ff3300;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 0 0 0;
+}
+
+/* Boutons (style menu-button similaire à choose-game-button mais adapté) */
+.menu-button {
+    -fx-background-color: #222;
+    -fx-text-fill: #00cccc;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-border-color: #00cccc;
+    -fx-border-width: 3;
+    -fx-border-radius: 14;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0);
+    -fx-min-width: 120px;
+}
+
+/* Hover boutons */
+.menu-button:hover {
+    -fx-background-color: #00cccc;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(one-pass-box, #00cccc, 8, 0, 0, 0);
+}
+
+/* VBox contenant les inputs centré */
+.vbox {
+    -fx-alignment: center;
+}

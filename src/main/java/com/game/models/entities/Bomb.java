@@ -7,11 +7,7 @@ import java.util.Random;
 
 import com.game.controllers.GameMapController;
 import com.game.models.entities.bot.PlacedBomb;
-import com.game.utils.GameData;
-import com.game.utils.ImageLibrary;
-import com.game.utils.ResourceLoader;
-import com.game.utils.SFXLibrary;
-import com.game.utils.SFXPlayer;
+import com.game.utils.*;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -249,6 +245,30 @@ public class Bomb {
                     clear.play();
                 }
             }
+        }
+
+
+        // Tester la victoire après avoir traité tous les joueurs touchés
+        List<Player> alivePlayers = new ArrayList<>();
+        for (Player p : players) {
+            if (p != null && p.getState() == Player.State.ALIVE) {
+                alivePlayers.add(p);
+            }
+        }
+
+        // Si il ne reste qu'un seul joueur vivant, il a gagné
+        if (alivePlayers.size() == 1) {
+            Player winner = alivePlayers.get(0);
+
+            // Enregistrer la victoire si un profil est sélectionné
+            if (PlayerManager.hasCurrentPlayer() && winner.getPlayerConnected()) {
+                PlayerManager.recordGameWon();
+
+                // Ici vous pouvez ajouter d'autres actions de fin de partie
+                System.out.println("Le joueur " + PlayerManager.getCurrentPlayer().getNom() + " a gagné !");
+            }
+
+
         }
     }
 }

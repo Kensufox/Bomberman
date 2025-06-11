@@ -33,6 +33,8 @@ public class Player {
     protected boolean canPlaceBomb = true;
     protected double bombDelay;
 
+    private boolean PlayerConnected = false;
+
     /**
      * Constructs a player with a starting position and initial state.
      *
@@ -252,5 +254,13 @@ public class Player {
 
     public double getBombDelay() {
         return bombDelay;
+    }
+
+    public boolean getPlayerConnected() {
+        return PlayerConnected;
+    }
+
+    public void setPlayerConnected(boolean playerConnected) {
+        PlayerConnected = playerConnected;
     }
 }
