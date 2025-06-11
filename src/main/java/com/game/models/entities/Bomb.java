@@ -7,7 +7,12 @@ import java.util.Random;
 
 import com.game.controllers.GameMapController;
 import com.game.models.entities.bot.PlacedBomb;
-import com.game.utils.*;
+import com.game.utils.GameData;
+import com.game.utils.ImageLibrary;
+import com.game.utils.PlayerManager;
+import com.game.utils.ResourceLoader;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -91,12 +96,16 @@ public class Bomb {
     }
 
     /**
-     * Sets the explosion range of the bomb.
+     * Sets the explosion range of the bomb. Don't allow negative or null value
      *
      * @param range The number of tiles the explosion will extend.
      */
-    public void setRange(int range){
-        this.range = range;
+    public void setRange(int range) {
+        if (range <= 0) {
+            this.range = 1;
+        } else {
+            this.range = range;
+        }
     }
 
     /**

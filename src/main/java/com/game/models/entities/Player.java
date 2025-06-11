@@ -263,4 +263,8 @@ public class Player {
     public void setPlayerConnected(boolean playerConnected) {
         PlayerConnected = playerConnected;
     }
+
+    public void setCanPlaceBomb(boolean canPlaceBomb) {
+        this.canPlaceBomb = canPlaceBomb;
+    }
 }
