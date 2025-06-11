@@ -48,8 +48,8 @@ public class GameMap {
     public void setupMap(GridPane mapGrid) {
         setupGrid(mapGrid);
         //generateMap(mapGrid);
-        loadMapFromFile("src/main/resources/map/saved-map.txt", mapGrid);
-        //saveMapToFile("src/main/resources/map/saved-map.txt");
+        loadMapFromFile("src/main/resources/maps/saved-map.txt", mapGrid);
+        //saveMapToFile("src/main/resources/maps/saved-map copy.txt", mapData);
     }
 
     /**
@@ -115,18 +115,18 @@ public class GameMap {
     public void setupBackground(GameMap gameMap, GridPane backgroundGrid) {
         int rows = gameMap.getMapData().length;
         int cols = gameMap.getMapData()[0].length;
-        int tileSize = gameMap.getTileSize();   
+        int tileSize = gameMap.getTileSize();
 
         backgroundGrid.getRowConstraints().clear();
         backgroundGrid.getColumnConstraints().clear();
-        backgroundGrid.getChildren().clear();   
+        backgroundGrid.getChildren().clear();
 
         for (int i = 0; i < cols; i++) {
             backgroundGrid.getColumnConstraints().add(new ColumnConstraints(tileSize));
         }
         for (int i = 0; i < rows; i++) {
             backgroundGrid.getRowConstraints().add(new RowConstraints(tileSize));
-        }   
+        }
 
         String color1 = "#33b052"; // vert plus clair
         String color2 = "#257c3b"; // vert un peu foncé
