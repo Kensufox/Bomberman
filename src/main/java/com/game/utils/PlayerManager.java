@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class PlayerManager {
 
-    private static final String PLAYERS_FILE = "players.dat";
+    private static final String PLAYERS_FILE = "profile/players.dat";
     private static List<Player> players = new ArrayList<>();
     private static Player currentPlayer = null;
 
@@ -137,7 +137,20 @@ public class PlayerManager {
     private static void loadPlayers() {
         File file = new File(PLAYERS_FILE);
         if (!file.exists()) {
-            System.out.println("Fichier de profils inexistant, création d'une nouvelle liste.");
+            System.out.println("Fichier de profils inexistant, création d'une nouvelle liste et fichier.");
+            try {
+                // Crée les dossiers parents si nécessaire
+                if (file.getParentFile() != null) {
+                    file.getParentFile().mkdirs();
+                }
+
+                // Initialise la liste vide
+                players = new ArrayList<>();
+                savePlayersToFile();  // Cette méthode écrira dans "profile/players.dat"
+            } catch (Exception e) {
+                System.err.println("Erreur lors de la création du fichier de profils: " + e.getMessage());
+                e.printStackTrace();
+            }
             return;
         }
 
