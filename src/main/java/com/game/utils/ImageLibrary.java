@@ -21,6 +21,7 @@ public class ImageLibrary {
     public static final String Player        = "/images/player.png";
     public static final String Player1       = "/images/player1.png";
     public static final String Player2       = "/images/player2.png";
+    public static final String RobotPlayer   = "/images/robot-player.png";
     public static final String PowerAmount   = "/images/power-up-amount.png";
     public static final String PowerRange    = "/images/power-up-range.png";
     public static final String PowerSpeed    = "/images/power-up-speed.png";

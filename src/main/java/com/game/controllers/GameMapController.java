@@ -18,7 +18,14 @@ import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.entities.bot.BotPlayer;
 import com.game.models.map.GameMap;
-import com.game.utils.*;
+import com.game.utils.GameData;
+import com.game.utils.ImageLibrary;
+import com.game.utils.InputHandler;
+import com.game.utils.PlayerManager;
+import com.game.utils.ResourceLoader;
+import com.game.utils.SFXLibrary;
+import com.game.utils.SFXPlayer;
+import com.game.utils.ScoreManager;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -89,7 +96,13 @@ public class GameMapController {
 
         // Create player images
         Image player1Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Player1)));
-        Image player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Player2)));
+        Image player2Img;
+
+        if (!(this instanceof GameMapControllerbot)) {
+            player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Player2)));
+        } else {
+            player2Img = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.RobotPlayer)));
+        }
 
         // Create players
         Player[] players_temps = createPlayers();

@@ -127,7 +127,7 @@ public class GameMapControllerbot extends GameMapController {
                             // Debug des informations du bot (optionnel)
                             if(bot.getState() == Player.State.ALIVE && enemy.getState() == Player.State.ALIVE) {
                                 // System.out.println("Bot Difficulty: " + botDifficulty);
-                                System.out.println(bot.getDebugInfo() + "\n");
+                                //System.out.println(bot.getDebugInfo() + "\n");
 
                                 /* Debug de la carte (décommenté si nécessaire)
                                 for (int i = 0; i < gameMap.getMapData().length; i++) {
