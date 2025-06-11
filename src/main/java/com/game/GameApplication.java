@@ -39,9 +39,7 @@ public class GameApplication extends Application {
         primaryStage.setResizable(false);
 
         // Play random background music track on start
-
-        //attention Music elever a cause de linux
-        //MusicPlayer.play(MusicLibrary.ACTION3, MusicPlayer.Mode.RANDOM);
+        MusicPlayer.play(MusicLibrary.ACTION3, MusicPlayer.Mode.RANDOM);
 
         primaryStage.show();
     }

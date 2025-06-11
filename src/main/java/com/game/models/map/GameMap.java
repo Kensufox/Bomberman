@@ -21,8 +21,8 @@ import javafx.scene.layout.StackPane;
 public class GameMap {
 
     private final int TILE_SIZE = 40;
-    private final int ROWS = 13;
-    private final int COLS = 15;
+    private final static int ROWS = 13;
+    private final static int COLS = 15;
 
     private final char[][] mapData = new char[ROWS][COLS]; // W = wall, B = breakable, . = empty
     private final StackPane[][] tiles = new StackPane[ROWS][COLS];
@@ -47,8 +47,8 @@ public class GameMap {
      */
     public void setupMap(GridPane mapGrid) {
         setupGrid(mapGrid);
-        generateMap(mapGrid);
-        //loadMapFromFile("src/main/resources/map/saved-map.txt", mapGrid);
+        //generateMap(mapGrid);
+        loadMapFromFile("src/main/resources/map/saved-map.txt", mapGrid);
         //saveMapToFile("src/main/resources/map/saved-map.txt");
     }
 
@@ -93,7 +93,7 @@ public class GameMap {
                 } else if ((row <= 2 && col <= 2) || row >= ROWS-3 && col >= COLS-3) {
                     mapData[row][col] = '.';
                     tilePane = ResourceLoader.createTexturedTile(emptyImg, TILE_SIZE);
-                } else if (random.nextDouble() < 0.3) {
+                } else if (random.nextDouble() < 0.7) {
                     mapData[row][col] = 'B';
                     tilePane = ResourceLoader.createTexturedTile(breakableImg, TILE_SIZE);
                 } else {
@@ -147,7 +147,7 @@ public class GameMap {
      *
      * @param filename The path to the output file.
      */
-    public void saveMapToFile(String filename) {
+    public static void saveMapToFile(String filename, char[][] mapData) {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(filename)) {
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {
