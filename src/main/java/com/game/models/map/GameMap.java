@@ -21,8 +21,8 @@ import javafx.scene.layout.StackPane;
 public class GameMap {
 
     private final int TILE_SIZE = 40;
-    private final int ROWS = 13;
-    private final int COLS = 15;
+    private final static int ROWS = 13;
+    private final static int COLS = 15;
 
     private final char[][] mapData = new char[ROWS][COLS]; // W = wall, B = breakable, . = empty
     private final StackPane[][] tiles = new StackPane[ROWS][COLS];
@@ -48,8 +48,8 @@ public class GameMap {
     public void setupMap(GridPane mapGrid) {
         setupGrid(mapGrid);
         //generateMap(mapGrid);
-        loadMapFromFile("src/main/resources/map/saved-map.txt", mapGrid);
-        //saveMapToFile("src/main/resources/map/saved-map.txt");
+        loadMapFromFile("src/main/resources/maps/saved-map.txt", mapGrid);
+        saveMapToFile("src/main/resources/maps/saved-map copy.txt", mapData);
     }
 
     /**
@@ -147,7 +147,7 @@ public class GameMap {
      *
      * @param filename The path to the output file.
      */
-    public void saveMapToFile(String filename) {
+    public static void saveMapToFile(String filename, char[][] mapData) {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(filename)) {
             for (int row = 0; row < ROWS; row++) {
                 for (int col = 0; col < COLS; col++) {

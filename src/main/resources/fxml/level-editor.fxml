@@ -13,6 +13,6 @@
         </HBox>
     </top>
     <center>
-        <GridPane fx:id="gridPane" hgap="0" vgap="0"/>
+        <GridPane fx:id="mapGrid" hgap="0" vgap="0"/>
     </center>
 </BorderPane>
