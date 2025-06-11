@@ -61,7 +61,7 @@ public class MovementStrategy {
      * Méthode d'évasion améliorée qui évite les impasses.
      * Remplace l'ancienne méthode findEscapeMove qui utilisait pathFinder.findSafeDirection.
      */
-    private int[] findImprovedEscapeMove(int currentRow, int currentCol, Player enemy) {
+    int[] findImprovedEscapeMove(int currentRow, int currentCol, Player enemy) {
         List<MoveOption> moveOptions = new ArrayList<>();
 
         // Évaluer chaque direction possible
@@ -84,14 +84,6 @@ public class MovementStrategy {
         return moveOptions.isEmpty() ? new int[]{0, 0} : moveOptions.get(0).direction;
     }
 
-    /**
-     * Ancienne méthode d'évasion pour compatibilité (fallback).
-     * Trouve un mouvement d'évasion en cas de danger.
-     */
-    private int[] findEscapeMove(int currentRow, int currentCol, Player enemy) {
-        int[] safestPos = pathFinder.findSafeDirection(currentRow, currentCol, enemy, 15);
-        return safestPos != null ? safestPos : new int[]{0, 0};
-    }
 
     /**
      * Évalue une option de mouvement avec plusieurs critères

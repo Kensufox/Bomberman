@@ -8,7 +8,7 @@ import java.util.*;
  * Chercheur de chemins utilisant l'algorithme A*.
  * Composant du modèle pour la navigation intelligente.
  * 
- * @author Équipe Bomberman
+ * @author RADJOU Dinesh
  * @version 4.0
  * @since 2025-06-08
  */
@@ -94,70 +94,6 @@ public class PathFinder {
         }
     }
 
-    /**
-     * Trouve une direction sûre pour l'évasion avec recherche récursive.
-     * 
-     * @param startRow Position de départ
-     * @param startCol Position de départ  
-     * @param enemy Joueur ennemi
-     * @param maxDepth Profondeur maximale de recherche
-     * @return Direction sûre [deltaRow, deltaCol] ou null
-     */
-    public int[] findSafeDirection(int startRow, int startCol, Player enemy, int maxDepth) {
-        Set<String> visited = new HashSet<>();
-        return findSafeDirectionRecursive(startRow, startCol, enemy, maxDepth, visited);
-    }
-
-    /**
-     * Recherche récursive d'une direction sûre.
-     */
-    private int[] findSafeDirectionRecursive(int startRow, int startCol, Player enemy, 
-                                           int maxDepth, Set<String> visited) {
-        if (maxDepth <= 0) return null;
-        
-        String currentPos = startRow + "," + startCol;
-        if (visited.contains(currentPos)) return null;
-        
-        visited.add(currentPos);
-        int[] bestDirection = findBestEscapeDirection(startRow, startCol, enemy, maxDepth, visited);
-        visited.remove(currentPos);
-        
-        return bestDirection;
-    }
-
-    /**
-     * Trouve la meilleure direction d'évasion depuis une position.
-     */
-    private int[] findBestEscapeDirection(int startRow, int startCol, Player enemy,
-                                          int maxDepth, Set<String> visited) {
-        int[] bestDirection = null;
-        int maxDistanceFromEnemy = -1;
-        int minDangerScore = Integer.MAX_VALUE; // nouveau critère
-
-        for (int[] dir : DIRECTIONS) {
-            int newRow = startRow + dir[0];
-            int newCol = startCol + dir[1];
-
-            if (!isValidForEscape(newRow, newCol)) continue;
-
-            int dangerScore = bombAnalyzer.getDangerScore(newRow, newCol);
-            int distFromEnemy = manhattanDistance(newRow, newCol, enemy.getRow(), enemy.getCol());
-
-            // On accepte soit une case sûre, soit une case "moins dangereuse" quand bloqué
-            if (dangerScore == 0 ||
-                    (dangerScore < minDangerScore &&
-                            (findSafeDirectionRecursive(newRow, newCol, enemy, maxDepth - 1, visited) != null || maxDepth <= 1))) {
-
-                // Choix priorisé : max distance ET min danger
-                if (distFromEnemy > maxDistanceFromEnemy || (distFromEnemy == maxDistanceFromEnemy && dangerScore < minDangerScore)) {
-                    maxDistanceFromEnemy = distFromEnemy;
-                    minDangerScore = dangerScore;
-                    bestDirection = dir;
-                }
-            }
-        }
-        return bestDirection;
-    }
 
 
     /**

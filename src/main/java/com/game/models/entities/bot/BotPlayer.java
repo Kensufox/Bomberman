@@ -358,7 +358,7 @@ public class BotPlayer extends Player {
 
         mapData[getRow()][getCol()] = 'X';
         try {
-            int[] escapeMove = pathFinder.findSafeDirection(getRow(), getCol(), enemy, 10);
+            int[] escapeMove = movementStrategy.findImprovedEscapeMove(getRow(), getCol(), enemy);
             return escapeMove != null && (escapeMove[0] != 0 || escapeMove[1] != 0);
         } finally {
             mapData[getRow()][getCol()] = originalCell;
