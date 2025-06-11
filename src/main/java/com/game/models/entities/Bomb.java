@@ -6,11 +6,8 @@ import java.util.Objects;
 import java.util.Random;
 
 import com.game.controllers.GameMapController;
-import com.game.utils.GameData;
-import com.game.utils.ImageLibrary;
-import com.game.utils.ResourceLoader;
-import com.game.utils.SFXLibrary;
-import com.game.utils.SFXPlayer;
+import com.game.models.entities.bot.PlacedBomb;
+import com.game.utils.*;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
@@ -41,6 +38,11 @@ public class Bomb {
     private final Random random = new Random();
     private static final double POWER_UP_SPAWN_CHANCE = 0.3;
 
+
+
+    private final List<PlacedBomb> activeBombs = new ArrayList<>();
+
+    // New constructor with a list of players
     /**
      * Constructs a Bomb object with necessary map data and game references.
      *
@@ -70,15 +72,20 @@ public class Bomb {
         Image bombImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Bomb)));
         StackPane bombCell = ResourceLoader.createPixelatedImageNode(bombImg, TILE_SIZE, TILE_SIZE, 0, 0);
 
+        PlacedBomb bomb = new PlacedBomb(row, col, System.currentTimeMillis() + 2/GameData.getGameSpeed(), range);
+        activeBombs.add(bomb);
+
         if (mapData[row][col] == 'X') return;
         mapData[row][col] = 'X'; 
         mapGrid.add(bombCell, col, row);
 
         PauseTransition delay = new PauseTransition(Duration.seconds(2/ GameData.getGameSpeed()));
         delay.setOnFinished(e -> {
+
             mapGrid.getChildren().remove(bombCell);
             mapData[row][col] = '.';
             explode(row, col);
+            activeBombs.remove(bomb);
         });
         delay.play();
     }
@@ -117,6 +124,10 @@ public class Bomb {
      */
     public static double getCOOLDOWN_SECONDS() {
         return COOLDOWN_SECONDS;
+    }
+
+    public List<PlacedBomb> getActiveBombs() {
+        return new ArrayList<>(activeBombs);
     }
 
     /**
@@ -234,6 +245,30 @@ public class Bomb {
                     clear.play();
                 }
             }
+        }
+
+
+        // Tester la victoire après avoir traité tous les joueurs touchés
+        List<Player> alivePlayers = new ArrayList<>();
+        for (Player p : players) {
+            if (p != null && p.getState() == Player.State.ALIVE) {
+                alivePlayers.add(p);
+            }
+        }
+
+        // Si il ne reste qu'un seul joueur vivant, il a gagné
+        if (alivePlayers.size() == 1) {
+            Player winner = alivePlayers.get(0);
+
+            // Enregistrer la victoire si un profil est sélectionné
+            if (PlayerManager.hasCurrentPlayer() && winner.getPlayerConnected()) {
+                PlayerManager.recordGameWon();
+
+                // Ici vous pouvez ajouter d'autres actions de fin de partie
+                System.out.println("Le joueur " + PlayerManager.getCurrentPlayer().getNom() + " a gagné !");
+            }
+
+
         }
     }
 }

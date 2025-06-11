@@ -22,6 +22,8 @@ public class BombAnalyzer {
     /** Référence vers la carte de jeu */
     private final GameMap gameMap;
 
+    private Bomb bomb;
+
     /**
      * Constructeur de l'analyseur de bombes.
      * 
@@ -44,7 +46,7 @@ public class BombAnalyzer {
         
         for (int r = 0; r < mapData.length; r++) {
             for (int c = 0; c < mapData[0].length; c++) {
-                if (mapData[r][c] == 'X' && isInExplosionRange(row, col, r, c)) {
+                if (isOnBomb(r, c) && isInExplosionRange(row, col, r, c)) {
                     return true;
                 }
             }
@@ -131,5 +133,42 @@ public class BombAnalyzer {
      */
     public char[][] getMapData() {
         return gameMap.getMapData();
+    }
+
+    /**
+     * Retourne un score de danger pour la case (row, col).
+     * 0 = safe, plus c'est élevé plus c'est dangereux.
+     */
+    public int getDangerScore(int row, int col) {
+        int dangerScore = 0;
+
+
+        // Exemple : si la case est une bombe active
+        if (isOnBomb(row, col)) {
+            dangerScore += 100; // très dangereux
+        }
+
+
+        // Exemple : danger dû aux bombes proches (rayon d'explosion)
+        for (PlacedBomb actBomb : bomb.getActiveBombs()) {
+            int dist = manhattanDistance(row, col, actBomb.getRow(), actBomb.getCol());
+            if (dist <= actBomb.getRange()) {
+                // danger plus fort si plus proche de la bombe
+                dangerScore += Math.max(0, 50 - dist * 5);
+                if((actBomb.getCol() == col || actBomb.getRow() == row) ){
+                    dangerScore += (int) (50 + (10 - actBomb.getTimeBeforeExplosion()) * 10);
+                }
+            }
+        }
+
+        return dangerScore;
+    }
+
+    private int manhattanDistance(int r1, int c1, int r2, int c2) {
+        return Math.abs(r1 - r2) + Math.abs(c1 - c2);
+    }
+
+    public void setBomb(Bomb bomb) {
+        this.bomb = bomb;
     }
 }

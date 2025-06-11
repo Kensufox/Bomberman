@@ -11,4 +11,6 @@ open module tp.intro.javafx {
     exports com.game.models.entities;
     exports com.game.models.entities.bot;
     exports com.game.models.map;
+
+    exports com.game.utils;
 }

@@ -48,8 +48,8 @@ public class GameMap {
     public void setupMap(GridPane mapGrid) {
         setupGrid(mapGrid);
         //generateMap(mapGrid);
-        loadMapFromFile("src/main/resources/maps/saved-map.txt", mapGrid);
-        saveMapToFile("src/main/resources/maps/saved-map copy.txt", mapData);
+        loadMapFromFile("src/main/resources/map/saved-map.txt", mapGrid);
+        //saveMapToFile("src/main/resources/map/saved-map.txt");
     }
 
     /**

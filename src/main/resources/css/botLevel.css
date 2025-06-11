@@ -1,0 +1,100 @@
+.bot-level-pane {
+    -fx-background-color: #1a1a1a;
+    -fx-padding: 40;
+}
+
+/* Titre */
+.bot-level-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(one-pass-box, #ffcc00, 4, 0, 0, 0);
+}
+
+/* Boutons de niveau */
+.bot-level-button {
+    -fx-background-color: #222;
+    -fx-text-fill: #ffcc00;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-max-width: 300px;
+    -fx-border-color: #ffcc00;
+    -fx-border-width: 3;
+    -fx-border-radius: 14;
+    -fx-padding: 12 40;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, #ffcc00, 6, 0, 0, 0);
+    -fx-min-width: 180px;
+    -fx-alignment: center;
+}
+
+.bot-level-button:hover {
+    -fx-background-color: #ffcc00;
+    -fx-text-fill: #1a1a1a;
+    -fx-effect: dropshadow(one-pass-box, #cc9900, 8, 0, 0, 0);
+}
+
+/* Bouton Facile - Vert */
+.bot-level-button:nth-child(1) {
+    -fx-border-color: #00ff00;
+    -fx-text-fill: #00ff00;
+    -fx-effect: dropshadow(one-pass-box, #00ff00, 6, 0, 0, 0);
+}
+
+.bot-level-button:nth-child(1):hover {
+    -fx-background-color: #00ff00;
+    -fx-text-fill: #1a1a1a;
+    -fx-effect: dropshadow(one-pass-box, #00cc00, 8, 0, 0, 0);
+}
+
+/* Bouton Moyen - Orange */
+.bot-level-button:nth-child(2) {
+    -fx-border-color: #ff8800;
+    -fx-text-fill: #ff8800;
+    -fx-effect: dropshadow(one-pass-box, #ff8800, 6, 0, 0, 0);
+}
+
+.bot-level-button:nth-child(2):hover {
+    -fx-background-color: #ff8800;
+    -fx-text-fill: #1a1a1a;
+    -fx-effect: dropshadow(one-pass-box, #cc6600, 8, 0, 0, 0);
+}
+
+/* Bouton Difficile - Rouge */
+.bot-level-button:nth-child(3) {
+    -fx-border-color: #ff0000;
+    -fx-text-fill: #ff0000;
+    -fx-effect: dropshadow(one-pass-box, #ff0000, 6, 0, 0, 0);
+}
+
+.bot-level-button:nth-child(3):hover {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: #1a1a1a;
+    -fx-effect: dropshadow(one-pass-box, #cc0000, 8, 0, 0, 0);
+}
+
+/* Bouton retour */
+.return-bot-button {
+    -fx-background-color: #222;
+    -fx-text-fill: #00cccc;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-max-width: 200px;
+    -fx-border-color: #00cccc;
+    -fx-border-width: 3;
+    -fx-border-radius: 14;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, #00cccc, 6, 0, 0, 0);
+    -fx-min-width: 120px;
+    -fx-alignment: center;
+}
+
+.return-bot-button:hover {
+    -fx-background-color: #00cccc;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow(one-pass-box, #00cccc, 8, 0, 0, 0);
+}

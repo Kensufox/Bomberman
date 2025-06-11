@@ -31,6 +31,9 @@ public class Player {
     protected long originalMoveDelay;
 
     protected boolean canPlaceBomb = true;
+    protected double bombDelay;
+
+    private boolean PlayerConnected = false;
 
     /**
      * Constructs a player with a starting position and initial state.
@@ -45,6 +48,7 @@ public class Player {
         this.state = state;
         this.moveDelay =  150_000_000/GameData.getGameSpeed();
         this.originalMoveDelay = moveDelay;
+        this.bombDelay = Bomb.getCOOLDOWN_SECONDS();
     }
 
     /**
@@ -62,7 +66,7 @@ public class Player {
         canPlaceBomb = false;
 
         // Gérer le cooldown (on utilise un timer ici pour éviter de poser une autre bombe trop rapidement)
-        PauseTransition cooldown = new PauseTransition(Duration.seconds(Bomb.getCOOLDOWN_SECONDS() / GameData.getGameSpeed() / placementSpeed));
+        PauseTransition cooldown = new PauseTransition(Duration.seconds(bombDelay / GameData.getGameSpeed() / placementSpeed));
         cooldown.setOnFinished(e -> canPlaceBomb = true);
         cooldown.play();
 
@@ -242,5 +246,21 @@ public class Player {
      */
     public int getScore() {
         return score;
+    }
+
+    public void setBombDelay(double delay) {
+        this.bombDelay = delay;
+    }
+
+    public double getBombDelay() {
+        return bombDelay;
+    }
+
+    public boolean getPlayerConnected() {
+        return PlayerConnected;
+    }
+
+    public void setPlayerConnected(boolean playerConnected) {
+        PlayerConnected = playerConnected;
     }
 }

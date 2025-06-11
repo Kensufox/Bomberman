@@ -34,11 +34,13 @@ public class MenuController {
         SFXPlayer.setupHoverSound(btnClassic);
         SFXPlayer.setupHoverSound(btnCaptureTheFlag);
         SFXPlayer.setupHoverSound(btnContreLOrdi);
+        SFXPlayer.setupHoverSound(profils);
     }
 
     // Menu Principal
 
     @FXML private Button jouer;
+    @FXML private Button profils;
     @FXML private Button options;
     @FXML private Button quitter;
 
@@ -47,6 +49,12 @@ public class MenuController {
     @FXML private Button btnCaptureTheFlag;
     @FXML private Button btnContreLOrdi;
     @FXML private Button btnLevelEditor;
+
+    // Menu Niveau Bot
+    @FXML private Button btnEasyBot;
+    @FXML private Button btnMediumBot;
+    @FXML private Button btnHardBot;
+    @FXML private Button btnRetourChooseGame;
 
     /**
      * Handles the action event triggered when the "Play" button is clicked.
@@ -67,6 +75,27 @@ public class MenuController {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handles the action event triggered when the "Profiles" button is clicked.
+     * Navigates to the player profiles management screen.
+     *
+     * @param event The action event triggered by the "Profiles" button.
+     */
+    @FXML
+    public void gestionProfils(ActionEvent event) {
+        try {
+            SFXPlayer.play(SFXLibrary.FINISH);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/profils_menu.fxml"));
+            AnchorPane root = loader.load();
+
+            // Retrieves the current scene from one of the buttons
+            Button sourceButton = (Button) event.getSource();
+            sourceButton.getScene().setRoot(root);
+
+        } catch (IOException e) {
         }
     }
 
@@ -156,9 +185,57 @@ public class MenuController {
     @FXML
     public void VsComputer (ActionEvent event) {
         try {
+            // Au lieu d'aller directement au jeu, on va à la sélection du niveau
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/bot_level_selection.fxml"));
+            StackPane root = loader.load();
+
+            // Retrieves the current scene from one of the buttons
+            Button sourceButton = (Button) event.getSource();
+            sourceButton.getScene().setRoot(root);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // MENU NIVEAU BOT
+    @FXML
+    public void easyBot(ActionEvent event) {
+        startBotGame(event, "EASY");
+    }
+
+    @FXML
+    public void mediumBot(ActionEvent event) {
+        startBotGame(event, "MEDIUM");
+    }
+
+    @FXML
+    public void hardBot(ActionEvent event) {
+        startBotGame(event, "HARD");
+    }
+
+    private void startBotGame(ActionEvent event, String difficulty) {
+        try {
             SFXPlayer.play(SFXLibrary.FINISH);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game_map.fxml"));
-            loader.setController(new GameMapControllerbot());
+            GameMapControllerbot controller = new GameMapControllerbot();
+            controller.setBotDifficulty(difficulty); // Définir la difficulté
+            loader.setController(controller);
+            StackPane root = loader.load();
+
+            // Retrieves the current scene from one of the buttons
+            Button sourceButton = (Button) event.getSource();
+            sourceButton.getScene().setRoot(root);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void retourChooseGame(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/choose_game.fxml"));
             StackPane root = loader.load();
 
             // Retrieves the current scene from one of the buttons
@@ -214,5 +291,4 @@ public class MenuController {
             e.printStackTrace();
         }
     }
-
 }

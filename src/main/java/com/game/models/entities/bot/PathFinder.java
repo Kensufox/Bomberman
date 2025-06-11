@@ -128,10 +128,11 @@ public class PathFinder {
     /**
      * Trouve la meilleure direction d'évasion depuis une position.
      */
-    private int[] findBestEscapeDirection(int startRow, int startCol, Player enemy, 
-                                        int maxDepth, Set<String> visited) {
+    private int[] findBestEscapeDirection(int startRow, int startCol, Player enemy,
+                                          int maxDepth, Set<String> visited) {
         int[] bestDirection = null;
         int maxDistanceFromEnemy = -1;
+        int minDangerScore = Integer.MAX_VALUE; // nouveau critère
 
         for (int[] dir : DIRECTIONS) {
             int newRow = startRow + dir[0];
@@ -139,19 +140,25 @@ public class PathFinder {
 
             if (!isValidForEscape(newRow, newCol)) continue;
 
+            int dangerScore = bombAnalyzer.getDangerScore(newRow, newCol);
             int distFromEnemy = manhattanDistance(newRow, newCol, enemy.getRow(), enemy.getCol());
-            
-            if (!bombAnalyzer.isDangerous(newRow, newCol) || 
-                findSafeDirectionRecursive(newRow, newCol, enemy, maxDepth - 1, visited) != null) {
-                
-                if (distFromEnemy > maxDistanceFromEnemy) {
+
+            // On accepte soit une case sûre, soit une case "moins dangereuse" quand bloqué
+            if (dangerScore == 0 ||
+                    (dangerScore < minDangerScore &&
+                            (findSafeDirectionRecursive(newRow, newCol, enemy, maxDepth - 1, visited) != null || maxDepth <= 1))) {
+
+                // Choix priorisé : max distance ET min danger
+                if (distFromEnemy > maxDistanceFromEnemy || (distFromEnemy == maxDistanceFromEnemy && dangerScore < minDangerScore)) {
                     maxDistanceFromEnemy = distFromEnemy;
+                    minDangerScore = dangerScore;
                     bestDirection = dir;
                 }
             }
         }
         return bestDirection;
     }
+
 
     /**
      * Reconstruit le chemin depuis le nœud final.
