@@ -2,8 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.game.controllers.OptionsController"
             stylesheets="/css/options.css"

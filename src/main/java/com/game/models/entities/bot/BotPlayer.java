@@ -257,8 +257,8 @@ public class BotPlayer extends Player {
                 Math.min(100.0, (bombCooldownSec / 1.5) * 100)));
 
         if (enemy != null) {
-            boolean enemyInRange = isEnemyInBombRange();
-            boolean canEscape = canEscapeAfterBomb();
+            boolean enemyInRange = bombAnalyzer.isInExplosionRange(getRow(), getCol(), enemy.getRow(), enemy.getCol());
+            boolean canEscape = movementStrategy.canEscapeAfterBomb(getRow(), getCol(), enemy);
             debug.append(String.format("   • Enemy in Range: %s\n", enemyInRange ? "🎯 YES" : "❌ NO"));
             debug.append(String.format("   • Can Escape After: %s\n", canEscape ? "✅ YES" : "⚠️  RISKY"));
             debug.append(String.format("   • Should Place Bomb: %s\n",
@@ -310,6 +310,7 @@ public class BotPlayer extends Player {
         }
 
         debug.append("=".repeat(60));
+        //System.out.println(debug.toString());
         return debug.toString();
     }
 
@@ -347,39 +348,7 @@ public class BotPlayer extends Player {
         }
     }
 
-    /**
-     * Détermine si l'ennemi est dans la portée d'explosion
-     */
-    private boolean isEnemyInBombRange() {
-        if (enemy == null) return false;
 
-        int bombRow = getRow(), bombCol = getCol();
-        int enemyRow = enemy.getRow(), enemyCol = enemy.getCol();
-
-        if ((bombRow == enemyRow && Math.abs(bombCol - enemyCol) <= 2) ||
-                (bombCol == enemyCol && Math.abs(bombRow - enemyRow) <= 2)) {
-            return !bombAnalyzer.hasWallBetween(bombRow, bombCol, enemyRow, enemyCol);
-        }
-        return false;
-    }
-
-    /**
-     * Vérifie si le bot peut s'échapper après avoir posé une bombe
-     */
-    private boolean canEscapeAfterBomb() {
-        if (enemy == null) return false;
-
-        char[][] mapData = bombAnalyzer.getMapData();
-        char originalCell = mapData[getRow()][getCol()];
-
-        mapData[getRow()][getCol()] = 'X';
-        try {
-            int[] escapeMove = pathFinder.findSafeDirection(getRow(), getCol(), enemy, 10);
-            return escapeMove != null && (escapeMove[0] != 0 || escapeMove[1] != 0);
-        } finally {
-            mapData[getRow()][getCol()] = originalCell;
-        }
-    }
 
     /**
      * Convertit un mouvement en direction lisible
@@ -398,7 +367,7 @@ public class BotPlayer extends Player {
     private String determineCurrentStrategy() {
         if (bombAnalyzer.isDangerous(getRow(), getCol())) {
             return "🏃 ESCAPE MODE";
-        } else if (enemy != null && isEnemyInBombRange()) {
+        } else if (enemy != null && bombAnalyzer.isInExplosionRange(getRow(), getCol(), enemy.getRow(), enemy.getCol()) && movementStrategy.canEscapeAfterBomb(getRow(), getCol(), enemy)) {
             return "🎯 ATTACK MODE";
         } else if (enemy != null) {
             return "🕵️  HUNT MODE";

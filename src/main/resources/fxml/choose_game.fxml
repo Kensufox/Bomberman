@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <StackPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.game.controllers.MenuController"
-            stylesheets="/css/chooseGame.css" styleClass="choose-game-pane">
+           fx:controller="com.game.controllers.MenuController"
+           stylesheets="/css/chooseGame.css" styleClass="choose-game-pane">
 
     <VBox spacing="20" alignment="CENTER">
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
 <StackPane xmlns:fx="http://javafx.com/fxml">
     <GridPane fx:id="backgroundGrid" />
     <GridPane fx:id="mapGrid"

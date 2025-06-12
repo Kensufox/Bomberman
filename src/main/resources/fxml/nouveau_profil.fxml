@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
+<?import java.lang.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.game.controllers.NouveauProfilController"
             prefWidth="600" prefHeight="520"

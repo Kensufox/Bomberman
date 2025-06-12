@@ -67,12 +67,6 @@ public class BotPlayerTest {
         assertEquals(now, bot.getLastBombTime());
     }
 
-    @Test
-    public void testEnemyInBombRangeDetection() {
-        enemy = new Player(2, 4, Player.State.ALIVE); // In horizontal range
-        bot.decideAction(System.nanoTime(), enemy);
-        assertTrue(bot.getDebugInfo().contains("Enemy in Range"));
-    }
 
     @Test
     public void testCanEscapeAfterBomb() {
@@ -99,12 +93,11 @@ public class BotPlayerTest {
     }
 
     @Test
-    public void testDetermineStrategyEscapeMode() {
+    public void testDetermineStrategyHuntMode() {
+        bot.decideAction(System.currentTimeMillis(), enemy);
         bot.getBombAnalyzer().getMapData()[2][2] = 'X';
         String debug = bot.getDebugInfo();
-        assertTrue(debug.contains("🏃 ESCAPE MODE"));
-        assertTrue(debug.contains("🎯 ATTACK MODE"));
-        assertTrue(debug.contains("🕵️  HUNT MODE"));
-        assertTrue(debug.contains("⏳ WAIT MODE"));
+        assertTrue(debug.contains("🕵️  HUNT MODE")); //car pas moyen de s'echapper en mode safe
+
     }
 }

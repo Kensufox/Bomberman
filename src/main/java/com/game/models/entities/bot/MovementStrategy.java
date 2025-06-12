@@ -92,14 +92,7 @@ public class MovementStrategy {
         return moveOptions.isEmpty() ? new int[]{0, 0} : moveOptions.get(0).direction;
     }
 
-    /**
-     * Ancienne méthode d'évasion pour compatibilité (fallback).
-     * Trouve un mouvement d'évasion en cas de danger.
-     */
-    private int[] findEscapeMove(int currentRow, int currentCol, Player enemy) {
-        int[] safestPos = pathFinder.findSafeDirection(currentRow, currentCol, enemy, 15);
-        return safestPos != null ? safestPos : new int[]{0, 0};
-    }
+
 
     /**
      * Évalue une option de mouvement avec plusieurs critères
@@ -146,7 +139,7 @@ public class MovementStrategy {
      * Compte le nombre de routes d'évasion disponibles depuis une position
      * en explorant sur 2-3 cases de profondeur
      */
-    private int countEscapeRoutes(int row, int col) {
+    public int countEscapeRoutes(int row, int col) {
         int escapeRoutes = 0;
 
         for (int[] dir : DIRECTIONS) {
@@ -248,7 +241,7 @@ public class MovementStrategy {
     /**
      * Vérifie si l'ennemi est dans la portée d'explosion.
      */
-    private boolean isEnemyInBombRange(int bombRow, int bombCol, Player enemy) {
+    public boolean isEnemyInBombRange(int bombRow, int bombCol, Player enemy) {
         int enemyRow = enemy.getRow();
         int enemyCol = enemy.getCol();
 
@@ -263,7 +256,7 @@ public class MovementStrategy {
      * Vérifie si le bot peut s'échapper après avoir posé une bombe.
      * Simule temporairement la bombe sur la carte.
      */
-    private boolean canEscapeAfterBomb(int bombRow, int bombCol, Player enemy) {
+    public boolean canEscapeAfterBomb(int bombRow, int bombCol, Player enemy) {
         char[][] mapData = bombAnalyzer.getMapData();
         char originalCell = mapData[bombRow][bombCol];
 
@@ -288,7 +281,7 @@ public class MovementStrategy {
      * @param col2 Colonne du second point
      * @return Distance de Manhattan
      */
-    private int manhattanDistance(int row1, int col1, int row2, int col2) {
+    public int manhattanDistance(int row1, int col1, int row2, int col2) {
         return Math.abs(row1 - row2) + Math.abs(col1 - col2);
     }
 

@@ -1,9 +1,9 @@
 package com.game.models.entities.bot;
 
-import java.util.Objects;
-
 import com.game.models.entities.Bomb;
 import com.game.models.map.GameMap;
+
+import java.util.Objects;
 
 /**
  * Analyseur spécialisé dans la détection des bombes et zones dangereuses.
@@ -35,18 +35,19 @@ public class BombAnalyzer {
 
     /**
      * Vérifie si une position est dangereuse (dans le rayon d'explosion d'une bombe).
+     * Attention, le bot prends une case en plus comme dangereux
      * @param row Ligne à vérifier
      * @param col Colonne à vérifier
      * @return true si la position est dangereuse
      */
     public boolean isDangerous(int row, int col) {
-        char[][] mapData = gameMap.getMapData();
-        
-        for (int r = 0; r < mapData.length; r++) {
-            for (int c = 0; c < mapData[0].length; c++) {
-                if (isOnBomb(r, c) && isInExplosionRange(row, col, r, c)) {
-                    return true;
-                }
+        if (!isValidPosition(row, col) || isWall(row, col)) return false;
+        if (bomb == null || bomb.getActiveBombs() == null) return false;
+        for (PlacedBomb actBomb : bomb.getActiveBombs()) {
+            int bombRow = actBomb.getRow();
+            int bombCol = actBomb.getCol();
+            if (isInExplosionRange(row, col, bombRow, bombCol)) {
+                return true;
             }
         }
         return false;
@@ -72,7 +73,7 @@ public class BombAnalyzer {
      * @param bombCol   La colonne où la bombe est placée.
      * @return true si la position cible est dans la portée d'explosion, false sinon.
      */
-    private boolean isInExplosionRange(int targetRow, int targetCol, int bombRow, int bombCol) {
+    public boolean isInExplosionRange(int targetRow, int targetCol, int bombRow, int bombCol) {
         if (isOnBomb(targetRow, targetCol)) return true;
 
         // Vérification explosion horizontale ou verticale
