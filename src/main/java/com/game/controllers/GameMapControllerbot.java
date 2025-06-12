@@ -2,7 +2,6 @@ package com.game.controllers;
 
 import com.game.models.entities.Player;
 import com.game.models.entities.bot.BotPlayer;
-
 import javafx.animation.AnimationTimer;
 
 /**

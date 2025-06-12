@@ -1,32 +1,13 @@
-/**
- * Controller class responsible for managing the game map, including player movements,
- * bomb placements, power-up handling, and transitions to the game over screen.
- */
+
 
 package com.game.controllers;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.entities.bot.BotPlayer;
 import com.game.models.map.GameMap;
-import com.game.utils.GameData;
-import com.game.utils.ImageLibrary;
-import com.game.utils.InputHandler;
-import com.game.utils.PlayerManager;
-import com.game.utils.ResourceLoader;
-import com.game.utils.SFXLibrary;
-import com.game.utils.SFXPlayer;
-import com.game.utils.ScoreManager;
-
+import com.game.utils.*;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +18,23 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * Controller class responsible for managing the game map, including player movements,
+ * bomb placements, power-up handling, and transitions to the game over screen.
+ */
 public class GameMapController {
+
+    /**
+     * Default constructor for GameMapController.
+     * Initializes the controller instance.
+     */
+    public GameMapController() {
+        // No additional initialization required
+    }
 
     /** The primary grid representing game elements */
     @FXML protected GridPane mapGrid;

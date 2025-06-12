@@ -2,8 +2,9 @@ package com.game.models.entities.bot;
 
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
-import java.util.List;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stratégie de mouvement coordonnant l'analyse et la recherche de chemin.
@@ -22,6 +23,13 @@ public class MovementStrategy {
     private final BombAnalyzer bombAnalyzer;
     private final PathFinder pathFinder;
 
+    /**
+     * Initialise une stratégie de mouvement avec l'analyseur de bombes et le chercheur de chemin spécifiés,
+     * ainsi que des paramètres de configuration.
+     *
+     * @param bombAnalyzer           L'instance de BombAnalyzer utilisée pour évaluer le danger et les données de la carte.
+     * @param pathFinder             L'instance de PathFinder utilisée pour le calcul des chemins.
+     */
     public MovementStrategy(BombAnalyzer bombAnalyzer, PathFinder pathFinder) {
         this.bombAnalyzer = bombAnalyzer;
         this.pathFinder = pathFinder;
@@ -222,6 +230,13 @@ public class MovementStrategy {
 
     /**
      * Détermine si le bot doit poser une bombe.
+     *
+     * @param currentRow Position actuelle du bot (ligne)
+     * @param currentCol Position actuelle du bot (colonne)
+     * @param enemy Joueur ennemi
+     * @param currentTime Temps actuel en nanosecondes
+     * @param lastBombTime Temps en nanosecondes du dernier placement de bombe
+     * @return true si le bot doit poser une bombe, false sinon
      */
     public boolean shouldPlaceBomb(int currentRow, int currentCol, Player enemy,
                                    long currentTime, long lastBombTime) {

@@ -1,7 +1,6 @@
 package com.game.models.entities;
 
 import com.game.utils.GameData;
-
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 
@@ -17,23 +16,48 @@ public class Player {
         ALIVE, DEAD, GHOST
     }
 
+    /** The current row position of the player. */
     protected int row;
+
+    /** The current column position of the player. */
     protected int col;
+
+    /** The power-up currently held by the player. */
     protected PowerUp.Power power;
+
+    /** The current state of the player. */
     protected State state;
+
+    /** Timestamp when the player's current power-up effect ends. */
     protected long powerEndTime = 0;
+
+    /** The player's current score. */
     protected int score = 0;
+
+    /** The speed at which the player can place bombs. */
     private float placementSpeed = 1;
+
+    /** The original (default) bomb placement speed for the player. */
     private final float OriginalPlacementSpeed = 1;
 
+    /** Timestamp of the last movement performed by the player. */
     protected long lastMoveTime = 0;
+
+    /** Delay between player movements in milliseconds. */
     protected long moveDelay;
+
+    /** The original (default) movement delay for the player. */
     protected long originalMoveDelay;
 
+    /** Whether the player is currently allowed to place a bomb. */
     protected boolean canPlaceBomb = true;
+
+    /** Delay between bomb placements for the player. */
     protected double bombDelay;
 
+    /** Indicates whether the player is connected with a profile. */
     private boolean PlayerConnected = false;
+
 
     /**
      * Constructs a player with a starting position and initial state.
@@ -248,22 +272,47 @@ public class Player {
         return score;
     }
 
+    /**
+     * Sets the delay between bomb placements.
+     *
+     * @param delay The delay in seconds (or game time units) before the player can place another bomb.
+     */
     public void setBombDelay(double delay) {
         this.bombDelay = delay;
     }
 
+    /**
+     * Gets the current delay between bomb placements.
+     *
+     * @return The bomb placement delay.
+     */
     public double getBombDelay() {
         return bombDelay;
     }
 
+    /**
+     * Returns whether the player is currently connected.
+     *
+     * @return true if the player is connected; false otherwise.
+     */
     public boolean getPlayerConnected() {
         return PlayerConnected;
     }
 
+    /**
+     * Sets the player's connection status.
+     *
+     * @param playerConnected true if the player is connected; false otherwise.
+     */
     public void setPlayerConnected(boolean playerConnected) {
         PlayerConnected = playerConnected;
     }
 
+    /**
+     * Sets whether the player can place bombs.
+     *
+     * @param canPlaceBomb true if the player is allowed to place bombs; false otherwise.
+     */
     public void setCanPlaceBomb(boolean canPlaceBomb) {
         this.canPlaceBomb = canPlaceBomb;
     }

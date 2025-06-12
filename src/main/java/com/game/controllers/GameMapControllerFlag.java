@@ -6,26 +6,11 @@
 
 package com.game.controllers;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 import com.game.models.entities.PowerUp;
 import com.game.models.map.GameMap;
-import com.game.utils.GameData;
-import com.game.utils.ImageLibrary;
-import com.game.utils.InputHandler;
-import com.game.utils.ResourceLoader;
-import com.game.utils.SFXLibrary;
-import com.game.utils.SFXPlayer;
-import com.game.utils.ScoreManager;
-
+import com.game.utils.*;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,7 +21,39 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * GameMapControllerFlag extends GameMapController to implement Capture the Flag mechanics.
+ *
+ * This class handles the setup and management of a Capture the Flag game mode,
+ * including player initialization, flag placement, player movements, flag interactions,
+ * power-ups, bombs, and transitioning to the game over screen when a player wins.
+ *
+ * Key features:
+ * - Manages two players with their own flags at spawn points.
+ * - Tracks when flags are picked up, dropped, or returned to base.
+ * - Supports player movement with keyboard input.
+ * - Checks for flag captures to determine game victory.
+ * - Handles power-ups spawning and collection.
+ * - Supports bomb placement and player elimination.
+ *
+ * It utilizes JavaFX's GridPane for the map display and AnimationTimer for smooth movement.
+ */
 public class GameMapControllerFlag extends GameMapController {
+
+    /**
+     * Default constructor for GameMapControllerFlag.
+     * Initializes the controller for Capture the Flag mode.
+     * Typically, the 'initialize()' method will be called by the JavaFX framework
+     * after the constructor to setup the game elements and start the game.
+     */
+    public GameMapControllerFlag() {
+        super();
+        // No explicit initialization here; defer setup to initialize()
+    }
 
     /** The primary grid representing game elements */
     @FXML protected GridPane mapGrid;
@@ -86,6 +103,11 @@ public class GameMapControllerFlag extends GameMapController {
         final int spawnCol;
         boolean hasOpponentFlag;
 
+        /**
+         * Inner class representing a player's context within the game.
+         * Includes the Player instance, graphical cell, controls, spawn position,
+         * and whether the player is currently carrying the opponent's flag.
+         */
         PlayerContext(Player player, StackPane cell, InputHandler.PlayerControls controls, int spawnRow, int spawnCol) {
             this.player = player;
             this.cell = cell;
@@ -96,7 +118,11 @@ public class GameMapControllerFlag extends GameMapController {
         }
     }
 
-    // Inner class to represent a flag
+    /**
+     * Inner class representing a flag in Capture the Flag mode.
+     * Stores its position, home base, carrier state, and logic for being picked up, dropped, or returned.
+     */
+
     protected static class Flag {
         private int row;
         private int col;
@@ -116,33 +142,75 @@ public class GameMapControllerFlag extends GameMapController {
             this.carrier = null;
         }
 
-        // Getters and setters
+// Getters and setters
+        /**
+         * @return the current row of the flag
+         */
         public int getRow() { return row; }
+        /**
+         * @return the current column of the flag
+         */
         public int getCol() { return col; }
+        /**
+         * @return the home row of the flag
+         */
         public int getHomeRow() { return homeRow; }
+        /**
+         * @return the home column of the flag
+         */
         public int getHomeCol() { return homeCol; }
+        /**
+         * @return true if the flag is at its home position
+         */
         public boolean isAtHome() { return isAtHome; }
+        /**
+         * @return true if the flag is currently being carried
+         */
         public boolean isCarried() { return isCarried; }
+        /**
+         * @return the player currently carrying the flag, or null if not carried
+         */
         public Player getCarrier() { return carrier; }
 
+        /**
+         * Sets the flag's position and updates whether it is at its home base.
+         *
+         * @param row the row to set
+         * @param col the column to set
+         */
         public void setPosition(int row, int col) {
             this.row = row;
             this.col = col;
             this.isAtHome = (row == homeRow && col == homeCol);
         }
 
+        /**
+         * Assigns a player as the carrier of the flag and marks it as taken.
+         *
+         * @param player the player picking up the flag
+         */
         public void pickUp(Player player) {
             this.isCarried = true;
             this.carrier = player;
             this.isAtHome = false;
         }
 
+        /**
+         * Drops the flag at the specified position.
+         *
+         * @param row the row where the flag is dropped
+         * @param col the column where the flag is dropped
+         */
         public void drop(int row, int col) {
             this.isCarried = false;
             this.carrier = null;
             setPosition(row, col);
         }
 
+
+        /**
+         * Returns the flag to its home position and clears the carrier.
+         */
         public void returnHome() {
             this.isCarried = false;
             this.carrier = null;

@@ -1,13 +1,13 @@
 package com.game.controllers;
 
-import java.io.IOException;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+
+import java.io.IOException;
 
 /**
  * Controller for the Game Over screen in the game.
@@ -16,6 +16,13 @@ import javafx.scene.layout.AnchorPane;
  * and provides functionality to return to the main menu.
  */
 public class GameOverController {
+
+    /**
+     * Default constructor for GameOverController.
+     */
+    public GameOverController() {
+        // No initialization needed currently
+    }
 
     @FXML
     private Label winnerLabel;

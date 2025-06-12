@@ -1,10 +1,7 @@
 package com.game.controllers;
 
-import java.io.IOException;
-
 import com.game.utils.SFXLibrary;
 import com.game.utils.SFXPlayer;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+
+import java.io.IOException;
 
 /**
  * Controller for managing the main menu and submenus of the game.
@@ -199,21 +198,42 @@ public class MenuController {
     }
 
     // MENU NIVEAU BOT
+    /**
+     * Starts an easy bot game mode.
+     *
+     * @param event the action event triggered by the "Easy Bot" button
+     */
     @FXML
     public void easyBot(ActionEvent event) {
         startBotGame(event, "EASY");
     }
 
+    /**
+     * Starts a medium bot game mode.
+     *
+     * @param event the action event triggered by the "Medium Bot" button
+     */
     @FXML
     public void mediumBot(ActionEvent event) {
         startBotGame(event, "MEDIUM");
     }
 
+    /**
+     * Starts a hard bot game mode.
+     *
+     * @param event the action event triggered by the "Hard Bot" button
+     */
     @FXML
     public void hardBot(ActionEvent event) {
         startBotGame(event, "HARD");
     }
 
+    /**
+     * Helper method to launch a bot game with the specified difficulty.
+     *
+     * @param event      the action event triggering the game start
+     * @param difficulty the difficulty level of the bot ("EASY", "MEDIUM", or "HARD")
+     */
     private void startBotGame(ActionEvent event, String difficulty) {
         try {
             SFXPlayer.play(SFXLibrary.FINISH);
@@ -232,6 +252,12 @@ public class MenuController {
         }
     }
 
+    /**
+     * Handles the "Back to Choose Game" button click event.
+     * Returns to the game mode selection screen.
+     *
+     * @param event the action event triggered by the "Back to Choose Game" button
+     */
     @FXML
     public void retourChooseGame(ActionEvent event) {
         try {

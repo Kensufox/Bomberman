@@ -1,24 +1,18 @@
 package com.game.models.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
-
 import com.game.controllers.GameMapController;
 import com.game.models.entities.bot.PlacedBomb;
-import com.game.utils.GameData;
-import com.game.utils.ImageLibrary;
-import com.game.utils.PlayerManager;
-import com.game.utils.ResourceLoader;
-import com.game.utils.SFXLibrary;
-import com.game.utils.SFXPlayer;
-
+import com.game.utils.*;
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * Represents a bomb entity in the game. Handles the placement, explosion,
@@ -135,16 +129,21 @@ public class Bomb {
         return COOLDOWN_SECONDS;
     }
 
+    /**
+     * Returns a copy of the list of bombs currently active on the map.
+     *
+     * @return A new list containing active PlacedBomb objects.
+     */
     public List<PlacedBomb> getActiveBombs() {
         return new ArrayList<>(activeBombs);
     }
 
     /**
-     * Determines whether a direction has already been blocked or completed.
+     * Checks if a particular direction has already been processed (finished).
      *
-     * @param list   List of already finished directions.
-     * @param target The direction to check.
-     * @return true if the direction is already finished; false otherwise.
+     * @param list   List of directions that are finished.
+     * @param target Direction to check.
+     * @return true if the target direction is already finished, false otherwise.
      */
     private boolean directionFinished(List<int[]> list, int[] target) {
         for (int[] d : list) {

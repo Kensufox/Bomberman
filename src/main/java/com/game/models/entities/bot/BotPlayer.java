@@ -61,6 +61,11 @@ public class BotPlayer extends Player {
         this.map = gameMap.getMapData();
     }
 
+    /**
+     * Assigns the current bomb to the bomb analyzer.
+     *
+     * @param bomb the Bomb object to set
+     */
     public void setBomb(Bomb bomb) {
         bombAnalyzer.setBomb(bomb);
     }
@@ -178,13 +183,24 @@ public class BotPlayer extends Player {
     }
 
 
+    /**
+     * Sets the intelligence level.
+     *
+     * @param level the new intelligence level
+     */
     public void setIntelligenceLevel(int level) {
         this.intelligenceLevel = level;
     }
 
+    /**
+     * Returns the current intelligence level.
+     *
+     * @return the intelligence level
+     */
     public int getIntelligenceLevel() {
         return intelligenceLevel;
     }
+
 
 
 

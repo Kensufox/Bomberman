@@ -1,12 +1,8 @@
 package com.game.controllers;
 
-import java.io.IOException;
-import java.util.Objects;
-
 import com.game.models.map.GameMap;
 import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,6 +12,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.Objects;
 
 
 /**
@@ -34,19 +33,34 @@ public class LevelEditorController {
     /** The current game map */
     protected GameMap gameMap;
 
-    @FXML
-    private TextField mapNameField;
-    @FXML
-    private Button saveButton, returnButton;
+    /** TextField input for naming the map before saving */
+    @FXML private TextField mapNameField;
 
+    /** Button to trigger map saving */
+    @FXML private Button saveButton;
+
+    /** Button to return to the main menu */
+    @FXML private Button returnButton;
+
+    /** Number of rows in the editable map grid */
     private final int ROWS = 13;
+
+    /** Number of columns in the editable map grid */
     private final int COLS = 15;
+
+    /** Size of each tile in pixels */
     private final int TILE_SIZE = 40;
 
+    /** 2D array storing the map data where each cell is either wall ('W') or empty ('.') */
     private char[][] mapData = new char[ROWS][COLS];
+
+    /** 2D array storing the visual tiles corresponding to mapData */
     private final StackPane[][] tiles = new StackPane[ROWS][COLS];
-    
+
+    /** Image used for wall tiles */
     private final Image wallImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.InfWall)));
+
+    /** Image used for empty tiles */
     private final Image emptyImg = new Image(Objects.requireNonNull(getClass().getResourceAsStream(ImageLibrary.Empty)));
 
 
@@ -62,6 +76,12 @@ public class LevelEditorController {
         mapGrid.setFocusTraversable(true);
     }
 
+    /**
+     * Toggles a cell between wall and empty tile, and updates the map data and visual representation.
+     *
+     * @param row the row of the cell to toggle
+     * @param col the column of the cell to toggle
+     */
     private void toggleCell(int row, int col) {
         mapGrid.getChildren().remove(tiles[row][col]);
 
@@ -83,6 +103,12 @@ public class LevelEditorController {
         mapGrid.add(newTile, col, row);
     }
 
+
+    /**
+     * Generates the level editor grid with default boundaries and editable inner cells.
+     *
+     * @param mapGrid the GridPane to populate with tiles
+     */
     private void generateMapEditor(GridPane mapGrid) {
         mapGrid.getChildren().clear();
 
@@ -105,6 +131,9 @@ public class LevelEditorController {
         }
     }
 
+    /**
+     * Saves the current map to a text file using the entered name.
+     */
     @FXML
     private void saveMap() {
         String name = mapNameField.getText().trim();
@@ -115,6 +144,9 @@ public class LevelEditorController {
         returnToMenu();
     }
 
+    /**
+     * Returns the user to the main menu screen.
+     */
     @FXML
     private void returnToMenu() {
         try {
@@ -126,10 +158,20 @@ public class LevelEditorController {
         }
     }
 
+    /**
+     * Retrieves the current map data.
+     *
+     * @return 2D character array representing the map layout
+     */
     public char[][] getMapData() {
         return mapData;
     }
 
+    /**
+     * Sets the internal map data.
+     *
+     * @param mapData the new map layout to apply
+     */
     public void setMapData(char[][] mapData) {
         this.mapData = mapData;
     }

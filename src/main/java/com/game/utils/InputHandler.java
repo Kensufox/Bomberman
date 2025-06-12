@@ -1,13 +1,9 @@
 package com.game.utils;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Properties;
-
 import javafx.scene.input.KeyCode;
+
+import java.io.*;
+import java.util.Properties;
 
 /**
  * Handles loading, saving, and managing player input configurations for a game.
@@ -148,6 +144,7 @@ public class InputHandler {
      * Encapsulates the key controls for a single player.
      */
     public static class PlayerControls {
+        /** KeyCodes for moving up, down, left, right, and placing a bomb respectively. */
         public final KeyCode up, down, left, right, bomb;
 
         /**
@@ -186,32 +183,130 @@ public class InputHandler {
         return new PlayerControls(j2Up, j2Down, j2Left, j2Right, j2Bomb);
     }
 
-    // Individual setters for player 1 keys
+    // Setters for Player 1's key bindings
+
+    /**
+     * Sets the key used for Player 1's "move up" action.
+     * @param key the KeyCode to assign to Player 1's up control
+     */
     public void setJ1Up(KeyCode key) { this.j1Up = key; }
+
+    /**
+     * Sets the key used for Player 1's "move down" action.
+     * @param key the KeyCode to assign to Player 1's down control
+     */
     public void setJ1Down(KeyCode key) { this.j1Down = key; }
+
+    /**
+     * Sets the key used for Player 1's "move left" action.
+     * @param key the KeyCode to assign to Player 1's left control
+     */
     public void setJ1Left(KeyCode key) { this.j1Left = key; }
+
+    /**
+     * Sets the key used for Player 1's "move right" action.
+     * @param key the KeyCode to assign to Player 1's right control
+     */
     public void setJ1Right(KeyCode key) { this.j1Right = key; }
+
+    /**
+     * Sets the key used for Player 1's "place bomb" action.
+     * @param key the KeyCode to assign to Player 1's bomb control
+     */
     public void setJ1Bomb(KeyCode key) { this.j1Bomb = key; }
 
-    // Individual setters for player 2 keys
+
+    // Setters for Player 2's key bindings
+
+    /**
+     * Sets the key used for Player 2's "move up" action.
+     * @param key the KeyCode to assign to Player 2's up control
+     */
     public void setJ2Up(KeyCode key) { this.j2Up = key; }
+
+    /**
+     * Sets the key used for Player 2's "move down" action.
+     * @param key the KeyCode to assign to Player 2's down control
+     */
     public void setJ2Down(KeyCode key) { this.j2Down = key; }
+
+    /**
+     * Sets the key used for Player 2's "move left" action.
+     * @param key the KeyCode to assign to Player 2's left control
+     */
     public void setJ2Left(KeyCode key) { this.j2Left = key; }
+
+    /**
+     * Sets the key used for Player 2's "move right" action.
+     * @param key the KeyCode to assign to Player 2's right control
+     */
     public void setJ2Right(KeyCode key) { this.j2Right = key; }
+
+    /**
+     * Sets the key used for Player 2's "place bomb" action.
+     * @param key the KeyCode to assign to Player 2's bomb control
+     */
     public void setJ2Bomb(KeyCode key) { this.j2Bomb = key; }
 
-    // Individual getters for player 1 keys
+
+    /**
+     * Returns the key assigned for Player 1 to move up.
+     * @return the KeyCode for Player 1's up movement
+     */
     public KeyCode getJ1Up() { return j1Up; }
+
+    /**
+     * Returns the key assigned for Player 1 to move down.
+     * @return the KeyCode for Player 1's down movement
+     */
     public KeyCode getJ1Down() { return j1Down; }
+
+    /**
+     * Returns the key assigned for Player 1 to move left.
+     * @return the KeyCode for Player 1's left movement
+     */
     public KeyCode getJ1Left() { return j1Left; }
+
+    /**
+     * Returns the key assigned for Player 1 to move right.
+     * @return the KeyCode for Player 1's right movement
+     */
     public KeyCode getJ1Right() { return j1Right; }
+
+    /**
+     * Returns the key assigned for Player 1 to place a bomb.
+     * @return the KeyCode for Player 1's bomb action
+     */
     public KeyCode getJ1Bomb() { return j1Bomb; }
 
-    // Individual getters for player 2 keys
+    /**
+     * Returns the key assigned for Player 2 to move up.
+     * @return the KeyCode for Player 2's up movement
+     */
     public KeyCode getJ2Up() { return j2Up; }
+
+    /**
+     * Returns the key assigned for Player 2 to move down.
+     * @return the KeyCode for Player 2's down movement
+     */
     public KeyCode getJ2Down() { return j2Down; }
+
+    /**
+     * Returns the key assigned for Player 2 to move left.
+     * @return the KeyCode for Player 2's left movement
+     */
     public KeyCode getJ2Left() { return j2Left; }
+
+    /**
+     * Returns the key assigned for Player 2 to move right.
+     * @return the KeyCode for Player 2's right movement
+     */
     public KeyCode getJ2Right() { return j2Right; }
+
+    /**
+     * Returns the key assigned for Player 2 to place a bomb.
+     * @return the KeyCode for Player 2's bomb action
+     */
     public KeyCode getJ2Bomb() { return j2Bomb; }
 
     /**

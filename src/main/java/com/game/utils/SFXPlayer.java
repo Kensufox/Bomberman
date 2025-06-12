@@ -1,10 +1,10 @@
 package com.game.utils;
 
-import java.net.URL;
-import java.util.HashMap;
-
 import javafx.scene.control.Button;
 import javafx.scene.media.AudioClip;
+
+import java.net.URL;
+import java.util.HashMap;
 
 /**
  * Utility class to manage playback of sound effects (SFX) in the game.

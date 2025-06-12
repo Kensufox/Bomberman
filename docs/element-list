@@ -1,0 +1,7 @@
+module:tp.intro.javafx
+com.game
+com.game.controllers
+com.game.models.entities
+com.game.models.entities.bot
+com.game.models.map
+com.game.utils

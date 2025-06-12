@@ -1,17 +1,16 @@
 package com.game.models.map;
 
-import java.io.IOException;
-import java.util.Objects;
-import java.util.Random;
-
 import com.game.utils.ImageLibrary;
 import com.game.utils.ResourceLoader;
-
 import javafx.scene.image.Image;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * Represents the visual and logical game map composed of tiles.
@@ -146,6 +145,7 @@ public class GameMap {
      * Saves the current map layout to a file. Breakables are saved as empty.
      *
      * @param filename The path to the output file.
+     * @param mapData  The 2D character array representing the map layout to save.
      */
     public static void saveMapToFile(String filename, char[][] mapData) {
         try (java.io.PrintWriter writer = new java.io.PrintWriter(filename)) {
