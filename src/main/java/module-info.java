@@ -1,5 +1,5 @@
 /**
- * Module tp.intro.javafx.
+ * Bomberman.
  *
  * <p>Ce module fournit l'application principale du jeu Bomberman développée avec JavaFX.</p>
  *
@@ -24,7 +24,7 @@
  *   <li><b>com.game.utils</b> : utilitaires divers pour la gestion du son, des images, des scores, etc.</li>
  * </ul>
  */
-open module tp.intro.javafx {
+open module Bomberman {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
