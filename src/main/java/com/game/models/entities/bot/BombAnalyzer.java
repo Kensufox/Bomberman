@@ -17,7 +17,7 @@ import com.game.models.map.GameMap;
 
 public class BombAnalyzer {
     /** Portée d'explosion d'une bombe */
-    private static final int BOMB_RANGE = Bomb.getOriginalRange() + 1;
+    private static final int BOMB_RANGE = Bomb.getOriginalRange() - 1;
     
     /** Référence vers la carte de jeu */
     private final GameMap gameMap;
@@ -146,6 +146,7 @@ public class BombAnalyzer {
         // Exemple : si la case est une bombe active
         if (isOnBomb(row, col)) {
             dangerScore += 100; // très dangereux
+            System.out.println(dangerScore);
         }
 
 
@@ -155,8 +156,10 @@ public class BombAnalyzer {
             if (dist <= actBomb.getRange()) {
                 // danger plus fort si plus proche de la bombe
                 dangerScore += Math.max(0, 50 - dist * 5);
+                System.out.println(dangerScore);
                 if((actBomb.getCol() == col || actBomb.getRow() == row) ){
                     dangerScore += (int) (50 + (10 - actBomb.getTimeBeforeExplosion()) * 10);
+                    System.out.println(dangerScore);
                 }
             }
         }
