@@ -203,7 +203,6 @@ public class BotPlayer extends Player {
 
 
 
-
     /**
      * Génère des informations de debug complètes pour le développement.
      * Version améliorée avec analyse détaillée de l'état du bot.
