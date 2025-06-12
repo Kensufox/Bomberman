@@ -269,7 +269,7 @@ public class GameMapControllerFlag extends GameMapController {
     /**
      * Sets up the flags for both players at their respective spawn points.
      */
-    private void setupFlags() {
+    void setupFlags() {
         // Create flags at each player's spawn point
         player1Flag = new Flag(1, 1); // Player 1's spawn
         player2Flag = new Flag(11, 13); // Player 2's spawn
@@ -631,5 +631,77 @@ public class GameMapControllerFlag extends GameMapController {
                 break;
             }
         }
+    }
+
+    /**
+     * Gets the flag for player 1.
+     *
+     * @return the player 1 flag
+     */
+    public Flag getPlayer1Flag() {
+        return player1Flag;
+    }
+
+    /**
+     * Sets the flag for player 1.
+     *
+     * @param player1Flag the flag to set for player 1
+     */
+    public void setPlayer1Flag(Flag player1Flag) {
+        this.player1Flag = player1Flag;
+    }
+
+    /**
+     * Gets the flag for player 2.
+     *
+     * @return the player 2 flag
+     */
+    public Flag getPlayer2Flag() {
+        return player2Flag;
+    }
+
+    /**
+     * Sets the flag for player 2.
+     *
+     * @param player2Flag the flag to set for player 2
+     */
+    public void setPlayer2Flag(Flag player2Flag) {
+        this.player2Flag = player2Flag;
+    }
+
+    /**
+     * Gets the cell (StackPane) containing the flag for player 1.
+     *
+     * @return the StackPane representing player 1's flag cell
+     */
+    public StackPane getPlayer1FlagCell() {
+        return player1FlagCell;
+    }
+
+    /**
+     * Sets the cell (StackPane) containing the flag for player 1.
+     *
+     * @param player1FlagCell the StackPane to set for player 1's flag cell
+     */
+    public void setPlayer1FlagCell(StackPane player1FlagCell) {
+        this.player1FlagCell = player1FlagCell;
+    }
+
+    /**
+     * Gets the cell (StackPane) containing the flag for player 2.
+     *
+     * @return the StackPane representing player 2's flag cell
+     */
+    public StackPane getPlayer2FlagCell() {
+        return player2FlagCell;
+    }
+
+    /**
+     * Sets the cell (StackPane) containing the flag for player 2.
+     *
+     * @param player2FlagCell the StackPane to set for player 2's flag cell
+     */
+    public void setPlayer2FlagCell(StackPane player2FlagCell) {
+        this.player2FlagCell = player2FlagCell;
     }
 }

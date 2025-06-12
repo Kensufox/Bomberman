@@ -72,4 +72,69 @@ public class GameOverController {
         } catch (IOException e) {
         }
     }
+    /**
+     * Gets the label displaying the winner.
+     *
+     * @return the winner label
+     */
+    public Label getWinnerLabel() {
+        return winnerLabel;
+    }
+
+    /**
+     * Sets the label displaying the winner.
+     *
+     * @param winnerLabel the winner label to set
+     */
+    public void setWinnerLabel(Label winnerLabel) {
+        this.winnerLabel = winnerLabel;
+    }
+
+    /**
+     * Gets the label displaying the score of player 1.
+     *
+     * @return the label for player 1's score
+     */
+    public Label getScoreJ1() {
+        return scoreJ1;
+    }
+
+    /**
+     * Sets the label displaying the score of player 1.
+     *
+     * @param scoreJ1 the label to set for player 1's score
+     */
+    public void setScoreJ1(Label scoreJ1) {
+        this.scoreJ1 = scoreJ1;
+    }
+
+    /**
+     * Gets the label displaying the score of player 2.
+     *
+     * @return the label for player 2's score
+     */
+    public Label getScoreJ2() {
+        return scoreJ2;
+    }
+
+    /**
+     * Sets the label displaying the score of player 2.
+     *
+     * @param scoreJ2 the label to set for player 2's score
+     */
+    public void setScoreJ2(Label scoreJ2) {
+        this.scoreJ2 = scoreJ2;
+    }
+
+    /**
+     * Creates and returns a new {@link FXMLLoader} for the specified FXML resource path.
+     *
+     * @param resource the path to the FXML resource, relative to the classpath
+     * @return a new {@link FXMLLoader} instance for the given resource
+     */
+    protected FXMLLoader createLoader(String resource) {
+        return new FXMLLoader(getClass().getResource(resource));
+    }
+
+
 }

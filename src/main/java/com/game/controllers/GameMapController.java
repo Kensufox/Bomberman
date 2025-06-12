@@ -64,10 +64,10 @@ public class GameMapController {
     protected final List<PlayerContext> players = new ArrayList<>();
 
     /** Active power-ups on the grid */
-    private final List<PowerUp> activePowerUps = new ArrayList<>();
+    final List<PowerUp> activePowerUps = new ArrayList<>();
 
     /** Visual nodes representing active power-ups */
-    private final List<StackPane> activePowerUpCells = new ArrayList<>();
+    final List<StackPane> activePowerUpCells = new ArrayList<>();
 
     /** Inner class for storing a player, their cell, and controls */
     protected static class PlayerContext {

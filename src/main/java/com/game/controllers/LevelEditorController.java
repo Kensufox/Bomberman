@@ -135,7 +135,7 @@ public class LevelEditorController {
      * Saves the current map to a text file using the entered name.
      */
     @FXML
-    private void saveMap() {
+    void saveMap() {
         String name = mapNameField.getText().trim();
         if (name.isEmpty()) return;
 
@@ -148,7 +148,7 @@ public class LevelEditorController {
      * Returns the user to the main menu screen.
      */
     @FXML
-    private void returnToMenu() {
+    void returnToMenu() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main_menu.fxml"));
             Stage stage = (Stage) returnButton.getScene().getWindow();
@@ -175,4 +175,41 @@ public class LevelEditorController {
     public void setMapData(char[][] mapData) {
         this.mapData = mapData;
     }
+
+    /**
+     * Returns the TextField used for entering the map name before saving.
+     *
+     * @return the mapNameField TextField
+     */
+    public TextField getMapNameField() {
+        return mapNameField;
+    }
+
+    /**
+     * Sets the TextField used for entering the map name before saving.
+     *
+     * @param mapNameField the TextField to set
+     */
+    public void setMapNameField(TextField mapNameField) {
+        this.mapNameField = mapNameField;
+    }
+
+    /**
+     * Returns the Button used to return to the main menu.
+     *
+     * @return the returnButton Button
+     */
+    public Button getReturnButton() {
+        return returnButton;
+    }
+
+    /**
+     * Sets the Button used to return to the main menu.
+     *
+     * @param returnButton the Button to set
+     */
+    public void setReturnButton(Button returnButton) {
+        this.returnButton = returnButton;
+    }
+
 }

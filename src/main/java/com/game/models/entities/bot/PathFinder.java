@@ -55,7 +55,7 @@ public class PathFinder {
 
         while (!openSet.isEmpty()) {
             Node current = openSet.poll();
-            System.out.println(current.col + " " + current.row);
+            //System.out.println(current.col + " " + current.row);
 
             if (closedSet.contains(current.getKey())) continue;
             closedSet.add(current.getKey());

@@ -1,14 +1,11 @@
 package com.game.models.entities.bot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.game.models.entities.Player;
+import com.game.models.map.GameMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.game.models.entities.Player;
-import com.game.models.map.GameMap;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BotPlayerTest {
 

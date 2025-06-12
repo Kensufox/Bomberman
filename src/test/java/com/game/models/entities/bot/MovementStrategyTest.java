@@ -1,15 +1,12 @@
 package com.game.models.entities.bot;
 
 import com.game.models.entities.Player;
-import com.game.models.entities.bot.BombAnalyzer;
-import com.game.models.entities.bot.MovementStrategy;
-import com.game.models.entities.bot.PathFinder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
