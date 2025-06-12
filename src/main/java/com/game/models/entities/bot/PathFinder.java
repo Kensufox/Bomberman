@@ -44,6 +44,7 @@ public class PathFinder {
     public List<Node> findPathToTarget(int startRow, int startCol, int targetRow, int targetCol) {
         Node start = new Node(startRow, startCol, 0, 
                             manhattanDistance(startRow, startCol, targetRow, targetCol));
+        if(!isValidMove(startRow, startCol)) return null;
         
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingInt(Node::fCost));
         Set<String> closedSet = new HashSet<>();
@@ -54,7 +55,8 @@ public class PathFinder {
 
         while (!openSet.isEmpty()) {
             Node current = openSet.poll();
-            
+            System.out.println(current.col + " " + current.row);
+
             if (closedSet.contains(current.getKey())) continue;
             closedSet.add(current.getKey());
 
