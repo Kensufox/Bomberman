@@ -13,7 +13,6 @@ public class MusicLibrary {
     public static final String ACTION5 = "bgm_action_5.mp3";
     public static final String ACTION6 = "bgm_menu.mp3";
 
-    
     /**
      * Private constructor to prevent instantiation.
      */
