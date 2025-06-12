@@ -1,23 +1,25 @@
 package com.game.models.entities.bot;
 
+import java.util.Objects;
+
 import com.game.models.entities.Bomb;
 import com.game.models.map.GameMap;
 
-import java.util.Objects;
-
 /**
- * Analyseur spécialisé dans la détection des bombes et des zones dangereuses.
- * Partie du modèle dans l'architecture MVC.
+ * Analyseur spécialisé dans la détection des bombes et zones dangereuses.
+ * Fait partie du modèle dans l'architecture MVC.
  *
  * @author RADJOU Dinesh G2-5
  * @version 4.0
  * @since 2025-06-05
  */
+
+
 public class BombAnalyzer {
     /** Portée d'explosion d'une bombe */
     private static final int BOMB_RANGE = Bomb.getOriginalRange() + 1;
 
-    /** Référence à la carte du jeu */
+    /** Référence vers la carte de jeu */
     private final GameMap gameMap;
 
     private Bomb bomb;
@@ -39,7 +41,7 @@ public class BombAnalyzer {
      */
     public boolean isDangerous(int row, int col) {
         char[][] mapData = gameMap.getMapData();
-
+        
         for (int r = 0; r < mapData.length; r++) {
             for (int c = 0; c < mapData[0].length; c++) {
                 if (isOnBomb(r, c) && isInExplosionRange(row, col, r, c)) {
@@ -73,7 +75,7 @@ public class BombAnalyzer {
     private boolean isInExplosionRange(int targetRow, int targetCol, int bombRow, int bombCol) {
         if (isOnBomb(targetRow, targetCol)) return true;
 
-        // Vérifie explosion horizontale ou verticale
+        // Vérification explosion horizontale ou verticale
         if (targetRow == bombRow || targetCol == bombCol) {
             int distance = (targetRow == bombRow) ? 
                 Math.abs(targetCol - bombCol) : Math.abs(targetRow - bombRow);
@@ -178,16 +180,18 @@ public class BombAnalyzer {
     public int getDangerScore(int row, int col) {
         int dangerScore = 0;
 
-        // Danger élevé si une bombe est présente
+
+        // Exemple : si la case est une bombe active
         if (isOnBomb(row, col)) {
             dangerScore += 100; // très dangereux
         }
 
-        // Danger dû aux bombes actives proches
+
+        // Exemple : danger dû aux bombes proches (rayon d'explosion)
         for (PlacedBomb actBomb : bomb.getActiveBombs()) {
             int dist = manhattanDistance(row, col, actBomb.getRow(), actBomb.getCol());
             if (dist <= actBomb.getRange()) {
-                // Plus proche de la bombe, plus c'est dangereux
+                // danger plus fort si plus proche de la bombe
                 dangerScore += Math.max(0, 50 - dist * 5);
                 if((actBomb.getCol() == col || actBomb.getRow() == row) ){
                     dangerScore += (int) (50 + (10 - actBomb.getTimeBeforeExplosion()) * 10);
