@@ -68,7 +68,7 @@ public class Bomb {
     }
 
     /**
-     * Places a bomb at the specified grid location and schedules its explosion.
+     * Places a bomb at the specidsfied grid location and schedules its explosion.
      *
      * @param row The row index on the map.
      * @param col The column index on the map.
