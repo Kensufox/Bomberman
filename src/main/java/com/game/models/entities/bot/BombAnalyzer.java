@@ -74,6 +74,7 @@ public class BombAnalyzer {
      * @return true si la position cible est dans la portée d'explosion, false sinon.
      */
     public boolean isInExplosionRange(int targetRow, int targetCol, int bombRow, int bombCol) {
+        if(!isValidPosition(targetRow, targetCol)) return false;
         if (isOnBomb(targetRow, targetCol)) return true;
 
         // Vérification explosion horizontale ou verticale

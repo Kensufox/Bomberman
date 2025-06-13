@@ -373,7 +373,7 @@ public class BotPlayer extends Player {
     /**
      * Compte les voisins traversables
      */
-    private int countTraversableNeighbors() {
+    protected int countTraversableNeighbors() {
         int count = 0;
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
@@ -390,7 +390,7 @@ public class BotPlayer extends Player {
     /**
      * Compte les murs voisins
      */
-    private int countWallNeighbors() {
+    protected int countWallNeighbors() {
         int count = 0;
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
@@ -407,7 +407,7 @@ public class BotPlayer extends Player {
     /**
      * Compte les routes d'évasion disponibles
      */
-    private int countEscapeRoutes() {
+    protected int countEscapeRoutes() {
         int count = 0;
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 

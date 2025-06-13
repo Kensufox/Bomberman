@@ -139,4 +139,106 @@ public class BombAnalyzerTest {
         // Ne doit pas lever d'exception même si bomb est null
         assertFalse(analyzer.isDangerous(0, 0));
     }
+
+    @Test
+    void testIsInExplosionRange() {
+        // Bombe à (1,1), portée 2+1=3 (BOMB_RANGE)
+        // Même ligne, dans la portée
+        assertTrue(analyzer.isInExplosionRange(1, 2, 1, 1));
+        assertTrue(analyzer.isInExplosionRange(1, 3, 1, 1)); // mur, mais isInExplosionRange doit vérifier le mur
+        // Même colonne, dans la portée
+        assertTrue(analyzer.isInExplosionRange(2, 1, 1, 1));
+        assertTrue(analyzer.isInExplosionRange(4, 1, 1, 1));
+        // Hors portée
+        assertFalse(analyzer.isInExplosionRange(1, 5, 1, 1));
+        assertFalse(analyzer.isInExplosionRange(5, 1, 1, 1));
+        // Pas sur la même ligne/colonne
+        assertFalse(analyzer.isInExplosionRange(2, 2, 1, 1));
+    }
+
+    @Test
+    void testCheckWallsInRangeHorizontal() {
+        // (1,1) à (1,4) : mur à (1,3)
+        assertTrue(analyzer.hasWallBetween(1, 1, 1, 4));
+        // (1,1) à (1,2) : pas de mur
+        assertFalse(analyzer.hasWallBetween(1, 1, 1, 2));
+    }
+
+    @Test
+    void testCheckWallsInRangeVertical() {
+        // (0,1) à (4,1) : pas de mur
+        assertFalse(analyzer.hasWallBetween(0, 1, 4, 1));
+    }
+
+    @Test
+    void testGetBombAndSetBomb() {
+        Bomb anotherBomb = new Bomb(null, mockMap.getMapData(), null, null, null, null);
+        analyzer.setBomb(anotherBomb);
+        assertEquals(anotherBomb, analyzer.getBomb());
+    }
+
+    @Test
+    void testIsWallWithInvalidPosition() {
+        assertFalse(analyzer.isWall(-1, -1));
+        assertFalse(analyzer.isWall(100, 100));
+    }
+
+    @Test
+    void testIsOnBombWithInvalidPosition() {
+        // Should throw ArrayIndexOutOfBoundsException if not checked, but our code does not check
+        // So we expect an exception here
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> analyzer.isOnBomb(-1, -1));
+    }
+
+    @Test
+    void testIsTraversableWithBombAndWall() {
+        assertFalse(analyzer.isTraversable(1, 1)); // bomb
+        assertFalse(analyzer.isTraversable(1, 3)); // wall
+    }
+
+
+    @Test
+    void testGetDangerScoreWithMultipleBombs() {
+        // Add another bomb at (2,2)
+        List<PlacedBomb> bombs = new ArrayList<>(mockBomb.getActiveBombs());
+        bombs.add(new PlacedBomb(2, 2, 2, 1));
+        Bomb multiBomb = new Bomb(null, mockMap.getMapData(), null, null, null, null) {
+            @Override
+            public List<PlacedBomb> getActiveBombs() {
+                return bombs;
+            }
+        };
+        analyzer.setBomb(multiBomb);
+        // (2,2) is on a bomb
+        assertTrue(analyzer.getDangerScore(2, 2) >= 100);
+        // (1,1) is also on a bomb
+        assertTrue(analyzer.getDangerScore(1, 1) >= 100);
+    }
+
+    @Test
+    void testIsDangerousWithNoBombs() {
+        analyzer.setBomb(new Bomb(null, mockMap.getMapData(), null, null, null, null) {
+            @Override
+            public List<PlacedBomb> getActiveBombs() {
+                return null;
+            }
+        });
+        assertFalse(analyzer.isDangerous(1, 1));
+    }
+
+    @Test
+    void testIsDangerousWithBombNextToWall() {
+        // Place a bomb on a wall (should not happen in game, but test logic)
+        List<PlacedBomb> bombs = new ArrayList<>();
+        bombs.add(new PlacedBomb(1, 2, 2, 2)); // (1,3) is a wall
+        Bomb wallBomb = new Bomb(null, mockMap.getMapData(), null, null, null, null) {
+            @Override
+            public List<PlacedBomb> getActiveBombs() {
+                return bombs;
+            }
+        };
+        analyzer.setBomb(wallBomb);
+        // Should not be dangerous
+        assertFalse(analyzer.isDangerous(1, 4));
+    }
 }

@@ -140,6 +140,103 @@ class PathFinderTest {
             assertFalse((node.row == 1 && node.col == 1) || (node.row == 2 && node.col == 1));
         }
     }
+    @Test
+    void testFindPathToTarget_OnlyOnePossiblePath() {
+        // Only one narrow path open
+        // Block all except (0,0)->(1,0)->(2,0)->(2,1)->(2,2)
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 3; c++) {
+                when(bombAnalyzer.isTraversable(r, c)).thenReturn(false);
+                when(bombAnalyzer.isDangerous(r, c)).thenReturn(false);
+            }
+        when(bombAnalyzer.isTraversable(0, 0)).thenReturn(true);
+        when(bombAnalyzer.isTraversable(1, 0)).thenReturn(true);
+        when(bombAnalyzer.isTraversable(2, 0)).thenReturn(true);
+        when(bombAnalyzer.isTraversable(2, 1)).thenReturn(true);
+        when(bombAnalyzer.isTraversable(2, 2)).thenReturn(true);
 
+        List<Node> path = pathFinder.findPathToTarget(0, 0, 2, 2);
+
+        assertNotNull(path);
+        assertEquals(5, path.size());
+        assertEquals(0, path.get(0).row);
+        assertEquals(0, path.get(0).col);
+        assertEquals(2, path.get(path.size() - 1).row);
+        assertEquals(2, path.get(path.size() - 1).col);
+        // Path must follow the only open route
+        assertEquals(1, path.get(1).row);
+        assertEquals(0, path.get(1).col);
+        assertEquals(2, path.get(2).row);
+        assertEquals(0, path.get(2).col);
+        assertEquals(2, path.get(3).row);
+        assertEquals(1, path.get(3).col);
+        assertEquals(2, path.get(4).row);
+        assertEquals(2, path.get(4).col);
+    }
+
+    @Test
+    void testFindPathToTarget_AllCellsDangerousExceptTarget() {
+        // All cells dangerous except the target
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 3; c++) {
+                when(bombAnalyzer.isTraversable(r, c)).thenReturn(true);
+                when(bombAnalyzer.isDangerous(r, c)).thenReturn(true);
+            }
+        when(bombAnalyzer.isDangerous(2, 2)).thenReturn(false);
+
+        List<Node> path = pathFinder.findPathToTarget(0, 0, 2, 2);
+
+        assertNull(path);
+    }
+
+    @Test
+    void testFindPathToTarget_TargetIsDangerous() {
+        // Target cell is dangerous
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 3; c++) {
+                when(bombAnalyzer.isTraversable(r, c)).thenReturn(true);
+                when(bombAnalyzer.isDangerous(r, c)).thenReturn(false);
+            }
+        when(bombAnalyzer.isDangerous(2, 2)).thenReturn(true);
+
+        List<Node> path = pathFinder.findPathToTarget(0, 0, 2, 2);
+
+        assertNull(path);
+    }
+
+    @Test
+    void testFindPathToTarget_LargeGrid() {
+        // 5x5 grid, all traversable and safe
+        for (int r = 0; r < 5; r++)
+            for (int c = 0; c < 5; c++) {
+                when(bombAnalyzer.isTraversable(r, c)).thenReturn(true);
+                when(bombAnalyzer.isDangerous(r, c)).thenReturn(false);
+            }
+
+        List<Node> path = pathFinder.findPathToTarget(0, 0, 4, 4);
+
+        assertNotNull(path);
+        assertEquals(9, path.size()); // Minimum path length for 4,4 in 5x5 grid
+        assertEquals(0, path.get(0).row);
+        assertEquals(0, path.get(0).col);
+        assertEquals(4, path.get(path.size() - 1).row);
+        assertEquals(4, path.get(path.size() - 1).col);
+    }
+
+    @Test
+    void testFindPathToTarget_ObstacleSurroundsTarget() {
+        // Target is surrounded by non-traversable cells
+        for (int r = 0; r < 3; r++)
+            for (int c = 0; c < 3; c++) {
+                when(bombAnalyzer.isTraversable(r, c)).thenReturn(true);
+                when(bombAnalyzer.isDangerous(r, c)).thenReturn(false);
+            }
+        when(bombAnalyzer.isTraversable(1, 2)).thenReturn(false);
+        when(bombAnalyzer.isTraversable(2, 1)).thenReturn(false);
+
+        List<Node> path = pathFinder.findPathToTarget(0, 0, 2, 2);
+
+        assertNull(path);
+    }
     
 }

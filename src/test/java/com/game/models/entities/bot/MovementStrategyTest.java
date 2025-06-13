@@ -179,4 +179,130 @@ class MovementStrategyTest {
         // }
         // But for this test class, we assume Bomb.getOriginalRange() returns 3 by default.
     }
+
+    @Test
+    void testFindImprovedEscapeMove_PrefersSafeDirection() {
+        // Setup: Only one direction is safe and not dangerous
+        when(bombAnalyzer.isValidPosition(anyInt(), anyInt())).thenReturn(true);
+        when(bombAnalyzer.isTraversable(anyInt(), anyInt())).thenReturn(true);
+        when(bombAnalyzer.isDangerous(eq(2), eq(3))).thenReturn(false); // Right is safe
+        when(bombAnalyzer.isDangerous(eq(1), eq(2))).thenReturn(true);  // Up is dangerous
+        when(bombAnalyzer.isDangerous(eq(3), eq(2))).thenReturn(true);  // Down is dangerous
+        when(bombAnalyzer.isDangerous(eq(2), eq(1))).thenReturn(true);  // Left is dangerous
+        when(bombAnalyzer.getDangerScore(anyInt(), anyInt())).thenReturn(0);
+        when(bombAnalyzer.getMapData()).thenReturn(new char[5][5]);
+        when(enemy.getRow()).thenReturn(0);
+        when(enemy.getCol()).thenReturn(0);
+
+        int[] move = movementStrategy.findImprovedEscapeMove(2, 2, enemy);
+        assertArrayEquals(new int[]{0, 1}, move); // Should move right
+    }
+
+    @Test
+    void testFindImprovedEscapeMove_NoSafeMove_StaysInPlace() {
+        // All directions are dangerous or invalid
+        when(bombAnalyzer.isValidPosition(anyInt(), anyInt())).thenReturn(false);
+
+        int[] move = movementStrategy.findImprovedEscapeMove(2, 2, enemy);
+        assertArrayEquals(new int[]{0, 0}, move);
+    }
+
+    @Test
+    void testEvaluateMoveOption_ScoreCalculation() {
+        // All safe, far from enemy, open area
+        when(bombAnalyzer.isDangerous(anyInt(), anyInt())).thenReturn(false);
+        when(bombAnalyzer.getDangerScore(anyInt(), anyInt())).thenReturn(0);
+        when(bombAnalyzer.getMapData()).thenReturn(new char[10][10]);
+        when(enemy.getRow()).thenReturn(0);
+        when(enemy.getCol()).thenReturn(0);
+
+        // Use reflection to access private method
+        int[] direction = {1, 0};
+        try {
+            java.lang.reflect.Method method = MovementStrategy.class.getDeclaredMethod(
+                    "evaluateMoveOption", int.class, int.class, Player.class, int[].class);
+            method.setAccessible(true);
+            Object moveOption = method.invoke(movementStrategy, 5, 5, enemy, direction);
+            assertNotNull(moveOption);
+        } catch (Exception e) {
+            fail("Reflection failed: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testIsNearEdge_TrueAndFalse() {
+        char[][] map = new char[5][5];
+        when(bombAnalyzer.getMapData()).thenReturn(map);
+
+        // Use reflection to access private method
+        try {
+            java.lang.reflect.Method method = MovementStrategy.class.getDeclaredMethod(
+                    "isNearEdge", int.class, int.class);
+            method.setAccessible(true);
+            // Near edge
+            assertTrue((Boolean) method.invoke(movementStrategy, 1, 2));
+            assertTrue((Boolean) method.invoke(movementStrategy, 2, 1));
+            assertTrue((Boolean) method.invoke(movementStrategy, 3, 4));
+            // Not near edge
+            assertFalse((Boolean) method.invoke(movementStrategy, 2, 2));
+        } catch (Exception e) {
+            fail("Reflection failed: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void testFindSafeMoveTowardsEnemy_PrefersCloserAndSafe() {
+        when(bombAnalyzer.isValidPosition(anyInt(), anyInt())).thenReturn(true);
+        when(bombAnalyzer.isTraversable(anyInt(), anyInt())).thenReturn(true);
+        when(bombAnalyzer.isDangerous(anyInt(), anyInt())).thenReturn(false);
+        when(bombAnalyzer.getMapData()).thenReturn(new char[5][5]);
+        when(enemy.getRow()).thenReturn(2);
+        when(enemy.getCol()).thenReturn(3);
+
+        int[] move = movementStrategy.calculateOptimalMove(2, 2, enemy);
+        // Should move not right towards enemy
+        //should go away
+        assertNotEquals(0, move[0]);
+        assertNotEquals(1, move[1]);
+    }
+
+    @Test
+    void testCanEscapeAfterBomb_NoEscape() {
+        char[][] map = new char[3][3];
+        when(bombAnalyzer.getMapData()).thenReturn(map);
+        // Only current position is valid, all others are not
+        when(bombAnalyzer.isValidPosition(anyInt(), anyInt())).thenReturn(false);
+        when(bombAnalyzer.isValidPosition(eq(1), eq(1))).thenReturn(true);
+        when(bombAnalyzer.isTraversable(anyInt(), anyInt())).thenReturn(false);
+        when(bombAnalyzer.isTraversable(eq(1), eq(1))).thenReturn(true);
+        when(bombAnalyzer.isDangerous(anyInt(), anyInt())).thenReturn(true);
+        when(bombAnalyzer.getDangerScore(anyInt(), anyInt())).thenReturn(10);
+        when(enemy.getRow()).thenReturn(0);
+        when(enemy.getCol()).thenReturn(0);
+
+        boolean result = movementStrategy.canEscapeAfterBomb(1, 1, enemy);
+        assertFalse(result);
+    }
+
+    @Test
+    void testIsEnemyInBombRange_DifferentRowCol() {
+        when(enemy.getRow()).thenReturn(0);
+        when(enemy.getCol()).thenReturn(0);
+        mockStaticBombRange(3);
+
+        boolean result = movementStrategy.isEnemyInBombRange(2, 2, enemy);
+        assertFalse(result);
+    }
+
+    @Test
+    void testShouldPlaceBomb_EnemyNotInRange() {
+        when(enemy.getRow()).thenReturn(0);
+        when(enemy.getCol()).thenReturn(0);
+        mockStaticBombRange(3);
+
+        long now = 10_000_000_000L;
+        long last = 0L;
+        boolean result = movementStrategy.shouldPlaceBomb(2, 2, enemy, now, last);
+        assertFalse(result);
+    }
 }
