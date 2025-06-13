@@ -1,11 +1,5 @@
 package com.game.utils;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.util.Duration;
-
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
@@ -13,6 +7,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 /**
  * Utility class for playing background music tracks with support for different modes
@@ -44,7 +44,7 @@ public class MusicPlayer {
      * @return List of music file names found in the folder
      * @throws RuntimeException if the folder cannot be found or is invalid
      */
-    private static List<String> getMusicFiles() {
+    static List<String> getMusicFiles() {
         URL folderURL = MusicPlayer.class.getResource("/audio/music/");
         if (folderURL == null) {
             throw new RuntimeException("Music folder not found: /audio/music/");
