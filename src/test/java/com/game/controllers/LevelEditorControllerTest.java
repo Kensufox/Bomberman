@@ -1,6 +1,7 @@
 package com.game.controllers;
 
 import com.game.JavaFXInitializer;
+import javafx.application.Platform;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import org.junit.jupiter.api.BeforeAll;
