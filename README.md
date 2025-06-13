@@ -7,7 +7,7 @@ Développement d’un jeu **Bomberman** avec JavaFX dans le cadre de la **SAÉ 2
 
 ##  Équipe de développement
 
-- [**Kensufox**](https://github.com/Kensufox) (QUILLIEC Matisse)  
+- [**Kensufox**](https://github.com/Kensufox)  
   - Génération et chargement de la map  
   - Gestion des bombes et des explosions  
   - Création et effets des Power-Up  
@@ -17,7 +17,7 @@ Développement d’un jeu **Bomberman** avec JavaFX dans le cadre de la **SAÉ 2
   - Intégration d’un éditeur de niveaux  
   - Javadoc et tests unitaires partiels  
 
-- [**D-WADE**](https://github.com/LoanALLARD) (ALLARD Loan)  
+- [**D-WADE**](https://github.com/LoanALLARD)  
   - Création de l’interface utilisateur et des menus  
   - Gestion des inputs et des keybinds personnalisés  
   - Gestion du score et navigation entre menus  
