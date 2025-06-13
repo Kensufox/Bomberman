@@ -112,7 +112,7 @@ public class OptionsController implements Initializable {
      * @param button  The button to update.
      * @param keyCode The key code to display.
      */
-    private void updateKeyButtonText(Button button, KeyCode keyCode) {
+    void updateKeyButtonText(Button button, KeyCode keyCode) {
         if (keyCode == null) {
             button.setText("NONE");
             return;
@@ -160,7 +160,7 @@ public class OptionsController implements Initializable {
      *
      * @param keyCode The key to clear from any other binding.
      */
-    private void clearKeyAssignment(KeyCode keyCode) {
+    void clearKeyAssignment(KeyCode keyCode) {
         if (inputHandler.getJ1Up() == keyCode) inputHandler.setJ1Up(null);
         else if (inputHandler.getJ1Down() == keyCode) inputHandler.setJ1Down(null);
         else if (inputHandler.getJ1Left() == keyCode) inputHandler.setJ1Left(null);
@@ -180,7 +180,7 @@ public class OptionsController implements Initializable {
      * @param action  The action to bind (e.g., "up", "down").
      * @param keyCode The new key code to assign.
      */
-    private void updateKeyBinding(String player, String action, KeyCode keyCode) {
+    void updateKeyBinding(String player, String action, KeyCode keyCode) {
         if ("player1".equals(player)) {
             switch (action) {
                 case "up": inputHandler.setJ1Up(keyCode); break;
@@ -328,7 +328,7 @@ public class OptionsController implements Initializable {
      * Saves the current control settings and displays a confirmation alert.
      */
     @FXML
-    private void applySettings() {
+    void applySettings() {
         inputHandler.saveSettings();  // Il faut implémenter cette méthode dans InputHandler
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -342,7 +342,7 @@ public class OptionsController implements Initializable {
      * Cancels any unsaved changes and reloads the last saved settings.
      */
     @FXML
-    private void cancelSettings() {
+    void cancelSettings() {
         inputHandler.loadConfiguration(); // Reload config
         inputHandler.convertStringKeysToKeyCodes();
         loadCurrentSettings();
@@ -363,4 +363,339 @@ public class OptionsController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    // === Player 1 Buttons ===
+
+    /**
+     * Gets the button for Player 1's "Move Up" action.
+     * @return the Player 1 up button
+     */
+    public Button getPlayer1UpButton() {
+        return player1UpButton;
+    }
+
+    /**
+     * Sets the button for Player 1's "Move Up" action.
+     * @param player1UpButton the button to assign
+     */
+    public void setPlayer1UpButton(Button player1UpButton) {
+        this.player1UpButton = player1UpButton;
+    }
+
+    /**
+     * Gets the button for Player 1's "Move Down" action.
+     * @return the Player 1 down button
+     */
+    public Button getPlayer1DownButton() {
+        return player1DownButton;
+    }
+
+    /**
+     * Sets the button for Player 1's "Move Down" action.
+     * @param player1DownButton the button to assign
+     */
+    public void setPlayer1DownButton(Button player1DownButton) {
+        this.player1DownButton = player1DownButton;
+    }
+
+    /**
+     * Gets the button for Player 1's "Move Left" action.
+     * @return the Player 1 left button
+     */
+    public Button getPlayer1LeftButton() {
+        return player1LeftButton;
+    }
+
+    /**
+     * Sets the button for Player 1's "Move Left" action.
+     * @param player1LeftButton the button to assign
+     */
+    public void setPlayer1LeftButton(Button player1LeftButton) {
+        this.player1LeftButton = player1LeftButton;
+    }
+
+    /**
+     * Gets the button for Player 1's "Move Right" action.
+     * @return the Player 1 right button
+     */
+    public Button getPlayer1RightButton() {
+        return player1RightButton;
+    }
+
+    /**
+     * Sets the button for Player 1's "Move Right" action.
+     * @param player1RightButton the button to assign
+     */
+    public void setPlayer1RightButton(Button player1RightButton) {
+        this.player1RightButton = player1RightButton;
+    }
+
+    /**
+     * Gets the button for Player 1's "Place Bomb" action.
+     * @return the Player 1 bomb button
+     */
+    public Button getPlayer1BombButton() {
+        return player1BombButton;
+    }
+
+    /**
+     * Sets the button for Player 1's "Place Bomb" action.
+     * @param player1BombButton the button to assign
+     */
+    public void setPlayer1BombButton(Button player1BombButton) {
+        this.player1BombButton = player1BombButton;
+    }
+
+
+// === Player 2 Buttons ===
+
+    /**
+     * Gets the button for Player 2's "Move Up" action.
+     * @return the Player 2 up button
+     */
+    public Button getPlayer2UpButton() {
+        return player2UpButton;
+    }
+
+    /**
+     * Sets the button for Player 2's "Move Up" action.
+     * @param player2UpButton the button to assign
+     */
+    public void setPlayer2UpButton(Button player2UpButton) {
+        this.player2UpButton = player2UpButton;
+    }
+
+    /**
+     * Gets the button for Player 2's "Move Down" action.
+     * @return the Player 2 down button
+     */
+    public Button getPlayer2DownButton() {
+        return player2DownButton;
+    }
+
+    /**
+     * Sets the button for Player 2's "Move Down" action.
+     * @param player2DownButton the button to assign
+     */
+    public void setPlayer2DownButton(Button player2DownButton) {
+        this.player2DownButton = player2DownButton;
+    }
+
+    /**
+     * Gets the button for Player 2's "Move Left" action.
+     * @return the Player 2 left button
+     */
+    public Button getPlayer2LeftButton() {
+        return player2LeftButton;
+    }
+
+    /**
+     * Sets the button for Player 2's "Move Left" action.
+     * @param player2LeftButton the button to assign
+     */
+    public void setPlayer2LeftButton(Button player2LeftButton) {
+        this.player2LeftButton = player2LeftButton;
+    }
+
+    /**
+     * Gets the button for Player 2's "Move Right" action.
+     * @return the Player 2 right button
+     */
+    public Button getPlayer2RightButton() {
+        return player2RightButton;
+    }
+
+    /**
+     * Sets the button for Player 2's "Move Right" action.
+     * @param player2RightButton the button to assign
+     */
+    public void setPlayer2RightButton(Button player2RightButton) {
+        this.player2RightButton = player2RightButton;
+    }
+
+    /**
+     * Gets the button for Player 2's "Place Bomb" action.
+     * @return the Player 2 bomb button
+     */
+    public Button getPlayer2BombButton() {
+        return player2BombButton;
+    }
+
+    /**
+     * Sets the button for Player 2's "Place Bomb" action.
+     * @param player2BombButton the button to assign
+     */
+    public void setPlayer2BombButton(Button player2BombButton) {
+        this.player2BombButton = player2BombButton;
+    }
+
+
+// === Other Buttons ===
+
+    /**
+     * Gets the reset button.
+     * @return the reset button
+     */
+    public Button getResetButton() {
+        return resetButton;
+    }
+
+    /**
+     * Sets the reset button.
+     * @param resetButton the button to assign
+     */
+    public void setResetButton(Button resetButton) {
+        this.resetButton = resetButton;
+    }
+
+    /**
+     * Gets the apply button.
+     * @return the apply button
+     */
+    public Button getApplyButton() {
+        return applyButton;
+    }
+
+    /**
+     * Sets the apply button.
+     * @param applyButton the button to assign
+     */
+    public void setApplyButton(Button applyButton) {
+        this.applyButton = applyButton;
+    }
+
+    /**
+     * Gets the cancel button.
+     * @return the cancel button
+     */
+    public Button getCancelButton() {
+        return cancelButton;
+    }
+
+    /**
+     * Sets the cancel button.
+     * @param cancelButton the button to assign
+     */
+    public void setCancelButton(Button cancelButton) {
+        this.cancelButton = cancelButton;
+    }
+
+    /**
+     * Gets the back button.
+     * @return the back button
+     */
+    public Button getBackButton() {
+        return backButton;
+    }
+
+    /**
+     * Sets the back button.
+     * @param backButton the button to assign
+     */
+    public void setBackButton(Button backButton) {
+        this.backButton = backButton;
+    }
+
+
+// === Key Capture UI Elements ===
+
+    /**
+     * Gets the StackPane used for capturing key input.
+     * @return the key capture pane
+     */
+    public StackPane getKeyCapture() {
+        return keyCapture;
+    }
+
+    /**
+     * Sets the StackPane used for capturing key input.
+     * @param keyCapture the StackPane to assign
+     */
+    public void setKeyCapture(StackPane keyCapture) {
+        this.keyCapture = keyCapture;
+    }
+
+    /**
+     * Gets the label displaying key capture instructions or state.
+     * @return the key capture label
+     */
+    public Label getKeyCaptureLabel() {
+        return keyCaptureLabel;
+    }
+
+    /**
+     * Sets the label displaying key capture instructions or state.
+     * @param keyCaptureLabel the label to assign
+     */
+    public void setKeyCaptureLabel(Label keyCaptureLabel) {
+        this.keyCaptureLabel = keyCaptureLabel;
+    }
+
+
+// === Other Variables ===
+
+    /**
+     * Gets the current input handler.
+     * @return the input handler
+     */
+    public InputHandler getInputHandler() {
+        return inputHandler;
+    }
+
+    /**
+     * Sets the input handler.
+     * @param inputHandler the input handler to assign
+     */
+    public void setInputHandler(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
+    }
+
+    /**
+     * Gets the currently selected button for key remapping.
+     * @return the current key button
+     */
+    public Button getCurrentKeyButton() {
+        return currentKeyButton;
+    }
+
+    /**
+     * Sets the currently selected button for key remapping.
+     * @param currentKeyButton the button to assign
+     */
+    public void setCurrentKeyButton(Button currentKeyButton) {
+        this.currentKeyButton = currentKeyButton;
+    }
+
+    /**
+     * Gets the identifier for the current player (e.g., "Player1", "Player2").
+     * @return the current player identifier
+     */
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    /**
+     * Sets the identifier for the current player.
+     * @param currentPlayer the player identifier to assign
+     */
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    /**
+     * Gets the name of the current action being configured (e.g., "UP", "BOMB").
+     * @return the current action name
+     */
+    public String getCurrentAction() {
+        return currentAction;
+    }
+
+    /**
+     * Sets the name of the current action being configured.
+     * @param currentAction the action name to assign
+     */
+    public void setCurrentAction(String currentAction) {
+        this.currentAction = currentAction;
+    }
+
 }
