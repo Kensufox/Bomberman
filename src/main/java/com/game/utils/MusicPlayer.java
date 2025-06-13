@@ -1,10 +1,7 @@
 package com.game.utils;
 
-import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -44,19 +41,15 @@ public class MusicPlayer {
      * @return List of music file names found in the folder
      * @throws RuntimeException if the folder cannot be found or is invalid
      */
-    static List<String> getMusicFiles() {
-        URL folderURL = MusicPlayer.class.getResource("/audio/music/");
-        if (folderURL == null) {
-            throw new RuntimeException("Music folder not found: /audio/music/");
-        }
-        File folder = new File(folderURL.getFile());
-        if (!folder.exists() || !folder.isDirectory()) {
-            throw new RuntimeException("Invalid music folder path: " + folder.getAbsolutePath());
-        }
-
-        return Arrays.stream(Objects.requireNonNull(folder.listFiles((dir, name) -> name.endsWith(".mp3"))))
-                .map(File::getName)
-                .collect(Collectors.toList());
+    public static List<String> getMusicFiles() {
+        return List.of(
+            MusicLibrary.ACTION1,
+            MusicLibrary.ACTION2,
+            MusicLibrary.ACTION3,
+            MusicLibrary.ACTION4,
+            MusicLibrary.ACTION5,
+            MusicLibrary.ACTION6
+        );
     }
 
     /**

@@ -1,8 +1,5 @@
 package com.game;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.game.utils.MusicLibrary;
 import com.game.utils.MusicPlayer;
 
@@ -42,25 +39,5 @@ public class GameApplication extends Application {
         MusicPlayer.play(MusicLibrary.ACTION3, MusicPlayer.Mode.RANDOM);
 
         primaryStage.show();
-    }
-
-    /**
-     * The main method of the application.
-     * 
-     * <p>Launches the JavaFX application and initializes a timer that currently
-     * schedules an empty task every second.</p>
-     * 
-     * @param args Command line arguments.
-     */
-    public static void main(String[] args) {
-        launch(args);
-
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                // Empty task - placeholder for scheduled code
-            }
-        }, 0, 1000);
     }
 }
