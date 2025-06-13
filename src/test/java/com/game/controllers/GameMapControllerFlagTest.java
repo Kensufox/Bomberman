@@ -157,4 +157,94 @@ class GameMapControllerFlagTest {
         assertEquals(11, players[1].getRow());
         assertEquals(13, players[1].getCol());
     }
+    @Test
+    void testSetAndGetPlayer1Flag() {
+        GameMapControllerFlag.Flag flag = new GameMapControllerFlag.Flag(5, 5);
+        controller.setPlayer1Flag(flag);
+        assertEquals(flag, controller.getPlayer1Flag());
+    }
+
+    @Test
+    void testSetAndGetPlayer2Flag() {
+        GameMapControllerFlag.Flag flag = new GameMapControllerFlag.Flag(7, 8);
+        controller.setPlayer2Flag(flag);
+        assertEquals(flag, controller.getPlayer2Flag());
+    }
+
+    @Test
+    void testSetAndGetPlayer1FlagCell() {
+        StackPane cell = new StackPane();
+        controller.setPlayer1FlagCell(cell);
+        assertEquals(cell, controller.getPlayer1FlagCell());
+    }
+
+    @Test
+    void testSetAndGetPlayer2FlagCell() {
+        StackPane cell = new StackPane();
+        controller.setPlayer2FlagCell(cell);
+        assertEquals(cell, controller.getPlayer2FlagCell());
+    }
+
+    @Test
+    void testFlagSetPositionUpdatesRowColAndIsAtHome() {
+        GameMapControllerFlag.Flag flag = new GameMapControllerFlag.Flag(3, 4);
+        flag.setPosition(5, 6);
+        assertEquals(5, flag.getRow());
+        assertEquals(6, flag.getCol());
+        assertFalse(flag.isAtHome());
+        flag.setPosition(3, 4);
+        assertTrue(flag.isAtHome());
+    }
+
+    @Test
+    void testFlagPickUpSetsCarriedAndCarrier() {
+        GameMapControllerFlag.Flag flag = new GameMapControllerFlag.Flag(1, 1);
+        Player player = new Player(2, 2, Player.State.ALIVE);
+        flag.pickUp(player);
+        assertTrue(flag.isCarried());
+        assertEquals(player, flag.getCarrier());
+        assertFalse(flag.isAtHome());
+    }
+
+    @Test
+    void testFlagDropSetsNotCarriedAndNullCarrier() {
+        GameMapControllerFlag.Flag flag = new GameMapControllerFlag.Flag(1, 1);
+        Player player = new Player(2, 2, Player.State.ALIVE);
+        flag.pickUp(player);
+        flag.drop(3, 3);
+        assertFalse(flag.isCarried());
+        assertNull(flag.getCarrier());
+        assertEquals(3, flag.getRow());
+        assertEquals(3, flag.getCol());
+    }
+
+    @Test
+    void testFlagReturnHomeResetsPositionAndCarrier() {
+        GameMapControllerFlag.Flag flag = new GameMapControllerFlag.Flag(1, 1);
+        Player player = new Player(2, 2, Player.State.ALIVE);
+        flag.pickUp(player);
+        flag.drop(3, 3);
+        flag.returnHome();
+        assertEquals(1, flag.getRow());
+        assertEquals(1, flag.getCol());
+        assertFalse(flag.isCarried());
+        assertNull(flag.getCarrier());
+        assertTrue(flag.isAtHome());
+    }
+
+    @Test
+    void testPlayerContextInitialization() {
+        Player player = new Player(1, 2, Player.State.ALIVE);
+        StackPane cell = new StackPane();
+        com.game.utils.InputHandler.PlayerControls controls = mock(com.game.utils.InputHandler.PlayerControls.class);
+        GameMapControllerFlag.PlayerContext ctx = new GameMapControllerFlag.PlayerContext(player, cell, controls, 1, 2);
+        assertEquals(player, ctx.player);
+        assertEquals(cell, ctx.cell);
+        assertEquals(controls, ctx.controls);
+        assertEquals(1, ctx.spawnRow);
+        assertEquals(2, ctx.spawnCol);
+        assertFalse(ctx.hasOpponentFlag);
+    }
+
+    
 }

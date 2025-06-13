@@ -90,4 +90,45 @@ class GameMapControllerbotTest {
         assertEquals(2, bot.getBombDelay());
         assertEquals(2, bot.getIntelligenceLevel());
     }
+
+    @Test
+    void testSetBotDifficultyIsCaseSensitive() {
+        controller.setBotDifficulty("easy");
+        assertEquals("easy", controller.getBotDifficulty());
+        // Should fall to default config since "easy" != "EASY"
+        Player[] players = controller.createPlayers();
+        BotPlayer bot = (BotPlayer) players[1];
+        assertEquals(300_000_000L, bot.getMoveDelay());
+        assertEquals(2, bot.getBombDelay());
+        assertEquals(2, bot.getIntelligenceLevel());
+    }
+
+    @Test
+    void testBotDifficultyRemainsAfterMultipleSets() {
+        controller.setBotDifficulty("EASY");
+        assertEquals("EASY", controller.getBotDifficulty());
+        controller.setBotDifficulty("HARD");
+        assertEquals("HARD", controller.getBotDifficulty());
+        controller.setBotDifficulty("MEDIUM");
+        assertEquals("MEDIUM", controller.getBotDifficulty());
+    }
+
+
+    @Test
+    void testCreatePlayersHumanPlayerProperties() {
+        Player[] players = controller.createPlayers();
+        Player human = players[0];
+        assertEquals(1, human.getRow());
+        assertEquals(1, human.getCol());
+        assertEquals(Player.State.ALIVE, human.getState());
+    }
+
+    @Test
+    void testCreatePlayersBotPlayerProperties() {
+        Player[] players = controller.createPlayers();
+        BotPlayer bot = (BotPlayer) players[1];
+        assertEquals(11, bot.getRow());
+        assertEquals(13, bot.getCol());
+        assertEquals(Player.State.ALIVE, bot.getState());
+    }
 }
