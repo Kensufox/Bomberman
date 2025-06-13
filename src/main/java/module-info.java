@@ -24,7 +24,7 @@
  *   <li><b>com.game.utils</b> : utilitaires divers pour la gestion du son, des images, des scores, etc.</li>
  * </ul>
  */
-open module tp.intro.javafx {
+open module com.game {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
