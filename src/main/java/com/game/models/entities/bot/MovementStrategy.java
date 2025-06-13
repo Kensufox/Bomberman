@@ -4,7 +4,9 @@ import com.game.models.entities.Bomb;
 import com.game.models.entities.Player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Stratégie de mouvement coordonnant l'analyse et la recherche de chemin.
@@ -99,39 +101,65 @@ public class MovementStrategy {
      */
     private MoveOption evaluateMoveOption(int row, int col, Player enemy, int[] direction) {
         int score = 0;
+        boolean inDanger = bombAnalyzer.isDangerous(row, col);
 
-        // Critère 1: Sécurité immédiate (priorité maximale)
-        if (bombAnalyzer.isDangerous(row, col)) {
-            score -= 1000; // Très mauvais
+        // Critère 1 : Sécurité immédiate (hautement prioritaire)
+        if (inDanger) {
+            score -= 2000; // Pénalité très forte pour danger immédiat
         } else {
-            score += 100; // Bonus pour sécurité
+            score += 300; // Bonus pour sécurité
         }
 
-        // Critère 2: Détection d'impasse (critique)
+        // Critère 2 : Capacité d'évasion (nombre de sorties)
         int escapeRoutes = countEscapeRoutes(row, col);
-        if (escapeRoutes == 0) {
-            score -= 800; // Très mauvais - impasse totale
-        } else if (escapeRoutes == 1) {
-            score -= 400; // Mauvais - risque d'être piégé
-        } else {
-            score += escapeRoutes * 50; // Bonus pour plusieurs sorties
+        switch (escapeRoutes) {
+            case 0:
+                score -= 2500; // Piège mortel
+                break;
+            case 1:
+                score -= 800; // Très risqué
+                break;
+            case 2:
+                score += 100; // Acceptable
+                break;
+            case 3:
+                score += 250; // Bien
+                break;
+            default:
+                score += escapeRoutes * 150; // Excellent - zone très ouverte
+                break;
         }
 
-        // Critère 3: Distance de l'ennemi (pour éviter les bombes)
+        // Critère 3 : Distance avec l'ennemi - MODIFIÉ selon le danger
         int distanceFromEnemy = manhattanDistance(row, col, enemy.getRow(), enemy.getCol());
-        if (distanceFromEnemy < 3) {
-            score += distanceFromEnemy * 30; // Bonus pour s'éloigner
+
+        if (inDanger) {
+            // EN DANGER : Plus on s'éloigne de l'ennemi, mieux c'est
+            score += distanceFromEnemy * 100; // Bonus fort pour s'éloigner
+        } else {
+            // PAS EN DANGER : Logique normale
+            if (distanceFromEnemy <= 2) {
+                score -= 400; // Très dangereux d'être trop proche
+            } else if (distanceFromEnemy <= 4) {
+                score += distanceFromEnemy * 50; // Plus on s'éloigne, mieux c'est
+            } else {
+                score += 300; // Zone très sûre, distance optimale
+            }
         }
 
-        // Critère 4: Danger futur (bombes actives)
+        // Critère 4 : Danger potentiel (bombes proches)
         int dangerScore = bombAnalyzer.getDangerScore(row, col);
-        score -= dangerScore; // Moins il y a de danger, mieux c'est
+        score -= dangerScore * 30; // Pénalité proportionnelle au danger
 
-        // Critère 5: Éviter les coins et bords de carte
+        // Critère 5 : Éviter les bords et coins
         if (isNearEdge(row, col)) {
-            score -= 50; // Malus léger pour les bords
+            score -= 150; // Les bords limitent les options d'évasion
         }
 
+        // Critère 6 : Éviter de rester immobile si possible
+        if (direction[0] == 0 && direction[1] == 0) {
+            score -= 50; // Léger malus pour encourager le mouvement
+        }
         return new MoveOption(direction, score, escapeRoutes);
     }
 
@@ -143,7 +171,8 @@ public class MovementStrategy {
         int escapeRoutes = 0;
 
         for (int[] dir : DIRECTIONS) {
-            if (hasEscapePathInDirection(row, col, dir[0], dir[1], 4)) {
+            Set<String> visited = new HashSet<>();
+            if (hasEscapePathInDirection(row, col, dir[0], dir[1], 0, 3, visited)) {
                 escapeRoutes++;
             }
         }
@@ -154,25 +183,31 @@ public class MovementStrategy {
     /**
      * Vérifie s'il existe un chemin d'évasion dans une direction donnée
      */
-    private boolean hasEscapePathInDirection(int startRow, int startCol, int dirRow, int dirCol, int depth) {
-        int currentRow = startRow;
-        int currentCol = startCol;
+    private boolean hasEscapePathInDirection(int row, int col, int initialDirRow, int initialDirCol, int steps, int maxSteps, Set<String> visited) {
+        if (steps > maxSteps || visited.contains(row + "," + col)) return false;
+        if (!bombAnalyzer.isValidPosition(row, col) || !bombAnalyzer.isTraversable(row, col)) return false;
+        if (steps >= 2 && !bombAnalyzer.isDangerous(row, col)) return true;
 
-        for (int step = 1; step <= depth; step++) {
-            currentRow += dirRow;
-            currentCol += dirCol;
+        visited.add(row + "," + col);
+        int[][] dirs = {{-1,0}, {1,0}, {0,-1}, {0,1}};
 
-            if (!bombAnalyzer.isValidPosition(currentRow, currentCol) ||
-                    !bombAnalyzer.isTraversable(currentRow, currentCol)) {
-                return false;
-            }
-
-            // Si on trouve une case sûre à partir du step 2, c'est une route valide
-            if (step >= 2 && !bombAnalyzer.isDangerous(currentRow, currentCol)) {
+        // Au premier pas : priorité à la direction initiale
+        if (steps == 0) {
+            if (hasEscapePathInDirection(row + initialDirRow, col + initialDirCol, initialDirRow, initialDirCol, steps + 1, maxSteps, visited)) {
+                visited.remove(row + "," + col);
                 return true;
+            }
+        } else {
+            // Après le premier pas : explorer toutes les directions
+            for (int[] dir : dirs) {
+                if (hasEscapePathInDirection(row + dir[0], col + dir[1], initialDirRow, initialDirCol, steps + 1, maxSteps, visited)) {
+                    visited.remove(row + "," + col);
+                    return true;
+                }
             }
         }
 
+        visited.remove(row + "," + col);
         return false;
     }
 

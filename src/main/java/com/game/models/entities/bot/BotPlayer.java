@@ -24,8 +24,6 @@ import java.util.Objects;
 public class BotPlayer extends Player {
 
     /** Composants de l'architecture MVC - Modèle */
-    private final GameMap gameMap;
-    private char[][] map;
     private final BombAnalyzer bombAnalyzer;
     private final PathFinder pathFinder;
     private final MovementStrategy movementStrategy;
@@ -53,12 +51,9 @@ public class BotPlayer extends Player {
         this.originalMoveDelay = moveDelay;
         
         // Initialisation du modèle
-        this.gameMap = Objects.requireNonNull(gameMap, "GameMap ne peut pas être null");
         this.bombAnalyzer = new BombAnalyzer(gameMap);
         this.pathFinder = new PathFinder(gameMap, bombAnalyzer);
         this.movementStrategy = new MovementStrategy(bombAnalyzer, pathFinder);
-
-        this.map = gameMap.getMapData();
     }
 
     /**
@@ -337,14 +332,14 @@ public class BotPlayer extends Player {
      * Retourne l'emoji correspondant au niveau de danger
      */
     private String getDangerLevelEmoji(int dangerousNeighbors) {
-        switch (dangerousNeighbors) {
-            case 0: return "😌";
-            case 1: return "😐";
-            case 2: return "😰";
-            case 3: return "😱";
-            case 4: return "💀";
-            default: return "❓";
-        }
+        return switch (dangerousNeighbors) {
+            case 0 -> "😌";
+            case 1 -> "😐";
+            case 2 -> "😰";
+            case 3 -> "😱";
+            case 4 -> "💀";
+            default -> "❓";
+        };
     }
 
 

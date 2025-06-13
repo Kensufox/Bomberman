@@ -17,8 +17,8 @@ import java.util.*;
 public class PathFinder {
     /** Directions de déplacement possibles */
     private static final int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-    
-    private final GameMap gameMap;
+
+
     private final BombAnalyzer bombAnalyzer;
 
     /**
@@ -28,7 +28,6 @@ public class PathFinder {
      * @param bombAnalyzer Analyseur de bombes
      */
     public PathFinder(GameMap gameMap, BombAnalyzer bombAnalyzer) {
-        this.gameMap = gameMap;
         this.bombAnalyzer = bombAnalyzer;
     }
 

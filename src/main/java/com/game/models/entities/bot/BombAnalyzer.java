@@ -224,4 +224,9 @@ public class BombAnalyzer {
     public void setBomb(Bomb bomb) {
         this.bomb = bomb;
     }
+
+    /**
+     * @return bomb l'objet Bomb
+     */
+    public Bomb getBomb() {return bomb;}
 }
