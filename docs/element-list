@@ -1,4 +1,4 @@
-module:tp.intro.javafx
+module:Bomberman
 com.game
 com.game.controllers
 com.game.models.entities
